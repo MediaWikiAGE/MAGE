@@ -1,0 +1,81 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2020": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 2019,
+        "sourceType": "module"
+    },
+    "rules": {
+        "arrow-spacing": [
+            "error",
+            {
+                "before": true,
+                "after": true
+            }
+        ],
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "comma-dangle": [
+            "error",
+            "never"
+        ],
+        "comma-spacing": "error",
+        "eqeqeq": [
+            "error",
+            "smart"
+        ],
+        "func-call-spacing": "error",
+        "line-comment-position": "error",
+        "prefer-const": "error",
+        "prefer-destructuring": "error",
+        "no-array-constructor": "error",
+        "no-dupe-else-if": "error",
+        "no-duplicate-imports": "error",
+        "no-extra-semi": "error",
+        "no-inline-comments": "error",
+        "no-invalid-regexp": "error",
+        "no-invalid-this": "error",
+        "no-lonely-if": "error",
+        "no-new": "error",
+        "no-new-object": "error",
+        "no-new-wrappers": "error",
+        "no-return-await": "error",
+        "no-self-compare": "error",
+        "no-undef-init": "error",
+        "no-unneeded-ternary": "error",
+        "no-unreachable": "error",
+        "no-useless-constructor": "error",
+        "no-unused-vars": "off",
+        "prefer-regex-literals": [
+            "error",
+            {
+                "disallowRedundantWrapping": true
+            }
+        ],
+        "prefer-spread": "error",
+        "prefer-template": "error",
+        "require-await": "error",
+        "semi": "error",
+        "semi-style": "error",
+        "space-before-blocks": "error",
+        "use-isnan": "error",
+        "valid-typeof": "error",
+        "quotes": [
+            "error",
+            "single",
+            {
+                "avoidEscape": true,
+                "allowTemplateLiterals": true
+            }
+        ]
+    }
+}

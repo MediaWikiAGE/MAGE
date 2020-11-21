@@ -1,0 +1,45 @@
+{
+  "name": "mage",
+  "version": "1.0.0",
+  "description": "A graphical MediaWiki editor allowing users to automatically take administrative actions through a GUI.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MediaWikiAGE/MAGE.git"
+  },
+  "keywords": [
+    "mediawiki",
+    "awb",
+    "bot",
+    "wiki",
+    "electron"
+  ],
+  "author": "MediaWikiAGE Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MediaWikiAGE/MAGE/issues"
+  },
+  "homepage": "https://github.com/MediaWikiAGE/MAGE#readme",
+  "config": {
+    "forge": "./forge.config.js"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "^11.0.2",
+    "eslint": "^7.14.0"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "update-electron-app": "^2.0.1"
+  }
+}
