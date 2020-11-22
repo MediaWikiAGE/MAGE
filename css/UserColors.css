@@ -1,0 +1,16 @@
+/* Default user preference colors */
+
+:root
+  {
+    --light-menu-highlight-background: #fff;
+    --light-menu-highlight-color: #000;
+    
+    --light-window-background: #ddd;
+    --light-window-color: #222;
+    
+    --dark-menu-highlight-background: #000;
+    --dark-menu-highlight-color: #fff;
+    
+    --dark-window-background: #222;
+    --dark-window-color: #ddd;
+  }
