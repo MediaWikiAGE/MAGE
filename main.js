@@ -1,5 +1,7 @@
 const updater = require('update-electron-app');
 const { app, BrowserWindow, ipcMain, nativeTheme } = require('electron');
+// eslint-disable-next-line no-undef
+const isMac = process.platform === 'darwin';
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -29,8 +31,7 @@ function createWindow () {
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
-    // eslint-disable-next-line no-undef
-    if (process.platform !== 'darwin') {
+    if (!isMac) {
         app.quit();
     }
 });
