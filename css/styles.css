@@ -1,7 +1,17 @@
+@import "UserColors.css";
+
 @media (prefers-color-scheme: dark) {
-    body { background:  #333; color: white; }
+    body
+    {
+        background: var(--dark-window-background);
+        color: var(--dark-window-color);
+    }
 }
 
 @media (prefers-color-scheme: light) {
-    body { background:  #ddd; color: black; }
+    body
+    {
+        background: var(--light-window-background);
+        color: var(--light-window-color);
+    }
 }
