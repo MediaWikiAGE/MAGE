@@ -1,15 +1,21 @@
+const { join } = require('path');
 const updater = require('update-electron-app');
 const { app, BrowserWindow, ipcMain, nativeTheme } = require('electron');
 
 // eslint-disable-next-line no-undef
 const isMac = process.platform === 'darwin';
 
+let win;
+
 function createWindow () {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
-            contextIsolation: true
+            nodeIntegration: false,
+            contextIsolation: false,
+            enableRemoteModule: false,
+            preload: join(app.getAppPath(), 'js', 'preload.js')
         }
     });
 
@@ -38,7 +44,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    if (!BrowserWindow.getAllWindows().length) {
+    if (win === null) {
         createWindow();
     }
 });
