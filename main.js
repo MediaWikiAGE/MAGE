@@ -1,5 +1,6 @@
 const updater = require('update-electron-app');
 const { app, BrowserWindow, ipcMain, nativeTheme } = require('electron');
+
 // eslint-disable-next-line no-undef
 const isMac = process.platform === 'darwin';
 
@@ -8,7 +9,7 @@ function createWindow () {
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            contextIsolation: true
         }
     });
 
@@ -37,7 +38,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (!BrowserWindow.getAllWindows().length) {
         createWindow();
     }
 });

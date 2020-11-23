@@ -1,4 +1,4 @@
-@import "UserColors.css";
+@import 'UserColors.css';
 
 @media (prefers-color-scheme: dark) {
     body

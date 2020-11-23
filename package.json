@@ -1,6 +1,6 @@
 {
   "name": "mage",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A graphical MediaWiki editor allowing users to automatically take administrative actions through a GUI.",
   "main": "main.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "wiki",
     "electron"
   ],
-  "author": "MediaWikiAGE Team",
+  "author": "MediaWikiAGE",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MediaWikiAGE/MAGE/issues"
