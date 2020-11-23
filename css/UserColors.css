@@ -2,15 +2,26 @@
 
 :root
   {
+    
+    /* light theme */
+    
     --light-menu-highlight-background: #fff;
     --light-menu-highlight-color: #000;
     
     --light-window-background: #ddd;
     --light-window-color: #222;
     
+    /* dark theme */
+    
     --dark-menu-highlight-background: #000;
     --dark-menu-highlight-color: #fff;
     
     --dark-window-background: #222;
     --dark-window-color: #ddd;
+    
+    /* neutral/other */
+    
+    --error-background: #000;
+    --error-color: #700;
+    
   }
