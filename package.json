@@ -13,9 +13,9 @@
   },
   "main": "src/background.js",
   "dependencies": {
-    "autoprefixer": "^9",
+    "autoprefixer": "^9.8.6",
     "core-js": "^3.7.0",
-    "postcss": "^7",
+    "postcss": "^7.0.35",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.1",
     "vue": "^3.0.2"
   },
