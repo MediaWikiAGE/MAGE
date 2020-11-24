@@ -1,27 +1,36 @@
 /* Default user preference colors */
 
-:root
-  {
+@media (prefers-color-scheme: light) {
+
+    root {    
     
-    /* light theme */
+        --color-menu-highlight-background: #fff;
+        --color-menu-highlight-text: #000;
+        
+        --color-interface-background: #ddd;
+        --color-interface-text: #222;
+        
+    }
+}
     
-    --light-menu-highlight-background: #fff;
-    --light-menu-highlight-color: #000;
+@media (prefers-color-scheme: dark) {
     
-    --light-window-background: #ddd;
-    --light-window-color: #222;
+    :root {;
     
-    /* dark theme */
-    
-    --dark-menu-highlight-background: #000;
-    --dark-menu-highlight-color: #fff;
-    
-    --dark-window-background: #222;
-    --dark-window-color: #ddd;
+        --color-menu-highlight-background: #000;
+        --color-menu-highlight-text: #fff;
+        
+        --color-interface-background: #222;
+        --color-interface-text: #ddd;
+
+    }
+}
+
+:root {
     
     /* neutral/other */
     
-    --error-background: #000;
-    --error-color: #700;
+    --color-error-background: #000;
+    --color-error-text: #700;
     
-  }
+}
