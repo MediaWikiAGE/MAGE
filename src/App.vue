@@ -45,8 +45,6 @@ export default {
 </script>
 
 <style>
-@import "./assets/css/jetbrains-mono.css";
-
 * {
   box-sizing: border-box;
   margin: 0;
