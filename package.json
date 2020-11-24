@@ -14,6 +14,8 @@
   "main": "src/background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "keytar": "^7.2.0",
+    "tailwindcss": "^2.0.1",
     "vue": "^3.0.0"
   },
   "devDependencies": {
