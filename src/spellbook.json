@@ -1,0 +1,45 @@
+{
+    "users": [
+        {
+            "site": "genshin-impact-1",
+            "note": "Main Account",
+            "isBot": true,
+            "theme": "light"
+        },
+        {
+            "site": "community-1",
+            "note": "Community Fandom",
+            "isBot": true,
+            "theme": "custom"
+        }
+    ],
+    "theme": {
+        "dark": {},
+        "light": {},
+        "custom": {}
+    },
+    "control": {
+        "quit": "UUDDLRLRBA",
+        "dance": "WASD"
+    },
+    "sites": {
+        "genshin-impact-1": {
+            "mwVersion": "1.33",
+            "articlepath": "/wiki/$1",
+            "scriptpath": "",
+            "script": "/index.php",
+            "lang": "en",
+            "baseUrl": "https://genshin-impact.fandom.com/"
+        }
+    },
+    "farms": {
+        "fandom": {
+            "match": "*.fandom.com",
+            "username": "Echoblast53@BotUsername",
+            "password": "seedHereToKeytar",
+            "note": "Default Note",
+            "isBot": false,
+            "theme": "dark"
+        }
+    }
+}

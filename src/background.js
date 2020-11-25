@@ -1,12 +1,61 @@
 /* eslint-disable no-undef */
 'use strict';
 
+import path from 'path';
+import fs from 'fs';
 import { app, protocol, BrowserWindow } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
+import defaultSettings from './spellbook.json';
+
+//Practice Keytar (and data storage)
+import keytar from 'keytar';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const isMac = process.platform !== 'darwin';
+
+//Load Config
+const spellbook = {
+  settings: defaultSettings,
+  set set(add) {
+    this.settings = add;
+  },
+  set addUserData(add) {
+    this.settings.users.push(add);
+  },
+  set addSiteData(add){
+    this.settings.sites[add.key] = add.val;
+  },
+  set addFarmData(add){
+    this.settings.farms[add.key] = add.val;
+  },
+  get get() {
+    return this.settings;
+  },
+  get export() {
+    return JSON.stringify(this.settings, null, 4);
+  },
+  get getUsers() {
+    return this.settings.users;
+  },
+  get getSites() {
+    return this.settings.sites;
+  },
+  get getFarm() {
+    return this.settings.farms;
+  },
+  addSingleUser: function(username,password,url,note) {
+};
+
+try {
+  spellbook.set = JSON.parse(fs.readFileSync(path.join(app.getPath('userData'),'spellbook.json')));
+} catch (err){
+  if (err.name === "SyntaxError")
+    console.error("Spellbook bad json");
+  else
+    fs.writeFileSync(path.join(app.getPath('userData'),'spellbook.json'),spellbook.export);
+}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
