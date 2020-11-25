@@ -45,7 +45,7 @@ const spellbook = {
   get getFarm() {
     return this.settings.farms;
   },
-  addSingleUser: function(username,password,url,note) {
+  addSingleUser: function(username,password,url,note) { }
 };
 
 try {
