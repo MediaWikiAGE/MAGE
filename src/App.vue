@@ -1,17 +1,20 @@
 <template>
   <div id="app">
+    <UserColors />
     <Header />
     <Todos v-bind:todos="todos" v-on:del-todo="deleteTodo" />
   </div>
 </template>
 
 <script>
+import UserColors from "./components/UserColors";
 import Header from "./components/Header";
 import Todos from "./components/MainPage";
 
 export default {
   name: "App",
   components: {
+    UserColors,
     Header,
     Todos,
   },
@@ -51,7 +54,7 @@ export default {
   padding: 0;
 }
 body, p, h1 {
-  font-family: "JetBrains Mono", "monospace";
+  font-family: "monospace";
   line-height: 1.4;
   -webkit-font-feature-settings: "liga" on, "calt" on;
   text-rendering: optimizeLegibility;
