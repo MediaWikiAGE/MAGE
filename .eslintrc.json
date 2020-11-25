@@ -13,6 +13,7 @@
     },
     "parserOptions": {
         "ecmaVersion": 2018,
+        "parser": "babel-eslint",
         "sourceType": "module"
     },
     "plugins": [
@@ -67,6 +68,13 @@
         "semi-style": "error",
         "space-before-blocks": "error",
         "use-isnan": "error",
-        "valid-typeof": "error"
+        "valid-typeof": "error",
+        "quotes": [
+            "error",
+            "double",
+            {
+                "avoidEscape": true
+            }
+        ]
     }
 }

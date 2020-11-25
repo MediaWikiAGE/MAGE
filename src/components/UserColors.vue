@@ -12,35 +12,37 @@
 </div>
 <div v-bind:style="{ color: colorMenu, 'background-color': backgroundMenu }">
 <input type="text" v-model="colorMenu" v-bind:style="{ color: colorMenu, 'background-color': backgroundMenu }">
-<label for="colorMenu" v-bind:style="{ color: colorMenu, 'background-color': backgroundMenu }">Menu Color</label>
-<br>
-<input type="text" v-model="backgroundMenu" v-bind:style="{ color: colorMenu, 'background-color': backgroundMenu }">
-<label for="backgroundMenu">Menu Background</label>
+  <label for="colorMenu" v-bind:style="{ color: colorMenu, 'background-color': backgroundMenu }">Menu Color</label>
+  <br>
+  <input type="text" v-model="backgroundMenu" v-bind:style="{ color: colorMenu, 'background-color': backgroundMenu }">
+  <label for="backgroundMenu">Menu Background</label>
 </div>
-<div v-bind:style="{ color: colorError, 'background-color': backgroundError }">
-<input type="text" v-model="colorError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">
-<label for="colorError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">Error Color</label>
-<br>
-<input type="text" v-model="backgroundError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">
-<label for="backgroundError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">Error Background</label>
-</div>
+  <div v-bind:style="{ color: colorError, 'background-color': backgroundError }">
+    <input type="text" v-model="colorError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">
+    <label for="colorError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">Error Color</label>
+    <br>
+    <input type="text" v-model="backgroundError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">
+    <label for="backgroundError" v-bind:style="{ color: colorError, 'background-color': backgroundError }">Error Background</label>
+  </div>
 </div>
 </div>
 </template>
 
 <script>
 export default {
-  name: 'UserColors',
+  name: "UserColors",
   data() {
-    this.colorMain = '#ddd';
-    this.backgroundMain = '#222';
-    this.colorMenu = '#fff';
-    this.backgroundMenu = '#000';
-    this.colorError = '#700';
-    this.backgroundError = '#300';
-    this.editUserColors = true;
-    },
-  el: '#app',
+    return {
+      colorMain: "#ddd",
+      backgroundMain: "#222",
+      colorMenu: "#fff",
+      backgroundMenu: "#000",
+      colorError: "#700",
+      backgroundError: "#300",
+      editUserColors: true
+    };
+  },
+  el: "#app",
   mounted() {
     if (localStorage.colorMain) {
       this.colorMain = localStorage.colorMain;
