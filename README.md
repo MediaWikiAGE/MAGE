@@ -5,7 +5,7 @@ MediaWiki Automated Graphical Editor. Mostly meant to be a replacement for AutoW
 This app is in heavy stages of production and isn't ready to be used, yet.
 
 ## Project setup
-You need Git, and a package manager installed, such as pnpm.
+You need Git, Node, and a package manager installed, such as [pnpm](https://pnpm.js.org/).
 ```
 # Clone repo
 git clone https://github.com/MediaWikiAGE/MAGE

@@ -33,10 +33,6 @@
                 "allowSingleLine": true
             }
         ],
-        "comma-dangle": [
-            "error",
-            "never"
-        ],
         "comma-spacing": "error",
         "eqeqeq": [
             "error",
@@ -71,14 +67,6 @@
         "semi-style": "error",
         "space-before-blocks": "error",
         "use-isnan": "error",
-        "valid-typeof": "error",
-        "quotes": [
-            "error",
-            "single",
-            {
-                "avoidEscape": true,
-                "allowTemplateLiterals": true
-            }
-        ]
+        "valid-typeof": "error"
     }
 }
