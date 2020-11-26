@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint key-spacing: ["error", { "afterColon": true }] */
+/*eslint object-curly-spacing: ["error", "always"]*/
 "use strict";
 
 import path from "path";
@@ -29,13 +30,13 @@ const spellbook = {
     this.settings = add;
   },
   set addUserData(add) {
-    this.settings.users[add.key] = {...(this.settings.users[add.key]||{}), ...add.val};
+    this.settings.users[add.key] = { ...(this.settings.users[add.key]||{}), ...add.val };
   },
   set addSiteData(add) {
-    this.settings.sites[add.key] = {...(this.settings.sites[add.key]||{}), ...add.val};
+    this.settings.sites[add.key] = { ...(this.settings.sites[add.key]||{}), ...add.val };
   },
   set addFarmData(add) {
-    this.settings.farms[add.key] = {...(this.settings.farms[add.key]||{}), ...add.val};
+    this.settings.farms[add.key] = { ...(this.settings.farms[add.key]||{}), ...add.val };
   },
   loadSettings: function() {
     //Load Settings
@@ -135,7 +136,7 @@ const spellbook = {
     }).then(path => {
       scriptPath.pathname=path;
       //Get clean server and scriptpath values from api.php
-      return get(`${scriptPath.href}api.php?action=query&meta=siteinfo&type=login&format=json`, {responseType: "json"});
+      return get(`${scriptPath.href}api.php?action=query&meta=siteinfo&type=login&format=json`, { responseType: "json" });
     }).then(async resp => {
       const siteinfo = resp.body.query;
 
