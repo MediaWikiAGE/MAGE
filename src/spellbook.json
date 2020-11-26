@@ -1,18 +1,7 @@
 {
-    "users": [
-        {
-            "site": "genshin-impact-1",
-            "note": "Main Account",
-            "isBot": true,
-            "theme": "light"
-        },
-        {
-            "site": "community-1",
-            "note": "Community Fandom",
-            "isBot": true,
-            "theme": "custom"
-        }
-    ],
+    "users": {
+        
+    },
     "theme": {
         "dark": {},
         "light": {},
