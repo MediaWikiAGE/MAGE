@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+/* eslint key-spacing: ["error", { "afterColon": true }] */
 "use strict";
 
 import path from "path";
@@ -36,7 +37,7 @@ const spellbook = {
   set addFarmData(add) {
     this.settings.farms[add.key] = {...(this.settings.farms[add.key]||{}), ...add.val};
   },
-  loadSettings:function() {
+  loadSettings: function() {
     //Load Settings
     try {
       this.set = JSON.parse(fs.readFileSync(path.join(app.getPath("userData"), "spellbook.json")));
@@ -52,7 +53,7 @@ const spellbook = {
       }
     }
   },
-  saveSettings:function() {
+  saveSettings: function() {
     //PROMPT USER TO OVERWRITE BAD FILE SETTING???
     const overwrite = true;
     if (!this.settingFileError || overwrite) {
@@ -134,7 +135,7 @@ const spellbook = {
     }).then(path => {
       scriptPath.pathname=path;
       //Get clean server and scriptpath values from api.php
-      return get(`${scriptPath.href}api.php?action=query&meta=siteinfo&type=login&format=json`, {responseType:"json"});
+      return get(`${scriptPath.href}api.php?action=query&meta=siteinfo&type=login&format=json`, {responseType: "json"});
     }).then(async resp => {
       const siteinfo = resp.body.query;
 
@@ -155,24 +156,24 @@ const spellbook = {
       else {
         const whoResult = await bot.whoAmI();
         const userOut = {
-          username:username,
-          site:siteKey
+          username: username,
+          site: siteKey
         };
         ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
         this.addUserData = {
-          key:`${siteKey}|${username}`,
-          val:userOut
+          key: `${siteKey}|${username}`,
+          val: userOut
         };
         this.addSiteData={
-          key:siteKey,
-          val:temp
+          key: siteKey,
+          val: temp
         };
         this.saveSettings();
         keytar.setPassword(projectName, `${siteKey}|${username}`, password);
       }
     });
   },
-  addFarm:function(username, password, defaultNote) {
+  addFarm: function(username, password, defaultNote) {
 
   },
   addFarmUser: function(farm, url, note) {
