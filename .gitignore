@@ -2,10 +2,6 @@
 node_modules
 /dist
 
-# locks
-package-lock.json
-pnpm-lock.yaml
-
 # local env files
 .env.local
 .env.*.local
@@ -27,3 +23,7 @@ pnpm-debug.log*
 
 #Electron-builder output
 /dist_electron
+
+#Locks
+package-lock.json
+pnpm-lock.yaml

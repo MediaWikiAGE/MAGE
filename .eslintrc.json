@@ -13,6 +13,7 @@
     },
     "parserOptions": {
         "ecmaVersion": 2018,
+        "parser": "babel-eslint",
         "sourceType": "module"
     },
     "plugins": [
@@ -32,10 +33,6 @@
             {
                 "allowSingleLine": true
             }
-        ],
-        "comma-dangle": [
-            "error",
-            "never"
         ],
         "comma-spacing": "error",
         "eqeqeq": [
@@ -74,10 +71,9 @@
         "valid-typeof": "error",
         "quotes": [
             "error",
-            "single",
+            "double",
             {
-                "avoidEscape": true,
-                "allowTemplateLiterals": true
+                "avoidEscape": true
             }
         ]
     }
