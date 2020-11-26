@@ -13,7 +13,9 @@
   },
   "main": "src/background.js",
   "dependencies": {
+    "@sidemen19/mediawiki.js": "^2.0.0",
     "core-js": "^3.6.5",
+    "got": "^11.8.0",
     "keytar": "^7.2.0",
     "tailwindcss": "^2.0.1",
     "vue": "^3.0.0"
