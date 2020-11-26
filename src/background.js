@@ -8,7 +8,7 @@ import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import defaultSettings from "./spellbook.json";
-import {get} from "got";
+import { get } from "got";
 import http from "http";
 import https from "https";
 import Bot from "@sidemen19/mediawiki.js";
