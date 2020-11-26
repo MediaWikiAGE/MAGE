@@ -1,6 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint key-spacing: ["error", { "afterColon": true }] */
-/*eslint object-curly-spacing: ["error", "always"]*/
 "use strict";
 
 import path from "path";

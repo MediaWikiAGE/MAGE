@@ -75,6 +75,8 @@
             {
                 "avoidEscape": true
             }
-        ]
+        ],
+        "key-spacing": ["error", { "afterColon": true }],
+        "object-curly-spacing": ["error", "always"]
     }
 }
