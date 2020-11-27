@@ -1,7 +1,5 @@
 {
-    "users": {
-        
-    },
+    "users": {},
     "theme": {
         "dark": {},
         "light": {},
@@ -11,16 +9,7 @@
         "quit": "UUDDLRLRBA",
         "dance": "WASD"
     },
-    "sites": {
-        "genshin-impact-1": {
-            "mwVersion": "1.33",
-            "articlepath": "/wiki/$1",
-            "scriptpath": "",
-            "script": "/index.php",
-            "lang": "en",
-            "baseUrl": "https://genshin-impact.fandom.com/"
-        }
-    },
+    "sites": {},
     "farms": {
         "fandom": {
             "match": "*.fandom.com",
