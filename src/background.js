@@ -82,8 +82,19 @@ const spellbook = {
   get getSites() {
     return this.settings.sites;
   },
-  get getFarm() {
+  get getFarms() {
     return this.settings.farms;
+  },
+  getUserBot: async function(userKey) {
+    const user = this.getUsers[userKey];
+    const site = this.getSites[user.site];
+    const farm = this.getFarms[site.farm];
+    return new Bot({
+      server: site.server,
+      path: site.scriptpath,
+      botUsername: user.username || farm.username,
+      botPassword: await keytar.getPassword(projectName,userKey)
+    });
   },
   addSingleUser: function(username, password, url, note) {
     /*Probable structure
@@ -222,6 +233,21 @@ if (process.env.WIKIUSER) {
   spellbook.addSingleUser(process.env.WIKIUSER, process.env.PASSWORD, process.env.SITE, "Test Note");
   spellbook.addFarm("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_PASSWORD, "Test Farm Note");
   spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
+
+  //Select user id from the list... can this be an integer reference and not a key O.o
+  spellbook.getUserBot("https://genshin-impact.fandom.com|gensinimpact|Echoblast53@Testing")
+    .then(async bot=>{
+      console.log(bot);
+      /*
+      await bot.login();
+      await bot.edit({
+          title: 'User:Echoblast53/Mage',
+          content: "Mage Test",
+          summary: 'This is a test',
+          minor: true
+      });
+      */
+    })
 }
 
 // Scheme must be registered before the app is ready
