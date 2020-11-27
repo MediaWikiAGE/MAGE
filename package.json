@@ -13,7 +13,7 @@
   },
   "main": "src/background.js",
   "dependencies": {
-    "@sidemen19/mediawiki.js": "^2.0.2",
+    "@sidemen19/mediawiki.js": "^2.0.3",
     "autoprefixer": "^9.8.6",
     "core-js": "^3.7.0",
     "got": "^11.8.0",
