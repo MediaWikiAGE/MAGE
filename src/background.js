@@ -1,16 +1,17 @@
 "use strict";
-
+import { config as load_env } from "dotenv";
 import path from "path";
 import fs from "fs";
 import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import defaultSettings from "./spellbook.json";
-import { get } from "got";
-import http from "http";
-import https from "https";
+import { getWikiInfo } from "./libraries/wikiDetect.js";
 import Bot from "@sidemen19/mediawiki.js";
 import keytar from "keytar";
+
+//Load .env file for testing
+load_env();
 
 //Should hook into node project varaible
 const projectName = "MediaWikiAGE";
@@ -47,7 +48,8 @@ const spellbook = {
         //DEFAULT SETTINGS SAVE IF NO FILE DETECTED (ASSUME FIRST STARTUP)
         this.saveSettings();
         //Delete keytar as well
-        keytar.findCredentials(projectName).forEach(obj => keytar.deletePassword(projectName, obj.account));
+        keytar.findCredentials(projectName)
+          .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
       }
     }
   },
@@ -60,7 +62,8 @@ const spellbook = {
       //Flush keytar on a True Overwrite
       if(this.settingFileError) {
         this.settingFileError = false;
-        keytar.findCredentials(projectName).forEach(obj => keytar.deletePassword(projectName, obj.account));
+        keytar.findCredentials(projectName)
+          .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
       }
     }
   },
@@ -79,8 +82,19 @@ const spellbook = {
   get getSites() {
     return this.settings.sites;
   },
-  get getFarm() {
+  get getFarms() {
     return this.settings.farms;
+  },
+  getUserBot: async function(userKey) {
+    const user = this.getUsers[userKey];
+    const site = this.getSites[user.site];
+    const farm = this.getFarms[site.farm];
+    return new Bot({
+      server: site.server,
+      path: site.scriptpath,
+      botUsername: user.username || farm.username,
+      botPassword: await keytar.getPassword(projectName, userKey)
+    });
   },
   addSingleUser: function(username, password, url, note) {
     /*Probable structure
@@ -103,83 +117,135 @@ const spellbook = {
     const scriptPath = new URL(url);
 
     //Chunk Load Script Path
-    new Promise((resolve, reject) => {
-      (scriptPath.protocol === "https:"?https:http).request({
-          method: "GET",
-          port: scriptPath.protocol === "https:"?443:80,
-          hostname: scriptPath.hostname,
-          path: scriptPath.pathname,
-        },
-        function(response, err) {
-          const request = this;
-          let body = "";
-
-          //Abort when match chunk
-          response.on("data", chunk => {
-            body+=chunk;
-            const match = body.match(/(?:src|href)="(.+)(?:load|api)\.php/);            
-            if (match)
-              request.abort();
-          });
-
-          response.on("end", () => {
-            //Parse Script Path
-            const match = body.match(/(?:src|href)="(.+)(?:load|api)\.php/);
-            if (!match)
-              throw new ErrInput("URL is (probably) not a MediaWiki url.");
-            resolve(match[1]);
-          });
-        }).on("error", reject).end();
-    }).then(path => {
-      scriptPath.pathname=path;
-      //Get clean server and scriptpath values from api.php
-      return get(`${scriptPath.href}api.php?action=query&meta=siteinfo&type=login&format=json`, { responseType: "json" });
-    }).then(async resp => {
+    getWikiInfo(scriptPath).then(async resp => {
       const siteinfo = resp.body.query;
 
       //Site data
-      const temp = {};
-      ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => temp[key] = siteinfo.general[key]);
+      const siteOut = {};
+      ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
       const siteKey = `${siteinfo.general.server+siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
 
-      const bot = new Bot({
+      const tempBot = new Bot({
         server: siteinfo.general.server,
-        path: `${siteinfo.general.scriptpath}/`,
+        path: siteinfo.general.scriptpath,
         botUsername: username,
         botPassword: password
       });
-      const loginResult = await bot.login();
-      if (loginResult.login.result === "Failed")
-          console.log(loginResult.login.reason);
-      else {
-        const whoResult = await bot.whoAmI();
-        const userOut = {
-          username: username,
-          site: siteKey
-        };
-        ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
-        this.addUserData = {
-          key: `${siteKey}|${username}`,
-          val: userOut
-        };
-        this.addSiteData={
-          key: siteKey,
-          val: temp
-        };
-        this.saveSettings();
-        keytar.setPassword(projectName, `${siteKey}|${username}`, password);
+      try {
+        const loginResult = await tempBot.login();
+        if (loginResult.login.result === "Failed")
+            console.log(loginResult.login.reason);
+        else {
+          const whoResult = await tempBot.whoAmI();
+          const userOut = {
+            username: username,
+            site: siteKey
+          };
+          ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
+          const userKey = `${siteKey}|${username}`;
+          if (typeof note !== "undefined")
+            userOut.note = note;
+          this.addUserData = {
+            key: userKey,
+            val: userOut
+          };
+          this.addSiteData={
+            key: siteKey,
+            val: siteOut
+          };
+          this.saveSettings();
+          keytar.setPassword(projectName, userKey, password);
+        }
+      } catch (err) {
+        console.log(err.name, err.message);
       }
     });
   },
-  addFarm: function(username, password, defaultNote) {
-
+  addFarm: function(farmName, username, password, farmNote) {
+    const farmKey = `${farmName}|${username}`;
+    const farmData = {
+      key: farmKey,
+      val: {
+        name: farmName,
+        username: username
+      }
+    };
+    if (typeof farmNote !== "undefined")
+      farmData.val.note = farmNote;
+    this.addFarmData=farmData;
+    this.saveSettings();
+    keytar.setPassword(projectName, farmKey, password);
   },
-  addFarmUser: function(farm, url, note) {
+  addFarmUser: async function(farmName, username, url, note) {
+    const farmKey = `${farmName}|${username}`;
+    const scriptPath = new URL(url);
+    const password = await keytar.getPassword(projectName, farmKey);
+    getWikiInfo(scriptPath).then(async resp => {
+      const siteinfo = resp.body.query;
 
+      //Site data
+      const siteOut = {
+        farm: farmKey
+      };
+      ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
+      const siteKey = `${siteinfo.general.server+siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
+
+      const tempBot = new Bot({
+        server: siteinfo.general.server,
+        path: siteinfo.general.scriptpath,
+        botUsername: username,
+        botPassword: password
+      });
+      try {
+        const loginResult = await tempBot.login();
+        if (loginResult.login.result === "Failed")
+            console.log(loginResult.login.reason);
+        else {
+          const whoResult = await tempBot.whoAmI();
+          const userOut = {
+            site: siteKey
+          };
+          ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
+          const userKey = `${siteKey}|${username}`;
+          if (typeof note !== "undefined")
+            userOut.note = note;
+          this.addUserData = {
+            key: userKey,
+            val: userOut
+          };
+          this.addSiteData={
+            key: siteKey,
+            val: siteOut
+          };
+          this.saveSettings();
+          keytar.setPassword(projectName, userKey, password);
+        }
+      } catch (err) {
+        console.log(err.name, err.message);
+      }
+    });
   }
 };
 spellbook.loadSettings();
-spellbook.addSingleUser("Echoblast53@Testing", "dummypasswordforgithub", "https://genshin-impact.fandom.com/es/api.php");
+
+//Hidden Testing
+if (process.env.WIKIUSER) {
+  spellbook.addSingleUser(process.env.WIKIUSER, process.env.PASSWORD, process.env.SITE, "Test Note");
+  spellbook.addFarm("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_PASSWORD, "Test Farm Note");
+  spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
+
+  //Select user id from the list... can this be an integer reference and not a key O.o
+  spellbook.getUserBot("https://genshin-impact.fandom.com|gensinimpact|Echoblast53@Testing")
+    .then(async bot => {
+      await bot.login();
+      await bot.edit({
+        title: `User:${(await bot.whoAmI()).name}/Mage`,
+        content: `Mage Test ${Math.floor(Math.random() * 100)}`,
+        summary: "This is a test",
+        minor: true
+      });
+    });
+}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -191,7 +257,8 @@ async function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      contextIsolation: true
     },
     backgroundColor: "#777"
   });
@@ -224,14 +291,16 @@ app.on("activate", () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", async () => {
+app.on("ready", () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
+    /*Devtools has issue installing. If someone can fix that would be godly
     try {
       await installExtension(VUEJS_DEVTOOLS);
     } catch (e) {
       console.error("Vue Devtools failed to install:", e.toString());
     }
+    */
   }
   createWindow();
 });
