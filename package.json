@@ -11,7 +11,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
-  "main": "src/background.js",
+  "main": "background.js",
   "dependencies": {
     "@sidemen19/mediawiki.js": "^2.0.0",
     "autoprefixer": "^9.8.6",
