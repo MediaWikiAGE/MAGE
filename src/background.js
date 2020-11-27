@@ -67,7 +67,7 @@ const spellbook = {
       }
     }
   },
-  get toString() {
+  toString() {
     return JSON.stringify(this.settings);
   },
   get get() {
@@ -85,7 +85,7 @@ const spellbook = {
   get getFarms() {
     return this.settings.farms;
   },
-  getUserBot: async function(userKey) {
+  async getUserBot(userKey) {
     const user = this.getUsers[userKey];
     const site = this.getSites[user.site];
     const farm = this.getFarms[site.farm];
@@ -96,7 +96,7 @@ const spellbook = {
       botPassword: await keytar.getPassword(projectName, userKey)
     });
   },
-  addSingleUser: function(username, password, url, note) {
+  async addSingleUser(username, password, url, note) {
     /*Probable structure
     let userOut = {
         "site": "genshin-impact-1",
@@ -161,7 +161,7 @@ const spellbook = {
       }
     });
   },
-  addFarm: function(farmName, username, password, farmNote) {
+  addFarm(farmName, username, password, farmNote) {
     const farmKey = `${farmName}|${username}`;
     const farmData = {
       key: farmKey,
@@ -176,7 +176,7 @@ const spellbook = {
     this.saveSettings();
     keytar.setPassword(projectName, farmKey, password);
   },
-  addFarmUser: async function(farmName, username, url, note) {
+  async addFarmUser(farmName, username, url, note) {
     const farmKey = `${farmName}|${username}`;
     const scriptPath = new URL(url);
     const password = await keytar.getPassword(projectName, farmKey);
@@ -235,6 +235,7 @@ if (process.env.WIKIUSER) {
   spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
 
   //Select user id from the list... can this be an integer reference and not a key O.o
+  /*
   spellbook.getUserBot("https://genshin-impact.fandom.com|gensinimpact|Echoblast53@Testing")
     .then(async bot => {
       await bot.login();
@@ -245,6 +246,7 @@ if (process.env.WIKIUSER) {
         minor: true
       });
     });
+  */
 }
 
 // Scheme must be registered before the app is ready
