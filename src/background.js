@@ -93,7 +93,7 @@ const spellbook = {
       server: site.server,
       path: site.scriptpath,
       botUsername: user.username || farm.username,
-      botPassword: await keytar.getPassword(projectName,userKey)
+      botPassword: await keytar.getPassword(projectName, userKey)
     });
   },
   addSingleUser: function(username, password, url, note) {
@@ -236,18 +236,15 @@ if (process.env.WIKIUSER) {
 
   //Select user id from the list... can this be an integer reference and not a key O.o
   spellbook.getUserBot("https://genshin-impact.fandom.com|gensinimpact|Echoblast53@Testing")
-    .then(async bot=>{
-      console.log(bot);
-      /*
+    .then(async bot => {
       await bot.login();
       await bot.edit({
-          title: 'User:Echoblast53/Mage',
-          content: "Mage Test",
-          summary: 'This is a test',
-          minor: true
+        title: `User:${(await bot.whoAmI()).name}/Mage`,
+        content: `Mage Test ${Math.floor(Math.random() * 100)}`,
+        summary: "This is a test",
+        minor: true
       });
-      */
-    })
+    });
 }
 
 // Scheme must be registered before the app is ready
