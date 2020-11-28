@@ -110,10 +110,12 @@ const spellbook = {
         this.name = "ErrInput";
       }
     }
-    if (typeof username === "undefined" || username.length === 0)
+    if (typeof username === "undefined" || username.length === 0) {
       throw new ErrInput("Username can't be undefined");
-    if (typeof password === "undefined" || password.length === 0)
+    }
+    if (typeof password === "undefined" || password.length === 0) {
       throw new ErrInput("Password can't be undefined");
+    }
     const scriptPath = new URL(url);
 
     // Chunk Load Script Path
@@ -133,9 +135,9 @@ const spellbook = {
       });
       try {
         const loginResult = await tempBot.login();
-        if (loginResult.login.result === "Failed")
+        if (loginResult.login.result === "Failed") {
             console.log(loginResult.login.reason);
-        else {
+        } else {
           const whoResult = await tempBot.whoAmI();
           const userOut = {
             username: username,
@@ -143,8 +145,9 @@ const spellbook = {
           };
           ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
           const userKey = `${siteKey}|${username}`;
-          if (typeof note !== "undefined")
+          if (typeof note !== "undefined") {
             userOut.note = note;
+          }
           this.addUserData = {
             key: userKey,
             val: userOut
@@ -170,8 +173,9 @@ const spellbook = {
         username: username
       }
     };
-    if (typeof farmNote !== "undefined")
+    if (typeof farmNote !== "undefined") {
       farmData.val.note = farmNote;
+    }
     this.addFarmData = farmData;
     this.saveSettings();
     keytar.setPassword(projectName, farmKey, password);
@@ -198,17 +202,18 @@ const spellbook = {
       });
       try {
         const loginResult = await tempBot.login();
-        if (loginResult.login.result === "Failed")
+        if (loginResult.login.result === "Failed") {
             console.log(loginResult.login.reason);
-        else {
+        } else {
           const whoResult = await tempBot.whoAmI();
           const userOut = {
             site: siteKey
           };
           ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
           const userKey = `${siteKey}|${username}`;
-          if (typeof note !== "undefined")
+          if (typeof note !== "undefined") {
             userOut.note = note;
+          }
           this.addUserData = {
             key: userKey,
             val: userOut
@@ -285,7 +290,9 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });
 
 // This method will be called when Electron has finished
