@@ -60,7 +60,7 @@ const spellbook = {
       fs.writeFileSync(path.join(app.getPath("userData"), "spellbook.json"), this.export);
 
       // Flush keytar on a True Overwrite
-      if(this.settingFileError) {
+      if (this.settingFileError) {
         this.settingFileError = false;
         keytar.findCredentials(projectName)
           .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
