@@ -1,7 +1,7 @@
 <template>
 <div
-  :style="{ display: 'inline-block', border: '6px groove ' + colorMain, color: colorMain, background: backgroundMain }" >
-  id="UserColors"
+  :style="{ display: 'inline-block', border: '6px groove ' + colorMain, color: colorMain, background: backgroundMain }"
+  id="UserColors" >
   <span :style="{ displaborder: '3px outset ' + colorMenu, color: colorMenu, background: backgroundMenu }"
     id="editUserColors"
     v-on:click="editUserColors = !editUserColors;"
