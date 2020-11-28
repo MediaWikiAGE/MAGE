@@ -6,6 +6,7 @@
     id="editUserColors"
     v-on:click="editUserColors = !editUserColors;"
     > Edit User Colors </span>
+  <br>
   <div :style="{ display: ( editUserColors ? 'inline-block' : 'none' ) }"
     id="panelUserColors">
     <div :style="{ border: '6px double ' + colorMain, color: colorMain, background: backgroundMain }" >
