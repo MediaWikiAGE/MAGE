@@ -9,25 +9,27 @@
   <div :style="{ display: ( editUserColors ? 'inline-block' : 'none' ) }"
     id="panelUserColors">
     <div :style="{ border: '6px double ' + colorMain, color: colorMain, background: backgroundMain }" >
+      <label for="colorMain" > Window Color </label>
+      <br>
       <input :style="{ border: '2px inset ' + colorMain, color: colorMain, background: backgroundMain }"
         v-on:input="$emit('input', $event.target.value)"
         type="text"
         v-model="colorMain" >
-      <label for="colorMain" > Window Color </label>
+      <br>
+      <label for="backgroundMain" > Window Background </label>
       <br>
       <input type="text"
         v-model="backgroundMain"
         :style="{ border: '2px inset ' + colorMain, color: colorMain, background: backgroundMain }"
         v-on:input="$emit('input', $event.target.value)" >
-      <label for="backgroundMain" > Window Background </label>
     </div>
     <div :style="{ border: '6px double ' + colorMain, color: colorMenu, background: backgroundMenu }" >
+      <label for="colorMenu" > Menu Color </label>
+      <br>
       <input type="text"
         v-model="colorMenu"
         :style="{ border: '2px inset' + colorMain, color: colorMenu, background: backgroundMenu }"
         v-on:input="$emit('input', $event.target.value)" >
-        <br>
-        <label for="colorMenu" > Menu Color </label>
         <br>
         <label for="backgroundMenu" > Menu Background </label>
         <br>
