@@ -2,7 +2,7 @@
 <div
   :style="{ display: 'inline-block', border: '6px groove ' + colorMain, color: colorMain, background: backgroundMain }"
   id="UserColors" >
-  <span :style="{ displaborder: '3px outset ' + colorMenu, color: colorMenu, background: backgroundMenu }"
+  <span :style="{ border: '3px outset ' + colorMenu, color: colorMenu, background: backgroundMenu }"
     id="editUserColors"
     v-on:click="editUserColors = !editUserColors;"
     > Edit User Colors </span>
@@ -15,7 +15,8 @@
         v-model="colorMain" >
       <label for="colorMain" > Window Color </label>
       <br>
-      <input type="text" v-model="backgroundMain"
+      <input type="text"
+        v-model="backgroundMain"
         :style="{ border: '2px inset ' + colorMain, color: colorMain, background: backgroundMain }"
         v-on:input="$emit('input', $event.target.value)" >
       <label for="backgroundMain" > Window Background </label>
@@ -25,26 +26,30 @@
         v-model="colorMenu"
         :style="{ border: '2px inset' + colorMain, color: colorMenu, background: backgroundMenu }"
         v-on:input="$emit('input', $event.target.value)" >
+        <br>
         <label for="colorMenu" > Menu Color </label>
+        <br>
+        <label for="backgroundMenu" > Menu Background </label>
         <br>
         <input type="text"
           v-model="backgroundMenu"
           :style="{ border: '2px inset' + colorMain, color: colorMenu, background: backgroundMenu }"
           v-on:input="$emit('input', $event.target.value)" >
-        <label for="backgroundMenu" > Menu Background </label>
           </div>
         <div v-bind:style="{ border: '6px double ' + colorMain, color: colorError, background: backgroundError }" >
+          <label for="colorError" > Error Color </label>
+          <br>
           <input type="text"
             v-model="colorError"
             :style="{ border: '2px inset ' + colorMain, color: colorError, background: backgroundError }"
             v-on:input="$emit('input', $event.target.value)" >
-          <label for="colorError" > Error Color </label>
+          <br>
+          <label for="backgroundError" > Error Background </label>
           <br>
           <input type="text"
             v-model="backgroundError"
             :style="{ border: '2px inset ' + colorMain, color: colorError, 'background-color': backgroundError }"
             v-on:input="$emit('input', $event.target.value)" >
-          <label for="backgroundError" > Error Background </label>
           </div>
       </div>
   </div>
