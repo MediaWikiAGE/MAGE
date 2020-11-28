@@ -20,7 +20,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 const isMac = process.platform !== "darwin";
 
-// Load Config
+// Load the configuration file
 const spellbook = {
   settingFileError: false,
   settings: defaultSettings,
@@ -37,7 +37,7 @@ const spellbook = {
     this.settings.farms[add.key] = { ...(this.settings.farms[add.key] || {}), ...add.val };
   },
   loadSettings: function() {
-    // Load Settings
+    // Load settings
     try {
       this.set = JSON.parse(fs.readFileSync(path.join(app.getPath("userData"), "spellbook.json")));
     } catch (err) {
@@ -103,7 +103,8 @@ const spellbook = {
         "note": "Main Account",
         "isBot": true,
         "theme": "light"
-    }*/
+    }
+    */
     class ErrInput extends Error {
       constructor(msg) {
         super(msg);
@@ -118,7 +119,7 @@ const spellbook = {
     }
     const scriptPath = new URL(url);
 
-    // Chunk Load Script Path
+    // Chunk load script path
     getWikiInfo(scriptPath).then(async resp => {
       const siteinfo = resp.body.query;
 
@@ -233,7 +234,7 @@ const spellbook = {
 };
 spellbook.loadSettings();
 
-// Hidden Testing
+// Hidden testing
 if (process.env.WIKIUSER) {
   spellbook.addSingleUser(process.env.WIKIUSER, process.env.PASSWORD, process.env.SITE, "Test Note");
   spellbook.addFarm("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_PASSWORD, "Test Farm Note");
@@ -271,7 +272,6 @@ async function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    // if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     win.loadURL("app://./index.html");
