@@ -28,13 +28,13 @@ const spellbook = {
     this.settings = add;
   },
   set addUserData(add) {
-    this.settings.users[add.key] = { ...(this.settings.users[add.key]||{}), ...add.val };
+    this.settings.users[add.key] = { ...(this.settings.users[add.key] || {}), ...add.val };
   },
   set addSiteData(add) {
-    this.settings.sites[add.key] = { ...(this.settings.sites[add.key]||{}), ...add.val };
+    this.settings.sites[add.key] = { ...(this.settings.sites[add.key] || {}), ...add.val };
   },
   set addFarmData(add) {
-    this.settings.farms[add.key] = { ...(this.settings.farms[add.key]||{}), ...add.val };
+    this.settings.farms[add.key] = { ...(this.settings.farms[add.key] || {}), ...add.val };
   },
   loadSettings: function() {
     //Load Settings
@@ -123,7 +123,7 @@ const spellbook = {
       //Site data
       const siteOut = {};
       ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
-      const siteKey = `${siteinfo.general.server+siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
+      const siteKey = `${siteinfo.general.server + siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
 
       const tempBot = new Bot({
         server: siteinfo.general.server,
@@ -141,7 +141,7 @@ const spellbook = {
             username: username,
             site: siteKey
           };
-          ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
+          ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
           const userKey = `${siteKey}|${username}`;
           if (typeof note !== "undefined")
             userOut.note = note;
@@ -149,7 +149,7 @@ const spellbook = {
             key: userKey,
             val: userOut
           };
-          this.addSiteData={
+          this.addSiteData = {
             key: siteKey,
             val: siteOut
           };
@@ -172,7 +172,7 @@ const spellbook = {
     };
     if (typeof farmNote !== "undefined")
       farmData.val.note = farmNote;
-    this.addFarmData=farmData;
+    this.addFarmData = farmData;
     this.saveSettings();
     keytar.setPassword(projectName, farmKey, password);
   },
@@ -188,7 +188,7 @@ const spellbook = {
         farm: farmKey
       };
       ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
-      const siteKey = `${siteinfo.general.server+siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
+      const siteKey = `${siteinfo.general.server + siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
 
       const tempBot = new Bot({
         server: siteinfo.general.server,
@@ -205,7 +205,7 @@ const spellbook = {
           const userOut = {
             site: siteKey
           };
-          ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
+          ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
           const userKey = `${siteKey}|${username}`;
           if (typeof note !== "undefined")
             userOut.note = note;
@@ -213,7 +213,7 @@ const spellbook = {
             key: userKey,
             val: userOut
           };
-          this.addSiteData={
+          this.addSiteData = {
             key: siteKey,
             val: siteOut
           };
