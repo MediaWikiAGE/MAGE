@@ -10,17 +10,17 @@ import { getWikiInfo } from "./libraries/wikiDetect.js";
 import Bot from "@sidemen19/mediawiki.js";
 import keytar from "keytar";
 
-//Load .env file for testing
+// Load .env file for testing
 load_env();
 
-//Should hook into node project varaible
+// Should hook into node project varaible
 const projectName = "MediaWikiAGE";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 const isMac = process.platform !== "darwin";
 
-//Load Config
+// Load Config
 const spellbook = {
   settingFileError: false,
   settings: defaultSettings,
@@ -37,7 +37,7 @@ const spellbook = {
     this.settings.farms[add.key] = { ...(this.settings.farms[add.key] || {}), ...add.val };
   },
   loadSettings: function() {
-    //Load Settings
+    // Load Settings
     try {
       this.set = JSON.parse(fs.readFileSync(path.join(app.getPath("userData"), "spellbook.json")));
     } catch (err) {
@@ -45,21 +45,21 @@ const spellbook = {
         this.settingFileError = true;
         console.error("Spellbook bad json. Warn user here, and do NOT overwrite their filesave. Suggest to load over from scratch");
       } else {
-        //DEFAULT SETTINGS SAVE IF NO FILE DETECTED (ASSUME FIRST STARTUP)
+        // DEFAULT SETTINGS SAVE IF NO FILE DETECTED (ASSUME FIRST STARTUP)
         this.saveSettings();
-        //Delete keytar as well
+        // Delete keytar as well
         keytar.findCredentials(projectName)
           .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
       }
     }
   },
   saveSettings: function() {
-    //PROMPT USER TO OVERWRITE BAD FILE SETTING???
+    // PROMPT USER TO OVERWRITE BAD FILE SETTING???
     const overwrite = true;
     if (!this.settingFileError || overwrite) {
       fs.writeFileSync(path.join(app.getPath("userData"), "spellbook.json"), this.export);
 
-      //Flush keytar on a True Overwrite
+      // Flush keytar on a True Overwrite
       if(this.settingFileError) {
         this.settingFileError = false;
         keytar.findCredentials(projectName)
@@ -97,7 +97,7 @@ const spellbook = {
     });
   },
   addSingleUser: function(username, password, url, note) {
-    /*Probable structure
+    /* Probable structure
     let userOut = {
         "site": "genshin-impact-1",
         "note": "Main Account",
@@ -116,11 +116,11 @@ const spellbook = {
       throw new ErrInput("Password can't be undefined");
     const scriptPath = new URL(url);
 
-    //Chunk Load Script Path
+    // Chunk Load Script Path
     getWikiInfo(scriptPath).then(async resp => {
       const siteinfo = resp.body.query;
 
-      //Site data
+      // Site data
       const siteOut = {};
       ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
       const siteKey = `${siteinfo.general.server + siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
@@ -183,7 +183,7 @@ const spellbook = {
     getWikiInfo(scriptPath).then(async resp => {
       const siteinfo = resp.body.query;
 
-      //Site data
+      // Site data
       const siteOut = {
         farm: farmKey
       };
@@ -228,13 +228,13 @@ const spellbook = {
 };
 spellbook.loadSettings();
 
-//Hidden Testing
+// Hidden Testing
 if (process.env.WIKIUSER) {
   spellbook.addSingleUser(process.env.WIKIUSER, process.env.PASSWORD, process.env.SITE, "Test Note");
   spellbook.addFarm("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_PASSWORD, "Test Farm Note");
   spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
 
-  //Select user id from the list... can this be an integer reference and not a key O.o
+  // Select user id from the list... can this be an integer reference and not a key O.o
   spellbook.getUserBot("https://genshin-impact.fandom.com|gensinimpact|Echoblast53@Testing")
     .then(async bot => {
       await bot.login();
@@ -266,7 +266,7 @@ async function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    //if (!process.env.IS_TEST) win.webContents.openDevTools();
+    // if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     win.loadURL("app://./index.html");
@@ -294,7 +294,7 @@ app.on("activate", () => {
 app.on("ready", () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
-    /*Devtools has issue installing. If someone can fix that would be godly
+    /* Devtools has issue installing. If someone can fix that would be godly
     try {
       await installExtension(VUEJS_DEVTOOLS);
     } catch (e) {
