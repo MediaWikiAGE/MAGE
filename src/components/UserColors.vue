@@ -75,6 +75,7 @@ export default {
   mounted() {
     if (localStorage.pxFont) { this.pxFont = localStorage.pxFont; }
     if (localStorage.nameFont) { this.nameFont = localStorage.nameFont; }
+
     if (localStorage.colorMain) { this.colorMain = localStorage.colorMain; }
     if (localStorage.backgroundMain) { this.backgroundMain = localStorage.backgroundMain; }
     if (localStorage.colorMenu) { this.colorMenu = localStorage.colorMenu; }
