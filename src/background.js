@@ -266,7 +266,7 @@ async function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: true
     },
-    backgroundColor: "#777"
+    backgroundColor: "#F6F7F9"
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
