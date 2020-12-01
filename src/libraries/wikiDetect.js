@@ -6,9 +6,11 @@ import https from "https";
  * Custom function to get the wiki scriptpath (must pass url object)
  * To be used when discovering new wikis
  */
+
 export function getWikiInfo(scriptPath) {
   if (!(scriptPath instanceof URL))
     console.log("Warning: URL object not passed.");
+
   return new Promise((resolve, reject) => {
     (scriptPath.protocol === "https:" ? https : http)
       .request(
@@ -18,7 +20,7 @@ export function getWikiInfo(scriptPath) {
           hostname: scriptPath.hostname,
           path: scriptPath.pathname,
         },
-        (response, err) => {
+        function (response, err) {
           const request = this;
           let body = "";
 
@@ -33,7 +35,7 @@ export function getWikiInfo(scriptPath) {
             //Parse Script Path
             const match = body.match(/(?:src|href)="(.+)(?:load|api)\.php/);
             if (!match)
-              throw new Error("URL is (probably) not a MediaWiki url.");
+              throw new Error(`URL is (probably) not a MediaWiki url: ${scriptPath}`);
             resolve(match[1]);
           });
         }
