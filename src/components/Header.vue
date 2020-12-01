@@ -61,7 +61,7 @@
       >
         <div class="rounded-lg shadow-lg">
           <div
-            class="divide-y-2 rounded-lg shadow-xs bg-black-secondary divide-gold-400"
+            class="bg-white divide-y-2 divide-gray-400 rounded-lg shadow-xs"
           >
             <div class="px-5 pt-5 pb-6 space-y-6 sm:space-y-8 sm:pb-8">
               <div class="flex items-center justify-between">
