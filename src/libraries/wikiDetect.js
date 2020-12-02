@@ -1,6 +1,4 @@
-import { get } from "got";
-import http from "http";
-import https from "https";
+import { get, stream } from "got";
 
 /**
  * Custom function to get the wiki scriptpath (must pass url object)
@@ -12,38 +10,29 @@ export function getWikiInfo(scriptPath) {
     console.log("Warning: URL object not passed.");
 
   return new Promise((resolve, reject) => {
-    (scriptPath.protocol === "https:" ? https : http)
-      .request(
-        {
-          method: "GET",
-          port: scriptPath.protocol === "https:" ? 443 : 80,
-          hostname: scriptPath.hostname,
-          path: scriptPath.pathname,
-        },
-        function (response, err) {
-          const request = this;
-          let body = "";
-
-          //Abort when match chunk
-          response.on("data", (chunk) => {
-            body += chunk;
-            const match = body.match(/(?:src|href)="(.+)(?:load|api)\.php/);
-            if (match) request.abort();
-          });
-
-          response.on("end", () => {
-            //Parse Script Path
-            const match = body.match(/(?:src|href)="(.+)(?:load|api)\.php/);
-            if (!match)
-              throw new Error(`URL is (probably) not a MediaWiki url: ${scriptPath}`);
-            resolve(match[1]);
-          });
-        }
-      )
-      .on("error", reject)
-      .end();
+    console.log(`Starting Auto Check: ${scriptPath}`);
+    let body = "";
+    let match = null;
+    const request = stream.get(scriptPath);
+    request.on("data", chunk => {
+      body += chunk;
+      match = body.match(/(?:src|href)="(.+)(?:load|api)\.php/);
+      console.log("Stream Length: ", body.length);
+      if (match) {
+        request.destroy();
+        onEnd();
+      }
+    });
+    const onEnd = () => {
+      //Parse Script Path
+      if (!match)
+        throw new Error(`URL is (probably) not a MediaWiki url: ${scriptPath}`);
+      resolve(match[1]);
+    };
+    request.on("end", onEnd);
   }).then((path) => {
     scriptPath.pathname = path;
+    console.log(`Auto Check Script Path: ${scriptPath}`);
     //Get clean server and scriptpath values from api.php
     return get(
       `${scriptPath.href}api.php?action=query&meta=siteinfo&type=login&format=json`,

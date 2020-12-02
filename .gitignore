@@ -28,3 +28,4 @@ pnpm-debug.log*
 #Locks
 package-lock.json
 pnpm-lock.yaml
+yarn.lock
