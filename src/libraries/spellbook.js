@@ -73,14 +73,14 @@ export default {
   get getFarms() {
     return this.settings.farms;
   },
-  get getUserLists(){
+  get getUserLists() {
     const data = this.getUsers;
     const sites = this.getSites;
     const out = [];
-    Object.keys(data).forEach(key=>{
+    Object.keys(data).forEach(key => {
       const { name, site, groups } = data[key];
       const { server, scriptpath } = sites[site];
-      out.push({key, name, groups, server, scriptpath});
+      out.push({ key, name, groups, server, scriptpath });
     });
     return out;
   },
