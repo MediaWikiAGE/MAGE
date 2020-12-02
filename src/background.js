@@ -1,6 +1,7 @@
 "use strict";
+import path from "path";
 import { config as load_env } from "dotenv";
-import { app, protocol, BrowserWindow, Menu, MenuItem } from "electron";
+import { app, protocol, BrowserWindow, Menu, MenuItem, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import spellbook from "./libraries/spellbook.js";
@@ -15,6 +16,7 @@ const isMac = process.platform !== "darwin";
 
 //Load Config
 spellbook.loadSettings();
+const current_user = null;
 
 // Hidden testing
 if (process.env.WIKIUSER) {
@@ -23,19 +25,16 @@ if (process.env.WIKIUSER) {
   spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
 
   // Select user id from the list... can this be an integer reference and not a key O.o
-  spellbook.getUserBot("https://genshin-impact.fandom.com|gensinimpact|Echoblast53@Testing")
-    .then(async bot => {
-      await bot.login();
-      console.log((await bot.whoAmI()).name);
-      /*
-      await bot.edit({
-        title: `User:${(await bot.whoAmI()).name}/Mage`,
-        content: `Mage Test ${Math.floor(Math.random() * 100)}`,
-        summary: "This is a test",
-        minor: true
-      });*/
-    });
 }
+ipcMain.handle("getUser", (event, arg) => {
+  if (!current_user)
+    return new Promise((res, rej) => res(null));
+  return current_user.whoAmI();
+  
+});
+ipcMain.handle("getUserLists", (event, arg) => {
+  return new Promise((res, rej) => res(spellbook.getUserLists));
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -47,13 +46,16 @@ async function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      // process.env.ELECTRON_NODE_INTEGRATION hardcode to true
+      // eslint-disable-next-line no-undef
+      preload: path.join(__static, "preload.js"),
+      nodeIntegration: false,
       contextIsolation: true
     },
     backgroundColor: "#F6F7F9"
   });
-  const menu = Menu.buildFromTemplate(menuTemplate);
-  Menu.setApplicationMenu(menu);
+  //const menu = Menu.buildFromTemplate(menuTemplate);
+  //Menu.setApplicationMenu(menu);
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
