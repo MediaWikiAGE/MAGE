@@ -28,5 +28,8 @@ pnpm-debug.log*
 #Locks
 package-lock.json
 pnpm-lock.yaml
+yarn.lock
+
+#VS files
 /.vs/slnx.sqlite
 /.vs/ProjectSettings.json
