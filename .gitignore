@@ -16,6 +16,7 @@ pnpm-debug.log*
 # Editor directories and files
 .idea
 .vscode
+.vs
 *.suo
 *.ntvs*
 *.njsproj
@@ -30,7 +31,3 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
-#VS files
-/.vs/slnx.sqlite
-/.vs/ProjectSettings.json
-/.vs/VSWorkspaceState.json
