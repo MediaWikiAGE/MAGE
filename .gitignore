@@ -33,3 +33,4 @@ yarn.lock
 #VS files
 /.vs/slnx.sqlite
 /.vs/ProjectSettings.json
+/.vs/VSWorkspaceState.json
