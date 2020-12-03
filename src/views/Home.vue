@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { computed } from "vue";
 export default {
   name: "Home",
   data: () => ({ users: [], name: null, wiki: null }),
@@ -18,10 +17,7 @@ export default {
     login(event) {
       const userKey = event.target.dataset.id;
       window.api.remote("loginUser", userKey).then(data => {
-        console.log(data);
-        const { name } = data||{};
-        this.name = name;
-        this.wiki = "dud wiki";
+        this.$store.commit("current_user", data);
       });
     }
   },
