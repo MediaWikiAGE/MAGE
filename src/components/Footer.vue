@@ -3,8 +3,8 @@
     <div
       class="w-full mx-auto space-y-4 overflow-hidden text-xs sm:px-6 lg:px-8"
     >
-      <template v-if="current_user.name">
-        Logged in as {{current_user.name}} @ {{current_user.wiki}}
+      <template v-if="current_user && current_user.name">
+        Logged in as {{current_user.name}} @ {{current_user.server}}{{current_user.scriptpath}}
       </template>
       <template v-else>
         Not logged in
@@ -18,7 +18,7 @@
   export default {
     created() {
       window.api.remote("getUser").then(data => {
-        this.$store.commit("current_user", data);
+        this.$store.state.current_user = data;
       });
     },
     computed: mapState(["current_user"])

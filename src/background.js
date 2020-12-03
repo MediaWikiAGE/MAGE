@@ -29,7 +29,8 @@ if (process.env.WIKIUSER) {
 const promiseTest = (event, arg) => {
   if (!current_user)
     return new Promise((res, rej) => res(null));
-  return current_user.whoAmI();
+  //PRETEND THAT WE GOT THE CORRECT LOGIN. MAYBE LOGIN FAILED.
+  return new Promise((res, rej) => res(null));
 };
 ipcMain.handle("getUser", promiseTest);
 ipcMain.handle("getUserLists", (event, arg) => {
@@ -38,7 +39,8 @@ ipcMain.handle("getUserLists", (event, arg) => {
 ipcMain.handle("loginUser", async (event, arg) => {
   current_user = await spellbook.getUserBot(arg);
   await current_user.login();
-  return current_user.whoAmI();
+  //PRETEND THAT WE GOT THE CORRECT LOGIN. MAYBE LOGIN FAILED.
+  return spellbook.getUserData(arg);
 });
 
 // Scheme must be registered before the app is ready

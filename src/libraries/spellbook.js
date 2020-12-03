@@ -6,7 +6,7 @@ import defaultSettings from "../spellbook.json";
 import { app } from "electron";
 import { getWikiInfo } from "./wikiDetect.js";
 
-//Should hook into node project varaible
+// Should hook into node project varaible REFERENCE TWICE
 const projectName = "MediaWikiAGE";
 
 export default {
@@ -73,17 +73,18 @@ export default {
   get getFarms() {
     return this.settings.farms;
   },
-  get getUserLists() {
-    const data = this.getUsers;
-    const sites = this.getSites;
-    const out = [];
-    Object.keys(data).forEach(key => {
-      const { name, site, groups } = data[key];
-      const { server, scriptpath } = sites[site];
-      out.push({ key, name, groups, server, scriptpath });
-    });
-    return out;
+  getUserData: function(key) {
+    const { name, site, groups, note } = this.getUsers[key];
+    const { server, scriptpath, farm } = this.getSites[site];
+    const farmNote = (this.getFarms[farm]||{}).note;
+    const farmName = (this.getFarms[farm]||{}).name;
+    return { key, name, groups, server, scriptpath, note, farmNote, farmName };
   },
+  get getUserLists() {
+    const users = this.getUsers;
+    return Object.keys(users).map(key=>this.getUserData(key));
+  },
+  //DEPRECIATE THIS ASAP. DONT WANT TO CREATE NEW BOT EVERY TIME
   async getUserBot(userKey) {
     const user = this.getUsers[userKey];
     const site = this.getSites[user.site];
@@ -91,7 +92,7 @@ export default {
     return new Bot({
       server: site.server,
       path: site.scriptpath,
-      botUsername: farm.username || user.username,
+      botUsername: (farm || user).username,
       botPassword: await keytar.getPassword(projectName, userKey)
     });
   },

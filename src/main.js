@@ -10,11 +10,7 @@ const store = createStore({
   state () {
     return {};
   },
-  mutations: {
-    current_user (state, arg) {
-      state.current_user = arg;
-    },
-  }
+  mutations: {}
 });
 
 createApp(App)
