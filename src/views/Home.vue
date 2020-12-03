@@ -1,21 +1,28 @@
 <template>
   <div>
-    <p>Hi</p>
+    <b>User Lists</b>
     <ul>
-      <li v-for="user in users" :key="user.key" v-on:click="login" v-bind:data-id="user.key">
-        {{user.name}} {{user.groups}} {{user.server}}{{user.scriptpath}}
+      <li v-for="user in users" :key="user.key">
+        <button v-bind:data-id="user.key" v-on:click="login" class="hover:bg-purple-100 active:bg-purple-200">{{user.name}} | {{user.server}}{{user.scriptpath}}</button> {{user.groups}}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import { computed } from "vue";
 export default {
   name: "Home",
-  data: () => ({ users: [] }),
+  data: () => ({ users: [], name: null, wiki: null }),
   methods: {
-    login: event => {
-      event.target;
+    login(event) {
+      const userKey = event.target.dataset.id;
+      window.api.remote("loginUser", userKey).then(data => {
+        console.log(data);
+        const { name } = data||{};
+        this.name = name;
+        this.wiki = "dud wiki";
+      });
     }
   },
   created() {

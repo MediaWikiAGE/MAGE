@@ -16,7 +16,7 @@ const isMac = process.platform !== "darwin";
 
 //Load Config
 spellbook.loadSettings();
-const current_user = null;
+let current_user = null;
 
 // Hidden testing
 if (process.env.WIKIUSER) {
@@ -26,14 +26,19 @@ if (process.env.WIKIUSER) {
 
   // Select user id from the list... can this be an integer reference and not a key O.o
 }
-ipcMain.handle("getUser", (event, arg) => {
+const promiseTest = (event, arg) => {
   if (!current_user)
     return new Promise((res, rej) => res(null));
   return current_user.whoAmI();
-  
-});
+};
+ipcMain.handle("getUser", promiseTest);
 ipcMain.handle("getUserLists", (event, arg) => {
   return new Promise((res, rej) => res(spellbook.getUserLists));
+});
+ipcMain.handle("loginUser", async (event, arg) => {
+  current_user = await spellbook.getUserBot(arg);
+  await current_user.login();
+  return current_user.whoAmI();
 });
 
 // Scheme must be registered before the app is ready
@@ -64,6 +69,7 @@ async function createWindow() {
 
     win.loadURL("app://./index.html");
   }
+  if (process.env.DEV_OPEN) await win.webContents.openDevTools();
 }
 
 // Quit when all windows are closed.
