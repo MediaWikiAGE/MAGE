@@ -82,19 +82,18 @@ export default {
   },
   get getUserLists() {
     const users = this.getUsers;
-    return Object.keys(users).map(key=>this.getUserData(key));
+    return Object.keys(users).map(key => this.getUserData(key));
   },
-  //DEPRECIATE THIS ASAP. DONT WANT TO CREATE NEW BOT EVERY TIME
-  async getUserBot(userKey) {
+  async getUserCred(userKey) {
     const user = this.getUsers[userKey];
     const site = this.getSites[user.site];
     const farm = this.getFarms[site.farm];
-    return new Bot({
+    return {
       server: site.server,
       path: site.scriptpath,
-      botUsername: (farm || user).username,
-      botPassword: await keytar.getPassword(projectName, userKey)
-    });
+      name: (farm || user).username,
+      pass: await keytar.getPassword(projectName, userKey)
+    };
   },
   addSingleUser(username, password, url, note) {
     /*Probable structure
@@ -127,12 +126,10 @@ export default {
 
       const tempBot = new Bot({
         server: siteinfo.general.server,
-        path: siteinfo.general.scriptpath,
-        botUsername: username,
-        botPassword: password
+        path: siteinfo.general.scriptpath
       });
       try {
-        const loginResult = await tempBot.login();
+        const loginResult = await tempBot.login(username, password);
         if (loginResult.login.result === "Failed")
             console.log(loginResult.login.reason);
         else {
@@ -193,11 +190,9 @@ export default {
       const tempBot = new Bot({
         server: siteinfo.general.server,
         path: siteinfo.general.scriptpath,
-        botUsername: username,
-        botPassword: password
       });
       try {
-        const loginResult = await tempBot.login();
+        const loginResult = await tempBot.login(username, password);
         if (loginResult.login.result === "Failed")
             console.log(loginResult.login.reason);
         else {
@@ -218,7 +213,6 @@ export default {
             val: siteOut
           };
           this.saveSettings();
-          keytar.setPassword(projectName, userKey, password);
         }
       } catch (err) {
         console.log(err.name, err.message);

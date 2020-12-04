@@ -3,7 +3,7 @@ import keytar from "keytar";
 
 // Should hook into node project varaible REFERENCE TWICE
 const projectName = "MediaWikiAGE";
-
+/* WIP
 class Bot extends MediaWikiJS {
   constructor(user, site, farm) {
     super({
@@ -18,3 +18,4 @@ class Bot extends MediaWikiJS {
     this.name = 'Square';
   }
 }
+*/
