@@ -27,7 +27,7 @@ export function getWikiInfo(scriptPath) {
       //Parse Script Path
       if (!match)
         throw new Error(`URL is (probably) not a MediaWiki url: ${scriptPath}`);
-      resolve(match[1]);
+      resolve(match[1].replace(scriptPath.origin, ""));
     };
     request.on("end", onEnd);
   }).then((path) => {

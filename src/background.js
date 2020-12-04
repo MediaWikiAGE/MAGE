@@ -4,6 +4,7 @@ import { config as load_env } from "dotenv";
 import { app, protocol, BrowserWindow, Menu, MenuItem, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import Bot from "@sidemen19/mediawiki.js";
 import spellbook from "./libraries/spellbook.js";
 import menuTemplate from "./libraries/menuTemplate.js";
 
@@ -16,24 +17,40 @@ const isMac = process.platform !== "darwin";
 
 //Load Config
 spellbook.loadSettings();
-const current_user = null;
+let current_user = new Bot();
 
 // Hidden testing
-if (process.env.WIKIUSER) {
-  spellbook.addSingleUser(process.env.WIKIUSER, process.env.PASSWORD, process.env.SITE, "Test Note");
-  spellbook.addFarm("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_PASSWORD, "Test Farm Note");
-  spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
-
-  // Select user id from the list... can this be an integer reference and not a key O.o
-}
-ipcMain.handle("getUser", (event, arg) => {
-  if (!current_user)
-    return new Promise((res, rej) => res(null));
-  return current_user.whoAmI();
-  
-});
+// if (process.env.WIKIUSER) {
+//   spellbook.addSingleUser(process.env.WIKIUSER, process.env.PASSWORD, process.env.SITE, "Test Note");
+//   spellbook.addFarm("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_PASSWORD, "Test Farm Note");
+//   spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
+// 
+//   // Select user id from the list... can this be an integer reference and not a key O.o
+// }
+const getUserData = (event, arg) => {
+  return new Promise((res, rej) => res({
+    cacheSite: current_user.cacheSite,
+    cacheUser: current_user.cacheUser
+  }));
+};
+ipcMain.handle("getUser", getUserData);
 ipcMain.handle("getUserLists", (event, arg) => {
   return new Promise((res, rej) => res(spellbook.getUserLists));
+});
+ipcMain.handle("loginUser", async (event, arg) => {
+  const { server, path, name, pass } = await spellbook.getUserCred(arg);
+  console.log(server, path);
+  await current_user.setServer(server, path);
+  await current_user.login(name, pass);
+  return getUserData();
+});
+ipcMain.handle("logoutUser", async (event, arg) => {
+  await current_user.logout();
+  return getUserData();
+});
+ipcMain.handle("disconnectServer", (event, arg) => {
+  current_user = new Bot();
+  return getUserData();
 });
 
 // Scheme must be registered before the app is ready
@@ -64,6 +81,7 @@ async function createWindow() {
 
     win.loadURL("app://./index.html");
   }
+  if (process.env.DEV_OPEN) await win.webContents.openDevTools();
 }
 
 // Quit when all windows are closed.
