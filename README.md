@@ -1,21 +1,27 @@
 # MediaWikiAGE
 
-MediaWiki Automated Graphical Editor. Mostly meant to be a replacement for AutoWikiBrowser (AWB).
+**MAGE** (MediaWiki Automated Graphical Editor) is a MediaWiki API client mostly meant to be a replacement for AutoWikiBrowser (AWB).
 
-This app is in heavy stages of production and isn't ready to be used, yet.
+This app is in heavy stages of production and isn't ready to be used yet.
 
 ## Project setup
-You need Git, Node, and a package manager installed, such as [pnpm](https://pnpm.js.org/).
-```
-# Clone repo
-git clone https://github.com/MediaWikiAGE/MAGE
+You will need:
+* Git
+* Node.js (version 14+; version 12 is no longer supported)
+* A package manager, such as [pnpm](https://pnpm.js.org/)
 
-# Enter cloned folder
+To start writing code, please fork the repository on GitHub first. This will be needed to send pull requests, which is how this project accepts patches.
+
+```
+# Clone the repository
+git clone <URL to your fork>
+
+# Enter the cloned folder
 cd MAGE
 
-# Install deps (use npm/yarn if you want)
+# Install needed dependencies (use npm/yarn if you want)
 pnpm install
 
-# Run app
+# Run the application
 pnpm run electron:serve
 ```
