@@ -13,6 +13,8 @@
   },
   "main": "background.js",
   "dependencies": {
+    "i18next": "^19.8.4",
+    "@panter/vue-i18next": "^0.15.2",
     "@sidemen19/mediawiki.js": "^2.1.1",
     "autoprefixer": "^9.8.6",
     "core-js": "^3.7.0",
