@@ -1,36 +1,16 @@
 <template>
-  <div id="app" style="width: 100vw; height: 100vh;" :style="UCStyle">
-    <main>
-      <div id="WindowLayout" :style="UCStyle">
-        <button :style="UCButton" type="button" @click="mobileMenuOpen = !mobileMenuOpen" class="inline-flex items-center justify-center focus:outline-none">
-          <svg v-if="mobileMenuOpen" class="w-6 h-6" x-description="Heroicon name: x" title="Close Menu"
-               viewBox="0 0 24 24"
-               preserveAspectRatio="xMidYMid meet"
-               xmlns="http://www.w3.org/2000/svg">
-            <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-          <svg v-else class="w-6 h-6" x-description="Heroicon name: menu" title="Open Menu"
-               viewBox="0 0 24 24"
-               preserveAspectRatio="xMidYMid meet"
-               xmlns="http://www.w3.org/2000/svg">
-            <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <nav x-description="Mobile menu, show/hide based on mobile menu state." v-if="mobileMenuOpen" class="focus:outline-none" style="display: inline-block; left: 0; top: 0; width: auto; height: auto;">
-          <button :style="UCButton" type="button" @click="editUserColors = !editUserColors" class="inline-flex items-center justify-center focus:outline-none" title="Edit User Colors / Font">
-            <svg class="w-6 h-6" fill="none" :stroke="colorError" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-            </svg>
+  <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh;" :style="UCStyle" class="fixed">
+    <main id="WindowLayout" :style="UCStyle">
+      <button :style="UCButton" type="button" @click="mobileMenuOpen = !mobileMenuOpen" class="inline-flex items-center justify-center focus:outline-none">
+        <svg v-if="mobileMenuOpen" class="w-6 h-6" x-description="Heroicon name: x" title="Close Menu" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"> <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg>
+        <svg v-else class="w-6 h-6" x-description="Heroicon name: menu" title="Open Menu" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"> <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /> </svg>
+      </button>
+      <nav x-description="Mobile menu, show/hide based on mobile menu state." v-if="mobileMenuOpen" class="focus:outline-none" style="display: inline-block; left: 0; top: 0; width: auto; height: auto;">
+        <button :style="UCButton" type="button" @click="editUserColors = !editUserColors" class="inline-flex items-center justify-center focus:outline-none" title="Edit User Colors / Font">
+          <svg class="w-6 h-6" fill="none" :stroke="colorError" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /> </svg>
           </button>
-          <router-link v-for="(item, i) in menuItems" :key="i" :to="item.url"
-                         class="focus:outline-none"
-                         style="margin-left: 2em; margin-right: 2em; margin-top: 1em; margin-bottom: 1em; display: inline-block; width: auto; height: auto;">
-            {{ item.title }}
-          </router-link>
-        </nav>
-      </div>
-    </main>
-    <router-view class="focus:outline-none" />
+          <router-link v-for="(item, i) in menuItems" :key="i" :to="item.url" class="focus:outline-none" style="margin-left: 2em; margin-right: 2em; margin-top: 1em; margin-bottom: 1em; display: inline-block; width: auto; height: auto;"> {{ item.title }} </router-link>
+        </nav> <router-view class="focus:outline-none" /> </main>
     <div class="focus:outline-none fixed" style="left: 0; bottom: 0; right: 0; height: 5ex;"> <MageFooter /> </div>
   </div>
 </template>
