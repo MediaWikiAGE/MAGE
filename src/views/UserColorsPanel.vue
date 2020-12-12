@@ -1,10 +1,10 @@
 <template>
-<div id="panelUserColors" :style="UCStyle" class="dib focus:outline-none">
+<div id="panelUserColors" :style="UCMenu" class="dib focus:outline-none">
 <table :style="UCMenu">
 <tr>
  <td :style="UCMenu"> Font Name </td>
  <td :style="UCMenu"> <input :style="UCInputBox" @input="$emit('input', $event.target.value)" type="text" :value="nameFont" class="long focus:outline-none" > </td>
- <td :style="UCMenu" rowspan="4"> &nbsp; </td>
+ <td style="visibility: hidden;" rowspan="4"> &nbsp; </td>
  <td :style="UCMenu"> Font Size </td>
  <td :style="UCMenu"> <input :style="UCInputBox" @input="$emit('input', $event.target.value)" type="text" :value="pxFont" class="short focus:outline-none" > </td>
 </tr>

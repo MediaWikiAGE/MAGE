@@ -15,7 +15,7 @@
       <router-link v-for="(item, i) in menuItems" :key="i" :to="item.url" class="focus:outline-none" :style="UCButton" style="vertical-align: middle; display: block;"> {{ item.title }} </router-link>
     </div>
   </div>
-  <router-view :style="UCStyle" class="dib" />
+  <div class="dib focus:outline-none"> <router-view class="dib" /> </div>
   <div class="fixed dib focus:outline-none" :style="UCMenu" style="bottom: 0.5em; right: 0.5em; left: 0.5em; height: 3em; vertical-align: middle;"> <MageFooter /> </div>
 </div>
 </template>

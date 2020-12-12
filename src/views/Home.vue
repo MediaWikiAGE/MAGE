@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="UCMenu">
     <b>User Lists</b> <button v-on:click="logout" class="hover:bg-purple-100 active:bg-purple-200">Logout</button> <button class="hover:bg-purple-100 active:bg-purple-200" v-on:click="disconnect">Disconnect from Server</button>
     <ul>
       <li v-for="user in users" :key="user.key">
