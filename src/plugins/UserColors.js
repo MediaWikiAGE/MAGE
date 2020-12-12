@@ -12,7 +12,7 @@ app.config.globalProperties.colorError = "#700";
 app.config.globalProperties.backgroundError = "#300";
 app.config.globalProperties.pxFont = 12;
 app.config.globalProperties.nameFont = "monospace";
-app.config.globalProperties.editUserColors = false;
+app.config.globalProperties.editUserColors = true;
 
 app.config.globalProperties.UCStyle = {
 font: `${app.config.globalProperties.pxFont}px '${app.config.globalProperties.nameFont}', monospace`,
