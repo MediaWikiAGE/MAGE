@@ -1,6 +1,6 @@
 <template>
 <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top;" class="fixed" :style="UCStyle">
-  <div id="nav" class="dib focus:outline-none" style="left: 0; top: 0; height: calc(100% - 2em - 4ex); width: auto; vertical-align: top;" :style="UCMenu">
+  <div id="nav" class="dib focus:outline-none" style="left: 0; top: 0; height: calc(100% - 4em); width: auto; vertical-align: top;" :style="UCMenu">
     <div class="dib">
       <button id="buttonMobileMenu" :style="UCButton" type="button" @click="mobileMenuOpen = !mobileMenuOpen" class="focus:outline-none" style="vertical-align: top;">
         <svg v-if="mobileMenuOpen" class="w-6 h-6" title="Close Menu" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
