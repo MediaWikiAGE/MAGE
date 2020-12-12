@@ -4,42 +4,69 @@ name: "UserColors",
 
 install: (app, here) => {
 
-app.config.globalProperties.colorMain = "#fff";
-app.config.globalProperties.backgroundMain = "#000";
-app.config.globalProperties.colorMenu = "#777";
-app.config.globalProperties.backgroundMenu = "#333";
-app.config.globalProperties.colorError = "#700";
-app.config.globalProperties.backgroundError = "#300";
-app.config.globalProperties.pxFont = 12;
-app.config.globalProperties.nameFont = "monospace";
-app.config.globalProperties.editUserColors = true;
+here.getStyles = () => {
+var s = "";
+s = localStorage.getItem("colorMain");
+here.colorMain = s ? s : "#fff";
+s = localStorage.getItem("backgroundMain");
+here.backgroundMain = s ? s : "#000";
+s = localStorage.getItem("colorMenu");
+here.colorMenu = s ? s : "#777";
+s = localStorage.getItem("backgroundMenu");
+here.backgroundMenu = s ? s : "#333";
+s = localStorage.getItem("colorError");
+here.colorError = s ? s : "#700";
+s = localStorage.getItem("backgroundError");
+here.backgroundError = s ? s : "#300";
+s = localStorage.getItem("pxFont");
+here.pxFont = s ? s : 12;
+s = localStorage.getItem("nameFont");
+here.nameFont = s ? s : "monospace";
 
-app.config.globalProperties.UCStyle = {
-font: `${app.config.globalProperties.pxFont}px '${app.config.globalProperties.nameFont}', monospace`,
-color: app.config.globalProperties.colorMain,
-background: app.config.globalProperties.backgroundMain
+here.UCStyle = {
+font: `${here.pxFont}px '${here.nameFont}', monospace`,
+color: here.colorMain,
+background: here.backgroundMain
 };
 
-app.config.globalProperties.UCButton = {
+here.UCButton = {
 border: `0.125ex outset ${here.colorMenu}`,
-background: app.config.globalProperties.backgroundMenu,
-color: app.config.globalProperties.colorMenu
+background: here.backgroundMenu,
+color: here.colorMenu
 };
 
-app.config.globalProperties.UCMenu = {
-border: `0.125ex outset ${app.config.globalProperties.colorMenu}`,
-background: app.config.globalProperties.backgroundMenu,
-color: app.config.globalProperties.colorMenu
+here.UCMenu = {
+border: `0.125ex outset ${here.colorMenu}`,
+background: here.backgroundMenu,
+color: here.colorMenu
 };
 
-app.config.globalProperties.UCInputBox = {
-border: `0.125ex inset ${app.config.globalProperties.colorMain}`,
-background: app.config.globalProperties.backgroundMain,
-color: app.config.globalProperties.colorMain
+here.UCInputBox = {
+border: `0.125ex inset ${here.colorMain}`,
+background: here.backgroundMain,
+color: here.colorMain
+};
 };
 
-app.config.globalProperties.updateCSS = () => {  };
+here.setStyles = () => {
+var item;
+localStorage.setItem("colorMain", here.colorMain);
+localStorage.setItem("backgroundMain", here.backgroundMain);
+localStorage.setItem("colorMenu", here.colorMenu);
+localStorage.setItem("backgroundMenu", here.backgroundMenu);
+localStorage.setItem("colorError", here.colorError);
+localStorage.setItem("backgroundError", here.backgroundError);
+localStorage.setItem("pxFont", here.pxFont);
+localStorage.setItem("nameFont", here.nameFont);
 
+for(item in here) {
+app.config.globalProperties[item] = here[item];
+}
+
+};
+
+here.getStyles();
+here.setStyles();
 app.provide("UserColors", here);
 
 }

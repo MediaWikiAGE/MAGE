@@ -1,20 +1,32 @@
 <template>
-<div id="panelUserColors" :style="[UCButton, {display: ( $root.editUserColors ? 'inline-block' : 'none' )}]" class="focus:outline-none" >
-Font (size)
-<input :style="UCInputBox" @input="$emit('input', $event.target.value)" type="text" :value="nameFont" class="long focus:outline-none" >
-<input :style="UCInputBox" @input="$emit('input', $event.target.value)" type="text" :value="pxFont" class="short focus:outline-none" >
-Window Color
-<input type="text" :value="colorMain" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" >
-Window Background
-<input type="text" :value="backgroundMain" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" >
-Menu Color
-<input type="text" :value="colorMenu" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" >
-Menu Background
-<input type="text" :value="backgroundMenu" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" >
-Error Color
-<input type="text" :value="colorError" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" >
-Error Background
-<input type="text" :value="backgroundError" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" >
+<div id="panelUserColors" :style="UCStyle" class="dib focus:outline-none">
+<table :style="UCMenu">
+<tr>
+ <td :style="UCMenu"> Font Name </td>
+ <td :style="UCMenu"> <input :style="UCInputBox" @input="$emit('input', $event.target.value)" type="text" :value="nameFont" class="long focus:outline-none" > </td>
+ <td :style="UCMenu" rowspan="4"> &nbsp; </td>
+ <td :style="UCMenu"> Font Size </td>
+ <td :style="UCMenu"> <input :style="UCInputBox" @input="$emit('input', $event.target.value)" type="text" :value="pxFont" class="short focus:outline-none" > </td>
+</tr>
+<tr>
+ <td :style="UCMenu"> Window Color </td>
+ <td :style="UCMenu"> <input type="text" :value="colorMain" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+ <td :style="UCMenu"> Window Background </td>
+ <td :style="UCMenu"> <input type="text" :value="backgroundMain" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+</tr>
+<tr>
+ <td :style="UCMenu"> Menu Color </td>
+ <td :style="UCMenu"> <input type="text" :value="colorMenu" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+ <td :style="UCMenu"> Menu Background </td>
+ <td :style="UCMenu"> <input type="text" :value="backgroundMenu" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+</tr>
+<tr>
+ <td :style="UCMenu"> Error Color </td>
+ <td :style="UCMenu"> <input type="text" :value="colorError" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+ <td :style="UCMenu"> Error Background </td>
+ <td :style="UCMenu"> <input type="text" :value="backgroundError" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+</tr>
+</table>
 </div>
 </template>
 
@@ -26,3 +38,6 @@ methods: {
   }
 };
 </script>
+<style>
+td, th { padding: 0.5em }
+</style>
