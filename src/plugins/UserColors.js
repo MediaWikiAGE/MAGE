@@ -34,7 +34,7 @@ color: app.config.globalProperties.colorMenu
 
 app.config.globalProperties.UCInputBox = {
 border: `0.125ex inset ${app.config.globalProperties.colorMain}`,
-background: app.config.globalProperties.backgoundMain,
+background: app.config.globalProperties.backgroundMain,
 color: app.config.globalProperties.colorMain
 };
 
