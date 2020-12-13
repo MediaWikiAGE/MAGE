@@ -18,13 +18,13 @@
  <td :style="UCMenu"> Menu Color </td>
  <td :style="UCMenu"> <input type="text" :value="colorMenu" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
  <td :style="UCMenu"> Menu Background </td>
- <td :style="UCMenu"> <input type="text" :value="backgroundMenu" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+ <td :style="UCMenu"> <input type="text" :value="backgroundMenu" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
 </tr>
 <tr>
  <td :style="UCMenu"> Error Color </td>
- <td :style="UCMenu"> <input type="text" :value="colorError" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+ <td :style="UCMenu"> <input type="text" :value="colorError" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
  <td :style="UCMenu"> Error Background </td>
- <td :style="UCMenu"> <input type="text" :value="backgroundError" :style="[UCInputBox, {width: '8em' }]" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
+ <td :style="UCMenu"> <input type="text" :value="backgroundError" :style="UCInputBox" @input="$emit('input', $event.target.value)" class="normal focus:outline-none" > </td>
 </tr>
 </table>
 </div>
