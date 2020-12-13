@@ -57,6 +57,8 @@ padding: 0.5em;
 outline: none 0 transparent;
 }
 
+input { border: 0.125 inset ThreeDShadow; }
+
 input.short { width: 4em; }
 
 input.normal { width: 8em; }
@@ -69,11 +71,11 @@ td, th { padding: 0.5em; }
 
 .dib { display: inline-block; }
 
-.menu { color: MenuText; background: Menu; }
+.menu { color: MenuText; background: Menu;  border: 0.125 outset ThreeDShadow;}
 
-.main { color: WindowText; background: Window; }
+.main { color: WindowText; background: Window;  border: 0.125 inset ThreeDShadow;}
 
-.button { color: ButtonText; background: ButtonFace; border: 0.125em solid ThreeDShadow; }
+.button { color: ButtonText; background: ButtonFace; border: 0.125em outset ThreeDShadow; }
 
 .nopad { padding: 0; }
 
