@@ -11,7 +11,7 @@
         </svg>
       </button>
     </div>
-    <div v-if="mobileMenuOpen" class="dib menu focus:outline-none" style="width: auto; height: auto; vertical-align: top;">
+    <div v-if="mobileMenuOpen" class="dib focus:outline-none" style="width: auto; height: auto; vertical-align: top;">
       <router-link v-for="(item, i) in menuItems" :key="i" :to="item.url" class="button focus:outline-none" style="vertical-align: middle; display: block;"> {{ item.title }} </router-link>
     </div>
   </div>
