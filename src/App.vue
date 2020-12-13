@@ -70,4 +70,6 @@ input.long { width: 12em; }
 
 .dib { display: inline-block; }
 
+td, th { padding: 0.5em; }
+
 </style>

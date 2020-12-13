@@ -33,11 +33,5 @@
 <script>
 export default {
 name: "UserColorsPanel",
-methods: {
-  updateCSS: function () {  }
-  }
 };
 </script>
-<style>
-td, th { padding: 0.5em }
-</style>
