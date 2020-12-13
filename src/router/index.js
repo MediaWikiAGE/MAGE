@@ -16,14 +16,6 @@ const routes = [
     meta: {
       layout: "AppLayoutDefault"
     }
-  },
-  {
-    path: "/usercolorspanel",
-    name: "User Colors",
-    component: () => import("@/views/UserColorsPanel.vue"),
-    meta: {
-      layout: "AppLayoutDefault"
-    }
   }
 ];
 
