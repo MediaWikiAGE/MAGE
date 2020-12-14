@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <router-link to="/login"><button @click="login">Login</button></router-link>
-  </div>
+  <div> <router-link to="/login"><button v-bind:data-id="user.key" @click="login" class="button hover:bg-purple-100>Login</button></router-link> </div>
 </template>
 
 <script>
