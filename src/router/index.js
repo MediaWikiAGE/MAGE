@@ -16,6 +16,14 @@ const routes = [
     meta: {
       layout: "AppLayoutDefault"
     }
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("@/views/Login.vue"),
+    meta: {
+      layout: "AppLayoutDefault"
+    }
   }
 ];
 
