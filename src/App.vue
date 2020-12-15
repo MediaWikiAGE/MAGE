@@ -30,7 +30,8 @@
         mobileMenuOpen: true,
         menuItems: [
           { title: "Home", url: "/" },
-          { title: "About", url: "/about" }
+          { title: "About", url: "/about" },
+          { title: "Login", url: "/login" },
         ],
       };
     },
@@ -44,6 +45,7 @@
 </script>
 
 <style>
+
 * {
 padding: 0.5em;
 }
@@ -79,17 +81,4 @@ td, th { padding: 0.5em; }
 
 .nopad { padding: 0; }
 
-
-/*
-    here.colorMenu = "#00f" );
-    here.backgroundMenu = ( localStorage.getItem("backgroundMenu") ? localStorage.getItem("backgroundMenu") : "#003" );
-    here.colorError = ( localStorage.getItem("colorError") ? localStorage.getItem("colorError") : "#f00" );
-    here.backgroundError = ( localStorage.getItem("backgroundError") ? localStorage.getItem("backgroundError") : "#300" );
-    here.pxFont = ( localStorage.getItem("pxFont") ? localStorage.getItem("pxFont") : 12 );
-    here.nameFont = ( localStorage.getItem("nameFont") ? localStorage.getItem("nameFont") : "monospace" );
-    here.UCStyle = ( localStorage.getItem("UCStyle") ? localStorage.getItem("UCStyle") : { font: `${here.pxFont}px '${here.nameFont}', monospace`, color: here.colorMain, background: here.backgroundMain } );
-    here.UCButton = ( localStorage.getItem("UCButton") ? localStorage.getItem("UCButton") : { border: `0.125em outset ${here.colorMenu}`, background: here.backgroundMenu, color: here.colorMenu } );
-    here.UCMenu = ( localStorage.getItem("UCMenu") ? localStorage.getItem("UCMenu") : { border: `0.125em outset ${here.colorMenu}`, background: here.backgroundMenu, color: here.colorMenu } );
-    here.UCInputBox = ( localStorage.getItem("UCInputBox") ? localStorage.getItem("UCInputBox") : { border: `0.125em inset ${here.colorMain}`, background: here.backgroundMain, color: here.colorMain } );
-*/
 </style>
