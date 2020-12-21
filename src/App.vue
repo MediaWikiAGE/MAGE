@@ -20,6 +20,9 @@
   import magelogo from "@/magelogo.vue";
   import buttonmenu from "@/buttonmenu.vue";
   import buttonx from "@/buttonx.vue";
+  import buttonidtag from "@/buttonidtag.vue";
+  import buttontasks from "@/buttontasks.vue";
+  import buttonabout from "@/buttonabout.vue";
   import { ref } from "vue";
   export default {
     name: "App",
@@ -28,8 +31,9 @@
         mobileMenuOpen: true,
         menuItems: [
           { buttonimage: "magelogo", title: "Home", url: "/" },
-          { buttonimage: "buttonx", title: "About", url: "/about" },
-          { buttonimage: "buttonmenu", title: "Login", url: "/login" },
+          { buttonimage: "buttonabout", title: "About", url: "/about" },
+          { buttonimage: "buttonidtag", title: "Login Manager", url: "/login" },
+          { buttonimage: "buttontasks", title: "Task List", url: "/tasks" },
         ],
       };
     },
@@ -42,7 +46,7 @@
       this.$nextTick(function () { });
     },
 
-    components: { MageFooter, magelogo, buttonmenu, buttonx },
+    components: { MageFooter, magelogo, buttonmenu, buttonx, buttonidtag, buttontasks, buttonabout },
   };
 </script>
 
