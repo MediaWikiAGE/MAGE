@@ -7,7 +7,7 @@
       <div :class="{ remove: !mobileMenuOpen }"> &nbsp; </div>
       <div class="flex flex-col">
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
-          <div class="flex flex-row flex-nowrap flex-auto cursor-pointer" style="align-items: center" @click="this.$router.push(`${item.url}`)">
+          <div class="flex flex-row flex-nowrap flex-auto cursor-pointer" :class="this.getMenuLinkClass(item.name)" style="align-items: center" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
             <div class="pad" :title="item.title" style="width: 48px; height: 48px;" > <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" /> </div>
             <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
@@ -34,12 +34,20 @@
       return {
         mobileMenuOpen: true,
         menuItems: [
-          { buttonimage: "magelogo", title: "Home", url: "/" },
-          { buttonimage: "buttonabout", title: "About", url: "/about" },
-          { buttonimage: "buttonidtag", title: "Login Manager", url: "/login" },
-          { buttonimage: "buttontasks", title: "Task List", url: "/tasks" },
+          { name: "home", buttonimage: "magelogo", title: "Home", url: "/" },
+          { name: "about", buttonimage: "buttonabout", title: "About", url: "/about" },
+          { name: "login", buttonimage: "buttonidtag", title: "Login Manager", url: "/login" },
+          { name: "tasks", buttonimage: "buttontasks", title: "Task List", url: "/tasks" },
         ],
+        activeTab: "home",
       };
+    },
+    methods: {
+      getMenuLinkClass: function(linkName) {
+        return {
+          "bg-gray-200": this.activeTab === linkName
+        };
+      }
     },
 
     onmount() {
