@@ -5,10 +5,14 @@
         <buttonmenu style="width: 100%; height: 100%;" v-show="!mobileMenuOpen" class="nopad" /> <buttonx style="width: 100%; height: 100%;" v-show="mobileMenuOpen" class="nopad" />
       </div>
       <div :class="{ remove: !mobileMenuOpen }"> &nbsp; </div>
-      <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
-        <div class="relative button pad cursor-pointer" :title="item.title" style="width: 3em; height: 3em;" @click="this.$router.push(`${item.url}`)"> <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" @click="this.$router.push(`${item.url}`)" /> </div>
-        <div class="button pad cursor-pointer" :class="{ remove: !mobileMenuOpen }" @click="this.$router.push(`${item.url}`)"> {{ item.title }} </div>
-      </router-link>
+      <div class="flex flex-col">
+        <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
+          <div class="flex flex-row flex-nowrap flex-auto cursor-pointer" style="align-items: center">
+            <div class="pad" :title="item.title" style="width: 48px; height: 48px;" @click="this.$router.push(`${item.url}`)"> <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" @click="this.$router.push(`${item.url}`)" /> </div>
+            <div class="pad" :class="{ remove: !mobileMenuOpen }" @click="this.$router.push(`${item.url}`)"> {{ item.title }} </div>
+          </div>
+        </router-link>
+      </div>
     </div>
     <div class="pad main" style="width: 100%; height: calc(100vh - 6ex); grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
     <div class="pad main" style="height: 4.5ex; grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
