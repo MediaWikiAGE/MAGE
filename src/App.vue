@@ -1,13 +1,12 @@
 <template>
   <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;" class="main grid">
-    <div id="nav" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em; grid-row-start: 1; grid-column-start: 1; grid-row-end: 2;" class="menu grid select-none">
-      <div class="relative button nopad cursor-pointer" style="width: 3em; height: 3em;" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
-        <buttonmenu style="width: 100%; height: 100%;" v-show="!mobileMenuOpen" class="nopad" /> <buttonx style="width: 100%; height: 100%;" v-show="mobileMenuOpen" class="nopad" />
-      </div>
-      <div :class="{ remove: !mobileMenuOpen }"> &nbsp; </div>
+    <div id="nav" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top;" class="menu select-none">
       <div class="flex flex-col">
+        <div class="button nopad cursor-pointer my-px" style="width: 48px; height: 48px;" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
+          <buttonmenu style="width: 100%; height: 100%;" v-show="!mobileMenuOpen" class="nopad" /> <buttonx style="width: 100%; height: 100%;" v-show="mobileMenuOpen" class="nopad" />
+        </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
-          <div class="flex flex-row flex-nowrap flex-auto cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" style="align-items: center" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
+          <div class="flex flex-row flex-nowrap flex-auto my-px cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" style="align-items: center" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
             <div class="pad" :title="item.title" style="width: 48px; height: 48px;" > <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" /> </div>
             <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
