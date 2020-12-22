@@ -78,7 +78,6 @@
   input.long { width: 12em; }
 
   #nav {
-    display: grid;
     width: 100%;
     height: 100%;
     justify-content: start;
@@ -96,20 +95,17 @@
   .menu {
     color: MenuText;
     background: Menu;
-    border: 0.125em outset ThreeDShadow;
     padding: 0.25em;
   }
 
   .main {
     color: WindowText;
     background: Window;
-    border: 0.125em inset ThreeDShadow;
     padding: 0.25em;
   }
 
   .button {
     color: ButtonText;
     background: ButtonFace;
-    border: 0.125em outset ThreeDShadow;
   }
 </style>
