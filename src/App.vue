@@ -9,7 +9,7 @@
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
           <div class="flex flex-row flex-nowrap flex-auto cursor-pointer" style="align-items: center">
             <div class="pad" :title="item.title" style="width: 48px; height: 48px;" @click="this.$router.push(`${item.url}`)"> <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" @click="this.$router.push(`${item.url}`)" /> </div>
-            <div class="pad" :class="{ remove: !mobileMenuOpen }" @click="this.$router.push(`${item.url}`)"> {{ item.title }} </div>
+            <div class="pad" :class="{ hidden: !mobileMenuOpen }" @click="this.$router.push(`${item.url}`)"> {{ item.title }} </div>
           </div>
         </router-link>
       </div>
