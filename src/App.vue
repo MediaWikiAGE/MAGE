@@ -1,12 +1,13 @@
 <template>
   <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;" class="main grid">
     <div id="nav" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top;" class="menu select-none">
-      <div class="flex flex-col">
-        <div class="button nopad cursor-pointer my-px" style="width: 48px; height: 48px;" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
-          <buttonmenu style="width: 100%; height: 100%;" v-show="!mobileMenuOpen" class="nopad" /> <buttonx style="width: 100%; height: 100%;" v-show="mobileMenuOpen" class="nopad" />
+      <div class="flex flex-col" style="gap: 2px">
+        <div class="flex whitespace-nowrap nopad bg-indigo-100 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
+          <div class="ml-auto" v-show="mobileMenuOpen"><buttonx style="width: 32px; height: 32px;" class="flex-grow-0 nopad" /></div>
+          <div class="mx-auto" v-show="!mobileMenuOpen"><buttonmenu style="width: 24px; height: 32px;" class="nopad" /></div>
         </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
-          <div class="flex flex-row flex-nowrap flex-auto my-px cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" style="align-items: center" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
+          <div class="flex items-center cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
             <div class="pad" :title="item.title" style="width: 48px; height: 48px;" > <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" /> </div>
             <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
