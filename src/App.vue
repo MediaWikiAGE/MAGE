@@ -1,10 +1,10 @@
 <template>
-  <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;" class="main grid">
-    <div id="nav" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top;" class="menu select-none">
+  <div id="app" class="main grid" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;">
+    <div id="nav" class="menu select-none" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top;">
       <div class="flex flex-col" style="gap: 2px">
         <div class="flex whitespace-nowrap p-0 bg-indigo-100 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
-          <div class="ml-auto" v-show="mobileMenuOpen"><buttonx style="width: 32px; height: 32px;" class="flex-grow-0 p-0" /></div>
-          <div class="mx-auto" v-show="!mobileMenuOpen"><buttonmenu style="width: 24px; height: 32px;" class="p-0" /></div>
+          <div class="ml-auto" v-show="mobileMenuOpen"><buttonx class="flex-grow-0 p-0" style="width: 32px; height: 32px;" /></div>
+          <div class="mx-auto" v-show="!mobileMenuOpen"><buttonmenu class="p-0" style="width: 24px; height: 32px;" /></div>
         </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
           <div class="flex items-center cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
