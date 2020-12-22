@@ -2,13 +2,13 @@
   <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;" class="main grid">
     <div id="nav" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top;" class="menu select-none">
       <div class="flex flex-col" style="gap: 2px">
-        <div class="flex whitespace-nowrap nopad bg-indigo-100 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
-          <div class="ml-auto" v-show="mobileMenuOpen"><buttonx style="width: 32px; height: 32px;" class="flex-grow-0 nopad" /></div>
-          <div class="mx-auto" v-show="!mobileMenuOpen"><buttonmenu style="width: 24px; height: 32px;" class="nopad" /></div>
+        <div class="flex whitespace-nowrap p-0 bg-indigo-100 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
+          <div class="ml-auto" v-show="mobileMenuOpen"><buttonx style="width: 32px; height: 32px;" class="flex-grow-0 p-0" /></div>
+          <div class="mx-auto" v-show="!mobileMenuOpen"><buttonmenu style="width: 24px; height: 32px;" class="p-0" /></div>
         </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
           <div class="flex items-center cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
-            <div class="pad" :title="item.title" style="width: 48px; height: 48px;" > <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" /> </div>
+            <div class="pad" :title="item.title" style="width: 48px; height: 48px;" > <component class="p-0" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" /> </div>
             <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
         </router-link>
@@ -64,8 +64,6 @@
 </script>
 
 <style>
-  :root { border-collapse: separate; }
-
   #app button:focus, #app button:active,
   #app input:focus, #app input:active,
   #app a:focus, #app a:active,
@@ -79,12 +77,6 @@
   input.normal { width: 8em; }
   input.long { width: 12em; }
 
-  .absolute { position: absolute; }
-
-  .relative { position: relative; }
-
-  .grid { display: grid; }
-
   #nav {
     display: grid;
     width: 100%;
@@ -93,17 +85,11 @@
     align-content: start;
   }
 
-  .fixed { position: fixed; }
-
-  .dib { display: inline-block; }
-
   .hide { visibility: hidden; }
 
   .show { visibility: visible; }
 
   .remove { width: 0; visibility: hidden; overflow: hidden; }
-
-  .nopad { padding: 0; }
 
   .pad { padding: 0.25em; }
 
