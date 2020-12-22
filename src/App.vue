@@ -3,12 +3,12 @@
     <div id="nav" class="menu select-none" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top;">
       <div class="flex flex-col" style="gap: 2px">
         <div class="flex whitespace-nowrap p-0 bg-indigo-100 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
-          <div class="ml-auto" v-show="mobileMenuOpen"><buttonx class="flex-grow-0 p-0" style="width: 32px; height: 32px;" /></div>
-          <div class="mx-auto" v-show="!mobileMenuOpen"><buttonmenu class="p-0" style="width: 24px; height: 32px;" /></div>
+          <div class="ml-auto" v-show="mobileMenuOpen"><svg-icon width="32" height="32" icon="chevron-double-left" /></div>
+          <div class="mx-auto" v-show="!mobileMenuOpen"><svg-icon width="24" height="32" icon="chevron-double-right" /></div>
         </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
           <div class="flex items-center cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
-            <div class="pad" :title="item.title" style="width: 48px; height: 48px;" > <component class="p-0" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" /> </div>
+            <div class="pad" :title="item.title" style="width: 48px; height: 48px;" ><svg-icon width="48" height="48" :icon="item.buttonImage" /></div>
             <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
         </router-link>
@@ -21,12 +21,8 @@
 
 <script>
   import MageFooter from "@/components/Footer";
-  import magelogo from "@/magelogo.vue";
-  import buttonmenu from "@/buttonmenu.vue";
-  import buttonx from "@/buttonx.vue";
-  import buttonidtag from "@/buttonidtag.vue";
-  import buttontasks from "@/buttontasks.vue";
-  import buttonabout from "@/buttonabout.vue";
+  import SvgIcon from "@/components/SvgIcon";
+  
   import { ref } from "vue";
   export default {
     name: "App",
@@ -34,10 +30,10 @@
       return {
         mobileMenuOpen: true,
         menuItems: [
-          { name: "home", buttonimage: "magelogo", title: "Home", url: "/" },
-          { name: "about", buttonimage: "buttonabout", title: "About", url: "/about" },
-          { name: "login", buttonimage: "buttonidtag", title: "Login Manager", url: "/login" },
-          { name: "tasks", buttonimage: "buttontasks", title: "Task List", url: "/tasks" },
+          { name: "home", buttonImage: "magelogo", title: "Home", url: "/" },
+          { name: "about", buttonImage: "tag", title: "About", url: "/about" },
+          { name: "login", buttonImage: "identification", title: "Login Manager", url: "/login" },
+          { name: "tasks", buttonImage: "pencil-alt", title: "Task List", url: "/tasks" },
         ],
         activeTab: "home",
       };
@@ -59,7 +55,7 @@
       this.$nextTick(function () { });
     },
 
-    components: { MageFooter, magelogo, buttonmenu, buttonx, buttonidtag, buttontasks, buttonabout },
+    components: { MageFooter, SvgIcon },
   };
 </script>
 
