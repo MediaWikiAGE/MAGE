@@ -7,7 +7,7 @@
       <div :class="{ remove: !mobileMenuOpen }"> &nbsp; </div>
       <div class="flex flex-col">
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
-          <div class="flex flex-row flex-nowrap flex-auto cursor-pointer" :class="this.getMenuLinkClass(item.name)" style="align-items: center" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
+          <div class="flex flex-row flex-nowrap flex-auto cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" style="align-items: center" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
             <div class="pad" :title="item.title" style="width: 48px; height: 48px;" > <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" /> </div>
             <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
@@ -45,7 +45,8 @@
     methods: {
       getMenuLinkClass: function(linkName) {
         return {
-          "bg-gray-200": this.activeTab === linkName
+          "bg-gray-300": this.activeTab === linkName,
+          "hover:bg-gray-200": this.activeTab !== linkName,
         };
       }
     },
