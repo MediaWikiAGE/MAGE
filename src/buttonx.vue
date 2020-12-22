@@ -1,4 +1,4 @@
-<template><img width="20" height="20" :src="require('./assets/icons/x.svg')"></template>
+<template><img width="20" height="20" :src="require('./assets/icons/chevron-double-left.svg')"></template>
 <script>
 export default { };
 </script>
