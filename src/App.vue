@@ -8,8 +8,8 @@
         </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
           <div class="flex items-center cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
-            <div class="pad" :title="item.title" style="width: 48px; height: 48px;" ><svg-icon width="48" height="48" :icon="item.buttonImage" /></div>
-            <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
+            <div class="pad flex-shrink-0" :title="item.title" style="width: 48px; height: 48px;" ><svg-icon width="48" height="48" :icon="item.buttonImage" /></div>
+            <div class="pad whitespace-nowrap" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
         </router-link>
       </div>
