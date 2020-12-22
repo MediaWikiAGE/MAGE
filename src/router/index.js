@@ -24,6 +24,14 @@ const routes = [
     meta: {
       layout: "AppLayoutDefault"
     }
+  },
+  {
+    path: "/tasks",
+    name: "Task List",
+    component: () => import("@/views/Tasks.vue"),
+    meta: {
+      layout: "AppLayoutDefault"
+    }
   }
 ];
 

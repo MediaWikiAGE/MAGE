@@ -1,5 +1,5 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <p style="font-size: 150%;"> <strong>MAGE</strong> - MediaWiki Automated Graphical Editor </p>
   </div>
 </template>

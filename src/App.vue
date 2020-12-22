@@ -1,84 +1,116 @@
 <template>
-<div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top;" class="fixed main">
-  <div id="nav" class="dib menu focus:outline-none" style="left: 0; top: 0; height: calc(100% - 4em); width: auto; vertical-align: top;">
-    <div class="dib">
-      <button id="buttonMobileMenu" type="button" @click="mobileMenuOpen = !mobileMenuOpen" class="button focus:outline-none" style="vertical-align: top; padding: 0;">
-        <svg v-if="mobileMenuOpen" class="nopad w-6 h-6" title="Close Menu" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-          <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-        <svg v-else class="nopad w-6 h-6" title="Open Menu" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-          <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+  <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;" class="main grid">
+    <div id="nav" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em; grid-row-start: 1; grid-column-start: 1; grid-row-end: 2;" class="menu grid">
+      <div class="relative button nopad" style="width: 3em; height: 3em;" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Close Menu' : 'Open Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
+        <buttonmenu style="width: 100%; height: 100%;" v-show="!mobileMenuOpen" class="nopad" /> <buttonx style="width: 100%; height: 100%;" v-show="mobileMenuOpen" class="nopad" />
+      </div>
+      <div :class="{ remove: !mobileMenuOpen }"> &nbsp; </div>
+      <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
+        <div class="relative button pad" :title="item.title" style="width: 3em; height: 3em;" @click="this.$router.push(`${item.url}`)"> <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" @click="this.$router.push(`${item.url}`)" /> </div>
+        <div :class="{ remove: !mobileMenuOpen, button: true, pad: true }" @click="this.$router.push(`${item.url}`)"> {{ item.title }} </div>
+      </router-link>
     </div>
-    <div v-if="mobileMenuOpen" class="dib focus:outline-none" style="width: auto; height: auto; vertical-align: top;">
-      <router-link v-for="(item, i) in menuItems" :key="i" :to="item.url" class="button focus:outline-none" style="vertical-align: middle; display: block;"> {{ item.title }} </router-link>
-    </div>
+    <div class="pad main" style="width: 100%; height: calc(100vh - 6ex); grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
+    <div class="pad main" style="height: 4.5ex; grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
   </div>
-  <div class="dib main focus:outline-none"> <router-view class="dib" /> </div>
-  <div class="fixed dib focus:outline-none menu" style="bottom: 0.5em; right: 0.5em; left: 0.5em; height: 3em; vertical-align: middle;"> <MageFooter /> </div>
-</div>
 </template>
 
 <script>
   import MageFooter from "@/components/Footer";
+  import magelogo from "@/magelogo.vue";
+  import buttonmenu from "@/buttonmenu.vue";
+  import buttonx from "@/buttonx.vue";
+  import buttonidtag from "@/buttonidtag.vue";
+  import buttontasks from "@/buttontasks.vue";
+  import buttonabout from "@/buttonabout.vue";
+  import { ref } from "vue";
   export default {
-
     name: "App",
     data() {
       return {
         mobileMenuOpen: true,
         menuItems: [
-          { title: "Home", url: "/" },
-          { title: "About", url: "/about" },
-          { title: "Login", url: "/login" },
+          { buttonimage: "magelogo", title: "Home", url: "/" },
+          { buttonimage: "buttonabout", title: "About", url: "/about" },
+          { buttonimage: "buttonidtag", title: "Login Manager", url: "/login" },
+          { buttonimage: "buttontasks", title: "Task List", url: "/tasks" },
         ],
       };
     },
 
-    updated() {
+    onmount() {
       this.$nextTick(function () { });
     },
 
-    components: { MageFooter },
+    onupdate() {
+      this.$nextTick(function () { });
+    },
+
+    components: { MageFooter, magelogo, buttonmenu, buttonx, buttonidtag, buttontasks, buttonabout },
   };
 </script>
 
 <style>
+  :root { border-collapse: separate; }
 
-* {
-padding: 0.5em;
-}
+  #app button:focus, #app button:active,
+  #app input:focus, #app input:active,
+  #app a:focus, #app a:active,
+  #app *:focus, #app *:active,
+  #app a[class*="focus:"], #app a[class*="active:"],
+  #app *[class*="router-"], #app a[class*="router-"] { outline: none 0 transparent; }
 
-#app button:focus, #app button:active,
-#app input:focus, #app input:active,
-#app a:focus, #app a:active,
-#app *:focus, #app *:active,
-#app a[class*="focus:"], #app a[class*="active:"],
-#app *[class*="router-"], #app a[class*="router-"] {
-outline: none 0 transparent;
-}
+  input { border: 0.125em inset ThreeDShadow; }
 
-input { border: 0.125em inset ThreeDShadow; }
+  input.short { width: 4em; }
+  input.normal { width: 8em; }
+  input.long { width: 12em; }
 
-input.short { width: 4em; }
+  .absolute { position: absolute; }
 
-input.normal { width: 8em; }
+  .relative { position: relative; }
 
-input.long { width: 12em; }
+  .grid { display: grid; }
 
-td, th { padding: 0.5em; }
+  #nav {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    justify-content: start;
+    align-content: start;
+  }
 
-.fixed { position: fixed; }
+  .fixed { position: fixed; }
 
-.dib { display: inline-block; }
+  .dib { display: inline-block; }
 
-.menu { color: MenuText; background: Menu; border: 0.125em outset ThreeDShadow; }
+  .hide { visibility: hidden; }
 
-.main { color: WindowText; background: Window; border: 0.125em inset ThreeDShadow; }
+  .show { visibility: visible; }
 
-.button { color: ButtonText; background: ButtonFace; border: 0.125em outset ThreeDShadow; }
+  .remove { width: 0; visibility: hidden; overflow: hidden; }
 
-.nopad { padding: 0; }
+  .nopad { padding: 0; }
 
+  .pad { padding: 0.25em; }
+
+  .menu {
+    color: MenuText;
+    background: Menu;
+    border: 0.125em outset ThreeDShadow;
+    padding: 0.25em;
+  }
+
+  .main {
+    color: WindowText;
+    background: Window;
+    border: 0.125em inset ThreeDShadow;
+    padding: 0.25em;
+  }
+
+  .button {
+    color: ButtonText;
+    background: ButtonFace;
+    border: 0.125em outset ThreeDShadow;
+  }
 </style>
