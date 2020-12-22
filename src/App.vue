@@ -1,13 +1,13 @@
 <template>
   <div id="app" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;" class="main grid">
     <div id="nav" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em; grid-row-start: 1; grid-column-start: 1; grid-row-end: 2;" class="menu grid select-none">
-      <div class="relative button nopad" style="width: 3em; height: 3em;" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Close Menu' : 'Open Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
+      <div class="relative button nopad cursor-pointer" style="width: 3em; height: 3em;" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Close Menu' : 'Open Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
         <buttonmenu style="width: 100%; height: 100%;" v-show="!mobileMenuOpen" class="nopad" /> <buttonx style="width: 100%; height: 100%;" v-show="mobileMenuOpen" class="nopad" />
       </div>
       <div :class="{ remove: !mobileMenuOpen }"> &nbsp; </div>
       <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
-        <div class="relative button pad" :title="item.title" style="width: 3em; height: 3em;" @click="this.$router.push(`${item.url}`)"> <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" @click="this.$router.push(`${item.url}`)" /> </div>
-        <div :class="{ remove: !mobileMenuOpen, button: true, pad: true }" @click="this.$router.push(`${item.url}`)"> {{ item.title }} </div>
+        <div class="relative button pad cursor-pointer" :title="item.title" style="width: 3em; height: 3em;" @click="this.$router.push(`${item.url}`)"> <component class="nopad" style="width: 100%; height: 100%;" :is="`${item.buttonimage}`" @click="this.$router.push(`${item.url}`)" /> </div>
+        <div class="button pad cursor-pointer" :class="{ remove: !mobileMenuOpen }" @click="this.$router.push(`${item.url}`)"> {{ item.title }} </div>
       </router-link>
     </div>
     <div class="pad main" style="width: 100%; height: calc(100vh - 6ex); grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
