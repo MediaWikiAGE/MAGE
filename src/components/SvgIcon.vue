@@ -6,10 +6,6 @@ export default {
       image: require(`../assets/icons/${this.icon}.svg`)
     };
   },
-  props: {
-    width: Number,
-    height: Number,
-    icon: String
-  }
+  props: [ "width", "height", "icon" ]
 };
 </script>

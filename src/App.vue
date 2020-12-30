@@ -1,21 +1,21 @@
 <template>
-  <div id="app" class="main grid" style="left: 0; top: 0; width: 100vw; height: 100vh; vertical-align: top; grid-template-columns: max-content auto; grid-gap: 0.25em;">
-    <div id="nav" class="menu select-none" style="left: 0; top: 0; width: auto; height: calc(100vh - 6ex); vertical-align: top;">
-      <div class="flex flex-col" style="gap: 2px">
+  <div id="app" class="main grid" style="width: 100vw; height: 100vh; grid-template: auto max-content / max-content auto; grid-gap: 0.25em;">
+    <div id="nav" class="menu select-none" style="overflow-y: auto;">
+      <div class="flex flex-col" style="gap: 2px;">
         <div class="flex whitespace-nowrap p-0 bg-indigo-100 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
-          <div class="ml-auto" v-show="mobileMenuOpen"><svg-icon width="32" height="32" icon="chevron-double-left" /></div>
+          <div class="mx-auto" v-show="mobileMenuOpen"><svg-icon width="32" height="32" icon="chevron-double-left" /></div>
           <div class="mx-auto" v-show="!mobileMenuOpen"><svg-icon width="24" height="32" icon="chevron-double-right" /></div>
         </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
           <div class="flex items-center cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
-            <div class="pad" :title="item.title" style="width: 48px; height: 48px;" ><svg-icon width="48" height="48" :icon="item.buttonImage" /></div>
-            <div class="pad" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
+            <div class="pad flex-shrink-0" :title="item.title" style="width: 48px; height: 48px;" ><svg-icon width="48" height="48" :icon="item.buttonImage" /></div>
+            <div class="pad whitespace-nowrap" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
         </router-link>
       </div>
     </div>
-    <div class="pad main" style="width: 100%; height: calc(100vh - 6ex); grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
-    <div class="pad main" style="height: 4.5ex; grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
+    <div class="pad main" style="grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
+    <div class="pad main" style="grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
   </div>
 </template>
 
