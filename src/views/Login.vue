@@ -25,7 +25,16 @@
 
     <div class="m-0.5">
       <label for="isWikiFarm"> Wiki farm? </label>
-      <input type="checkbox" id="isWikiFarm" name="isWikiFarm" @change="isWikiFarm = !isWikiFarm">
+      <input type="checkbox" id="isWikiFarm" name="isWikiFarm" @change="isWikiFarm = !isWikiFarm" :disabled="addToExisting">
+    </div>
+
+    <div class="m-0.5" v-if="!isWikiFarm">
+      <label for="urlField">URL </label>
+      <input type="text" id="urlField" name="urlField" :disabled="addToExisting" class="block">
+    </div>
+    <div class="m-0.5" v-else>
+      <label for="urlArea">URLs </label>
+      <textarea id="urlArea" name="urlArea" class="block border border-gray-300" :disabled="addToExisting"></textarea>
     </div>
 
   </div>
