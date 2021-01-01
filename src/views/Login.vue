@@ -37,6 +37,10 @@
       <textarea id="urlArea" name="urlArea" class="block border border-gray-300" :disabled="addToExisting"></textarea>
     </div>
 
+    <div class="m-0.5">
+      <input type="text" id="saveAs" name="saveAs" :disabled="addToExisting">
+    </div>
+
   </div>
 </template>
 
