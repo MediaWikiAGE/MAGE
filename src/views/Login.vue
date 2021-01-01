@@ -41,6 +41,10 @@
       <input type="text" id="saveAs" name="saveAs" :disabled="addToExisting">
     </div>
 
+    <div class="m-0.5">
+      <input type="button" id="saveLogin" name="saveLogin" value="Save login">
+    </div>
+
   </div>
 </template>
 
