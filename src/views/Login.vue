@@ -1,25 +1,15 @@
 <template>
-  <div id="loginentry" style="left: 0; top: 0; width: 100%; height: 100%; vertical-align: top; grid-template-columns: max-content auto; grid-template-rows: max-content max-content max-content max-content; grid-gap: 0.25em;" class="grid">
+  <div id="loginentry" class="flex flex-col">
 
-    <div class="menu" title="The username for the wiki account.">
-      Account username
-    </div>
-    <div class="menu">
-      <input type="text" id="account" name="name" class="w-full">
-    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2-fit-left grid-flow-row">
+      <label for="accountName" class="m-0.5">Wiki account name</label>
+      <input type="text" id="accountName" name="accountName" class="m-0.5">
 
-    <div class="menu" title="The BotPasswords username for generated credentials.">
-      Bot Password username
-    </div>
-    <div class="menu">
-      <input type="text" id="username" name="bpname" class="w-full">
-    </div>
+      <label for="botPasswordName" class="m-0.5">Bot password name</label>
+      <input type="text" id="botPasswordName" name="botPasswordName" class="m-0.5">
 
-    <div class="menu" title="The BotPassword password for generated credentials. Do not use your original account password.">
-      Bot Password password
-    </div>
-    <div class="menu">
-      <input type="password" id="password" name="bppassword" class="w-full">
+      <label for="botPassword" class="m-0.5">Bot password</label>
+      <input type="text" id="botPassword" name="botPassword" class="m-0.5">
     </div>
 
     <div title="Add to existing wiki/farm">
