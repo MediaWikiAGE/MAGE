@@ -2,7 +2,7 @@
   <div id="loginentry" class="flex flex-col">
 
     <div class="grid grid-cols-1 sm:grid-cols-2-fit-left grid-flow-row">
-      <label for="accountName" class="m-0.5">Wiki account name</label>
+      <label for="accountName" class="m-0.5">Username</label>
       <input type="text" id="accountName" name="accountName" class="m-0.5">
 
       <label for="botPasswordName" class="m-0.5">Bot password name</label>
@@ -13,12 +13,19 @@
     </div>
 
     <div class="m-0.5">
+      <label for="addToExisting"> Add to existing? </label>
       <input type="checkbox" id="addToExisting" name="addToExisting" :value=false @change="addToExisting = !addToExisting">
-      <label for="addToExisting"> Add to existing wiki/farm: </label>
+    </div>
+    <div class="m-0.5">
       <select :disabled="!addToExisting" name="addTo" id="addTo">
         <option value="0" disabled selected>None</option>
         <option v-for="knownFarm in farms" :key="knownFarm.id" :value="knownFarm.id">{{ knownFarm.name }}</option>
       </select>
+    </div>
+
+    <div class="m-0.5">
+      <label for="isWikiFarm"> Wiki farm? </label>
+      <input type="checkbox" id="isWikiFarm" name="isWikiFarm" @change="isWikiFarm = !isWikiFarm">
     </div>
 
   </div>
@@ -29,6 +36,7 @@ export default {
   data() {
     return {
       addToExisting: false,
+      isWikiFarm: false,
 
       farms: [
         { id: 1, name: "fandom.com" },
