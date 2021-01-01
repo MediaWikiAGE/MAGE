@@ -31,15 +31,6 @@
       <Dropdown class="my-dropdown-toggle" :options="arrayOfObjects" :selected="object" v-on:updateOption="methodToRunOnSelect" :placeholder="'Select an Item'" :closeOnOutsideClick="true" />
     </div>
 
-    <div title="Add to existing wiki/farm">
-      <input type="checkbox" id="addToExisting" name="addToExisting" :value=false @change="addToExisting = !addToExisting">
-      <label for="addToExisting"> Add to existing wiki/farm </label>
-    </div>
-    <div v-show="addToExisting">
-      <label title="Farms this wiki may be a part of."> Farms: </label>
-      <Dropdown class="my-dropdown-toggle" :options="arrayOfObjects" :selected="object" v-on:updateOption="methodToRunOnSelect" :placeholder="'Select an Item'" :closeOnOutsideClick="true" />
-    </div>
-
   </div>
 </template>
 
