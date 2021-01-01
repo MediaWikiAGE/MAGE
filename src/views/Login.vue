@@ -12,36 +12,31 @@
       <input type="text" id="botPassword" name="botPassword" class="m-0.5">
     </div>
 
-    <div title="Add to existing wiki/farm">
+    <div class="m-0.5">
       <input type="checkbox" id="addToExisting" name="addToExisting" :value=false @change="addToExisting = !addToExisting">
-      <label for="addToExisting"> Add to existing wiki/farm </label>
-    </div>
-    <div v-show="addToExisting">
-      <label title="Farms this wiki may be a part of."> Farms: </label>
-      <Dropdown class="my-dropdown-toggle" :options="arrayOfObjects" :selected="object" v-on:updateOption="methodToRunOnSelect" :placeholder="'Select an Item'" :closeOnOutsideClick="true" />
+      <label for="addToExisting"> Add to existing wiki/farm: </label>
+      <select :disabled="!addToExisting" name="addTo" id="addTo">
+        <option value="0" disabled selected>None</option>
+        <option v-for="knownFarm in farms" :key="knownFarm.id" :value="knownFarm.id">{{ knownFarm.name }}</option>
+      </select>
     </div>
 
   </div>
 </template>
 
 <script>
-import Dropdown from "@/components/Dropdown.vue";
-
 export default {
-  components: { Dropdown },
   data() {
     return {
       addToExisting: false,
 
-      arrayOfObjects: [
+      farms: [
         { id: 1, name: "fandom.com" },
-        { id: 1, name: "gamepedia.com" }
+        { id: 2, name: "gamepedia.com" }
       ],
       object: {
         name: "None",
       },
-
-      farms: []
     };
   },
   methods: {
