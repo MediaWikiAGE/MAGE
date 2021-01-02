@@ -63,7 +63,7 @@
       </div>
       <div v-else>
         <label for="urlArea">URLs</label>
-        <textarea id="urlArea" name="urlArea" class="block border border-gray-500" :disabled="addToExisting"></textarea>
+        <textarea id="urlArea" name="urlArea" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
       </div>
     </div>
 
