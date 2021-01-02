@@ -6,8 +6,9 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         // For the login manager
-        "3-border-second": "1fr 1px 1fr",
-        "4-border-second": "1fr 1px 1fr 1fr",
+        "loginview-3": "1fr 1px 1fr",
+        "loginview-4": "1fr 1px 1fr 1fr",
+        "loginview-outer": "1fr 4fr 1fr",
       },
       gridRowEnd: {
         "8": "8",
