@@ -67,7 +67,7 @@
   #app a[class*="focus:"], #app a[class*="active:"],
   #app *[class*="router-"], #app a[class*="router-"] { outline: none 0 transparent; }
 
-  input { border: 0.125em inset ThreeDShadow; }
+  input { border: 1px solid rgba(107, 114, 128, var(--tw-border-opacity)); }
 
   input.short { width: 4em; }
   input.normal { width: 8em; }
