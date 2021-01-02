@@ -14,7 +14,7 @@
         </router-link>
       </div>
     </div>
-    <div class="pad main" style="grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
+    <div class="pad main overflow-auto" style="grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
     <div class="pad main" style="grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
   </div>
 </template>
