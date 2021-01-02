@@ -1,7 +1,7 @@
 <template>
   <div id="loginentry" class="grid grid-cols-3-border-second md:grid-cols-4-border-second gap-1 h-full overflow-auto">
 
-    <div class="hidden md:flex md:justify-center md:items-center md:col-start-4 md:row-start-1 md:row-end-9"><svg-icon icon="magelogo" /></div>
+    <div class="hidden select-none md:flex md:justify-center md:items-center md:col-start-4 md:row-start-1 md:row-end-9"><svg-icon icon="magelogo" /></div>
     <div class="flex justify-center row-start-1 row-end-9 col-start-2">
       <div class="w-px border-l border-gray-500"></div>
     </div>
