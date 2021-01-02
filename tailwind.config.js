@@ -5,11 +5,13 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateColumns: {
-        // For forms (labels to the left, inputs to the right)
-        "2-fit-left": "max-content 1fr",
+        // For the login manager
+        "3-border-second": "1fr 1rem 1fr",
+        "4-border-second": "1fr 1rem 1fr 1fr",
       },
       gridRowEnd: {
-        '8': '8',
+        "8": "8",
+        "9": "9",
       }
     },
   },
