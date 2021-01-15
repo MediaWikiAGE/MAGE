@@ -97,6 +97,8 @@ export default {
       wikiUrls: [],
       saveAs: null,
 
+      validationErrors: [],
+
       farms: [
         { id: 1, name: "fandom.com" },
         { id: 2, name: "gamepedia.com" }
@@ -118,8 +120,75 @@ export default {
       }
       this.isWikiFarm = !this.isWikiFarm;
     },
+    /// Returns `false` if `string` is a string with at least one significant character, otherwise `true`.
+    isEmpty(string) {
+      return (string === undefined) || (string === null) || (string.trim().length === 0);
+    },
+    /// Returns true/false depending on whether `string` is a valid URL.
+    isValidUrl(string) {
+      try {
+        const url = new URL(string);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
     saveLogin() {
-      // stub
+      const validationErrors = [];
+      if (this.isEmpty(this.accountName)) {
+        validationErrors.push("The account name cannot be empty");
+      } else if (/[#<>[\]|{}/@:]/.test(this.accountName)) {
+        // Disallowed characters: # < > [ ] | { } / @ :
+        // List taken from the Wikipedia page on technical restrictions for usernames.
+        validationErrors.push("Account names cannot contain any of the following characters: # < > [ ] | { } / @ :");
+      }
+      if (this.isEmpty(this.botPasswordName)) {
+        validationErrors.push("The bot password name cannot be empty");
+      }
+      if (this.isEmpty(this.botPassword)) {
+        validationErrors.push("The bot password cannot be empty");
+      }
+      if (this.addToExisting) {
+        if (this.addTo === 0) {
+          validationErrors.push("When adding to an existing wiki or farm, the wiki or farm needs to be selected");
+        }
+      } else {
+        if (!this.isWikiFarm) {
+          this.wikiUrls[0] = document.getElementById("urlField").value.trim();
+          if (this.isEmpty(this.wikiUrls[0])) {
+            validationErrors.push("When creating a new standalone wiki, the wiki URL cannot be empty");
+          } else if (!this.isValidUrl(this.wikiUrls[0])) {
+            validationErrors.push("When creating a new standalone wiki, the wiki URL must be valid");
+          }
+        } else {
+          this.wikiUrls = document.getElementById("urlArea").value.split("\n");
+          let noValidUrls = true;
+          for (const url of this.wikiUrls) {
+            if (this.isEmpty(url)) {
+              continue;
+            }
+
+            if (!this.isValidUrl(url)) {
+              validationErrors.push(`Invalid URL: ${url}`);
+            } else {
+              noValidUrls = false;
+            }
+          }
+          if (noValidUrls) {
+            validationErrors.push("When creating a new wiki farm, at least one URL must be non-empty and valid.");
+          }
+        }
+
+        if (!this.addToExisting && (this.saveAs === null || this.saveAs === "")) {
+          validationErrors.push("When adding to an existing wiki or farm, the name for the wiki or farm cannot be empty");
+        }
+      }
+
+      if (validationErrors.length === 0) {
+        // TODO save login
+      } else {
+        this.validationErrors = validationErrors;
+      }
     }
   },
   components: { SvgIcon },
