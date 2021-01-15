@@ -49,7 +49,7 @@
       </div>
       <div class="row-start-5 col-start-3">
         <label for="isWikiFarm">Wiki farm?</label>
-        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" v-model="isWikiFarm" :disabled="addToExisting" class="ml-1">
+        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" @change="switchWikiFarmFlag" :disabled="addToExisting" class="ml-1">
       </div>
 
       <div class="row-start-6 col-start-1 text-right text-sm">
@@ -59,11 +59,11 @@
       <div class="row-start-6 col-start-3">
         <div v-if="!isWikiFarm">
           <label for="urlField">URL</label>
-          <input type="text" id="urlField" name="urlField" @input="onUrlFieldInput" :disabled="addToExisting" class="block w-full">
+          <input type="text" id="urlField" name="urlField" :value="wikiUrls[0]" :disabled="addToExisting" class="block w-full">
         </div>
         <div v-else>
           <label for="urlArea">URLs</label>
-          <textarea id="urlArea" name="urlArea" @input="onUrlAreaInput" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
+          <textarea id="urlArea" name="urlArea" :value="wikiUrls.join('\n')" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
         </div>
       </div>
 
@@ -94,6 +94,7 @@ export default {
       addToExisting: false,
       addTo: 0,
       isWikiFarm: false,
+      wikiUrls: [],
       saveAs: null,
 
       farms: [
@@ -109,11 +110,13 @@ export default {
     methodToRunOnSelect(payload) {
       this.object = payload;
     },
-    onUrlFieldInput(event) {
-      // stub
-    },
-    onUrlAreaInput(event) {
-      // stub
+    switchWikiFarmFlag(event) {
+      if (this.isWikiFarm) {
+        this.wikiUrls = document.getElementById("urlArea").value.split("\n");
+      } else {
+        this.wikiUrls[0] = document.getElementById("urlField").value.trim();
+      }
+      this.isWikiFarm = !this.isWikiFarm;
     },
     saveLogin() {
       // stub
