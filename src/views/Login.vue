@@ -116,9 +116,6 @@ export default {
     };
   },
   methods: {
-    methodToRunOnSelect(payload) {
-      this.object = payload;
-    },
     onUrlFieldInput(event) {
       this.wikiUrls[0] = event.target.value.trim();
     },
