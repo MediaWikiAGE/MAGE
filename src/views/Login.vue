@@ -11,7 +11,7 @@
       </div>
       <div class="row-start-1 col-start-3">
         <label for="accountName">Username</label>
-        <input type="text" id="accountName" name="accountName" class="block w-full">
+        <input type="text" id="accountName" name="accountName" v-model.trim="accountName" class="block w-full">
       </div>
 
       <div class="row-start-2 col-start-1 text-right text-sm">
@@ -19,7 +19,7 @@
       </div>
       <div class="row-start-2 col-start-3">
         <label for="botPasswordName">Bot password name</label>
-        <input type="text" id="botPasswordName" name="botPasswordName" class="block w-full">
+        <input type="text" id="botPasswordName" name="botPasswordName" v-model.trim="botPasswordName" class="block w-full">
       </div>
 
       <div class="row-start-3 col-start-1 text-right text-sm">
@@ -27,7 +27,7 @@
       </div>
       <div class="row-start-3 col-start-3">
         <label for="botPassword">Bot password</label>
-        <input type="text" id="botPassword" name="botPassword" class="block w-full">
+        <input type="text" id="botPassword" name="botPassword" v-model.trim="botPassword" class="block w-full">
       </div>
 
       <div class="row-start-4 col-start-1 text-right text-sm">
@@ -36,9 +36,9 @@
       <div class="row-start-4 col-start-3">
         <div>
           <label for="addToExisting">Add to existing?</label>
-          <input type="checkbox" id="addToExisting" name="addToExisting" :value=false @change="addToExisting = !addToExisting" class="ml-1">
+          <input type="checkbox" id="addToExisting" name="addToExisting" :value=false v-model="addToExisting" class="ml-1">
         </div>
-        <select :disabled="!addToExisting" name="addTo" id="addTo">
+        <select :disabled="!addToExisting" name="addTo" id="addTo" v-model.number="addTo">
           <option value="0" disabled selected>None</option>
           <option v-for="knownFarm in farms" :key="knownFarm.id" :value="knownFarm.id">{{ knownFarm.name }}</option>
         </select>
@@ -49,7 +49,7 @@
       </div>
       <div class="row-start-5 col-start-3">
         <label for="isWikiFarm">Wiki farm?</label>
-        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" @change="isWikiFarm = !isWikiFarm" :disabled="addToExisting" class="ml-1">
+        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" v-model="isWikiFarm" :disabled="addToExisting" class="ml-1">
       </div>
 
       <div class="row-start-6 col-start-1 text-right text-sm">
@@ -59,11 +59,11 @@
       <div class="row-start-6 col-start-3">
         <div v-if="!isWikiFarm">
           <label for="urlField">URL</label>
-          <input type="text" id="urlField" name="urlField" :disabled="addToExisting" class="block w-full">
+          <input type="text" id="urlField" name="urlField" @input="onUrlFieldInput" :disabled="addToExisting" class="block w-full">
         </div>
         <div v-else>
           <label for="urlArea">URLs</label>
-          <textarea id="urlArea" name="urlArea" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
+          <textarea id="urlArea" name="urlArea" @input="onUrlAreaInput" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
         </div>
       </div>
 
@@ -72,11 +72,11 @@
         <div v-else>Save this farm as:</div>
       </div>
       <div class="row-start-7 col-start-3">
-        <input type="text" id="saveAs" name="saveAs" :disabled="addToExisting" class="w-full">
+        <input type="text" id="saveAs" name="saveAs" v-model.trim="saveAs" :disabled="addToExisting" class="w-full">
       </div>
 
       <div class="row-start-8 col-start-3">
-        <input type="button" id="saveLogin" name="saveLogin" value="Save login" class="p-0.5">
+        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" class="p-0.5">
       </div>
     </div>
   </div>
@@ -88,8 +88,13 @@ import SvgIcon from "@/components/SvgIcon";
 export default {
   data() {
     return {
+      accountName: null,
+      botPasswordName: null,
+      botPassword: null,
       addToExisting: false,
+      addTo: 0,
       isWikiFarm: false,
+      saveAs: null,
 
       farms: [
         { id: 1, name: "fandom.com" },
@@ -103,6 +108,15 @@ export default {
   methods: {
     methodToRunOnSelect(payload) {
       this.object = payload;
+    },
+    onUrlFieldInput(event) {
+      // stub
+    },
+    onUrlAreaInput(event) {
+      // stub
+    },
+    saveLogin() {
+      // stub
     }
   },
   components: { SvgIcon },
