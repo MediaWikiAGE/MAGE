@@ -78,6 +78,13 @@
       <div class="row-start-8 col-start-3">
         <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" class="p-0.5">
       </div>
+
+      <div class="row-start-9 col-start-1 col-end-5">
+        <span v-if="validationErrors.length > 0">Errors:</span>
+        <ul class="bg-gray-100 text-red-900 text-sm">
+          <li v-for="(error, index) in validationErrors" :key="index">{{ error }}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -184,10 +191,9 @@ export default {
         }
       }
 
+      this.validationErrors = validationErrors;
       if (validationErrors.length === 0) {
         // TODO save login
-      } else {
-        this.validationErrors = validationErrors;
       }
     }
   },
