@@ -6,7 +6,7 @@ import defaultSettings from "../spellbook.json";
 import { app } from "electron";
 import { getWikiInfo } from "./wikiDetect.js";
 
-// Should hook into node project varaible REFERENCE TWICE
+// Should hook into node project variable REFERENCE TWICE
 const projectName = "MediaWikiAGE";
 
 export default {
@@ -16,16 +16,16 @@ export default {
     this.settings = add;
   },
   set addUserData(add) {
-    this.settings.users[add.key] = { ...(this.settings.users[add.key]||{}), ...add.val };
+    this.settings.users[add.key] = { ...(this.settings.users[add.key] || {}), ...add.val };
   },
   set addSiteData(add) {
-    this.settings.sites[add.key] = { ...(this.settings.sites[add.key]||{}), ...add.val };
+    this.settings.sites[add.key] = { ...(this.settings.sites[add.key] || {}), ...add.val };
   },
   set addFarmData(add) {
-    this.settings.farms[add.key] = { ...(this.settings.farms[add.key]||{}), ...add.val };
+    this.settings.farms[add.key] = { ...(this.settings.farms[add.key] || {}), ...add.val };
   },
   loadSettings: function() {
-    //Load Settings
+    // Load Settings
     try {
       this.set = JSON.parse(fs.readFileSync(path.join(app.getPath("userData"), "spellbook.json")));
     } catch (err) {
@@ -33,22 +33,22 @@ export default {
         this.settingFileError = true;
         console.error("Spellbook bad json. Warn user here, and do NOT overwrite their filesave. Suggest to load over from scratch");
       } else {
-        //DEFAULT SETTINGS SAVE IF NO FILE DETECTED (ASSUME FIRST STARTUP)
+        // DEFAULT SETTINGS SAVE IF NO FILE DETECTED (ASSUME FIRST STARTUP)
         this.saveSettings();
-        //Delete keytar as well
+        // Delete keytar as well
         keytar.findCredentials(projectName)
           .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
       }
     }
   },
   saveSettings: function() {
-    //PROMPT USER TO OVERWRITE BAD FILE SETTING???
+    // PROMPT USER TO OVERWRITE BAD FILE SETTING???
     const overwrite = true;
     if (!this.settingFileError || overwrite) {
       fs.writeFileSync(path.join(app.getPath("userData"), "spellbook.json"), this.export);
 
-      //Flush keytar on a True Overwrite
-      if(this.settingFileError) {
+      // Flush keytar on a True Overwrite
+      if (this.settingFileError) {
         this.settingFileError = false;
         keytar.findCredentials(projectName)
           .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
@@ -76,8 +76,8 @@ export default {
   getUserData: function(key) {
     const { name, site, groups, note } = this.getUsers[key];
     const { server, scriptpath, farm } = this.getSites[site];
-    const farmNote = (this.getFarms[farm]||{}).note;
-    const farmName = (this.getFarms[farm]||{}).name;
+    const farmNote = (this.getFarms[farm] || {}).note;
+    const farmName = (this.getFarms[farm] || {}).name;
     return { key, name, groups, server, scriptpath, note, farmNote, farmName };
   },
   get getUserLists() {
@@ -115,11 +115,11 @@ export default {
       throw new ErrInput("Password can't be undefined");
     const scriptPath = new URL(url);
 
-    //Chunk Load Script Path
+    // Chunk load script cath
     getWikiInfo(scriptPath).then(async resp => {
       const siteinfo = resp.body.query;
 
-      //Site data
+      // Site data
       const siteOut = {};
       ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
       const siteKey = `${siteinfo.general.server+siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
@@ -138,7 +138,7 @@ export default {
             username: username,
             site: siteKey
           };
-          ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
+          ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
           const userKey = `${siteKey}|${username}`;
           if (typeof note !== "undefined")
             userOut.note = note;
@@ -146,7 +146,7 @@ export default {
             key: userKey,
             val: userOut
           };
-          this.addSiteData={
+          this.addSiteData = {
             key: siteKey,
             val: siteOut
           };
@@ -169,7 +169,7 @@ export default {
     };
     if (typeof farmNote !== "undefined")
       farmData.val.note = farmNote;
-    this.addFarmData=farmData;
+    this.addFarmData = farmData;
     this.saveSettings();
     keytar.setPassword(projectName, farmKey, password);
   },
@@ -180,7 +180,7 @@ export default {
     getWikiInfo(scriptPath).then(async resp => {
       const siteinfo = resp.body.query;
 
-      //Site data
+      // Site data
       const siteOut = {
         farm: farmKey
       };
@@ -200,7 +200,7 @@ export default {
           const userOut = {
             site: siteKey
           };
-          ["name", "groups", "rights"].forEach(key => userOut[key]= whoResult[key]);
+          ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
           const userKey = `${siteKey}|${username}`;
           if (typeof note !== "undefined")
             userOut.note = note;
@@ -208,7 +208,7 @@ export default {
             key: userKey,
             val: userOut
           };
-          this.addSiteData={
+          this.addSiteData = {
             key: siteKey,
             val: siteOut
           };
