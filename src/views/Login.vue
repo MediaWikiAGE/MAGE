@@ -49,7 +49,7 @@
       </div>
       <div class="row-start-5 col-start-3">
         <label for="isWikiFarm">Wiki farm?</label>
-        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" @change="switchWikiFarmFlag" :disabled="addToExisting" class="ml-1">
+        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" v-model="isWikiFarm" :disabled="addToExisting" class="ml-1">
       </div>
 
       <div class="row-start-6 col-start-1 text-right text-sm">
@@ -59,11 +59,11 @@
       <div class="row-start-6 col-start-3">
         <div v-if="!isWikiFarm">
           <label for="urlField">URL</label>
-          <input type="text" id="urlField" name="urlField" :value="wikiUrls[0]" :disabled="addToExisting" class="block w-full">
+          <input type="text" id="urlField" name="urlField" :value="wikiUrls[0]" @input="onUrlFieldInput" :disabled="addToExisting" class="block w-full">
         </div>
         <div v-else>
           <label for="urlArea">URLs</label>
-          <textarea id="urlArea" name="urlArea" :value="wikiUrls.join('\n')" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
+          <textarea id="urlArea" name="urlArea" :value="wikiUrls.join('\n')" @input="onUrlAreaInput" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
         </div>
       </div>
 
@@ -119,12 +119,13 @@ export default {
     methodToRunOnSelect(payload) {
       this.object = payload;
     },
+    onUrlFieldInput(event) {
+      this.wikiUrls[0] = event.target.value.trim();
+    },
+    onUrlAreaInput(event) {
+      this.wikiUrls = event.target.value.split("\n");
+    },
     switchWikiFarmFlag(event) {
-      if (this.isWikiFarm) {
-        this.wikiUrls = document.getElementById("urlArea").value.split("\n");
-      } else {
-        this.wikiUrls[0] = document.getElementById("urlField").value.trim();
-      }
       this.isWikiFarm = !this.isWikiFarm;
     },
     /// Returns `false` if `string` is a string with at least one significant character, otherwise `true`.
@@ -161,14 +162,12 @@ export default {
         }
       } else {
         if (!this.isWikiFarm) {
-          this.wikiUrls[0] = document.getElementById("urlField").value.trim();
           if (this.isEmpty(this.wikiUrls[0])) {
             validationErrors.push("When creating a new standalone wiki, the wiki URL cannot be empty");
           } else if (!this.isValidUrl(this.wikiUrls[0])) {
             validationErrors.push("When creating a new standalone wiki, the wiki URL must be valid");
           }
         } else {
-          this.wikiUrls = document.getElementById("urlArea").value.split("\n");
           let noValidUrls = true;
           for (const url of this.wikiUrls) {
             if (this.isEmpty(url)) {
