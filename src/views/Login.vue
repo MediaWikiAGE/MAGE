@@ -138,7 +138,8 @@ export default {
         return false;
       }
     },
-    saveLogin() {
+    /// Returns an array of strings containing error messages for validating form inputs. If empty, the form is filled correctly.
+    validateForm() {
       const validationErrors = [];
       if (this.isEmpty(this.accountName)) {
         validationErrors.push("The account name cannot be empty");
@@ -187,8 +188,13 @@ export default {
         }
       }
 
-      this.validationErrors = validationErrors;
-      if (validationErrors.length === 0) {
+      return validationErrors;
+    },
+
+    /// Validates the form and attempts to save configuration data.
+    saveLogin() {
+      this.validationErrors = this.validateForm();
+      if (this.validationErrors.length === 0) {
         // TODO save login
       }
     }
