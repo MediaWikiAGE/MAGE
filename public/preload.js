@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld(
       if (validChannels.includes(channel)) {
         return ipcRenderer.invoke(channel, data);
       }
-      throw new Error("App Bad Remote Call");
+      throw new Error(`Unrecognized remote call: ${channel}`);
     }
   }
 );
