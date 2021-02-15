@@ -191,7 +191,6 @@ export default {
 
     /// Is called when the form was saved successfully.
     async onSaveSuccess() {
-
       this.accountName = null;
       this.botPasswordName = null;
       this.botPassword = null;
