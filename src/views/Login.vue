@@ -195,7 +195,6 @@ export default {
     saveLogin() {
       this.validationErrors = this.validateForm();
       if (this.validationErrors.length === 0) {
-        // TODO actually implement
         const botPasswordData = {
           accountName: this.accountName,
           botPasswordName: this.botPasswordName,
