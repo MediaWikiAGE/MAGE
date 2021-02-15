@@ -195,6 +195,30 @@ class Farm extends AuthSystem {
 export default {
   loadSettings: loadSettings,
 
+  getAuthSystemList() {
+    const list = [];
+    let id = 1;
+
+    for (const farmName in settings.farms) {
+      list.push({
+        name: farmName,
+        isFarm: true,
+        id: id
+      });
+      id += 1;
+    }
+
+    for (const wikiName in settings.wikis) {
+      list.push({
+        name: wikiName,
+        id: id
+      });
+      id += 1;
+    }
+
+    return list;
+  },
+
   addBotPasswordForAuthSystem(authSystemData, botPasswordData) {
     const authSystemObject = authSystemData.isFarm
       ? new Farm(authSystemData.name)

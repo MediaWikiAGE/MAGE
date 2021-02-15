@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld(
   "api", {
     remote: (channel, ...data) => {
       const validChannels = [
+        "getAuthSystemList",
         "addBotPasswordForAuthSystem",
         "createStandaloneWikiWithUrl",
         "createWikiFarmWithUrls",

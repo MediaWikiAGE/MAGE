@@ -107,10 +107,7 @@ export default {
 
       validationErrors: [],
 
-      farms: [
-        { id: 1, name: "fandom.com" },
-        { id: 2, name: "gamepedia.com" }
-      ],
+      farms: [],
       object: {
         name: "None",
       },
@@ -193,9 +190,7 @@ export default {
     },
 
     /// Is called when the form was saved successfully.
-    onSaveSuccess() {
-      this.blockSaving = false;
-      alert("Login data saved successfully!");
+    async onSaveSuccess() {
 
       this.accountName = null;
       this.botPasswordName = null;
@@ -205,6 +200,10 @@ export default {
       this.isWikiFarm = false;
       this.wikiUrls = [];
       this.saveAs = null;
+      this.farms = await window.api.remote("getAuthSystemList");
+
+      alert("Login data saved successfully!");
+      this.blockSaving = false;
     },
 
     /// Validates the form and attempts to save configuration data.
@@ -219,10 +218,13 @@ export default {
           botPassword: this.botPassword
         };
 
-        const authSystemData = {
-          name: this.addToExisting ? this.farms[this.addTo].name : this.saveAs,
-          isFarm: this.addToExisting ? true : this.isWikiFarm
-        };
+        // The auth systems list has structures with the same fields as needed by auth system remotes.
+        const authSystemData = this.addToExisting
+          ? { ... this.farms[this.addTo - 1] }
+          : {
+            name: this.saveAs,
+            isFarm: this.isWikiFarm
+          };
 
         if (this.addToExisting) {
           window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then(this.onSaveSuccess);
@@ -238,6 +240,9 @@ export default {
         }
       }
     }
+  },
+  created: async function() {
+    this.farms = await window.api.remote("getAuthSystemList");
   },
   components: { SvgIcon },
 };

@@ -25,6 +25,10 @@ const getUserData = (event, arg) => {
   }));
 };
 
+ipcMain.handle("getAuthSystemList", (event) => {
+  return spellbook.getAuthSystemList();
+});
+
 ipcMain.handle("addBotPasswordForAuthSystem", (event, ...args) => {
   const [ authSystemData, botPasswordData ] = args;
   spellbook.addBotPasswordForAuthSystem(authSystemData, botPasswordData);
