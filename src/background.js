@@ -15,24 +15,35 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 const isMac = process.platform !== "darwin";
 
-//Load Config
 spellbook.loadSettings();
 let current_user = new Bot();
 
-// Hidden testing
-// if (process.env.WIKIUSER) {
-//   spellbook.addSingleUser(process.env.WIKIUSER, process.env.PASSWORD, process.env.SITE, "Test Note");
-//   spellbook.addFarm("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_PASSWORD, "Test Farm Note");
-//   spellbook.addFarmUser("MyFandom", process.env.FARM_WIKIUSER, process.env.FARM_SITE, "Test User Farm Note");
-// 
-//   // Select user id from the list... can this be an integer reference and not a key O.o
-// }
 const getUserData = (event, arg) => {
   return new Promise((res, rej) => res({
     cacheSite: current_user.cacheSite,
     cacheUser: current_user.cacheUser
   }));
 };
+
+ipcMain.handle("getAuthSystemList", (event) => {
+  return spellbook.getAuthSystemList();
+});
+
+ipcMain.handle("addBotPasswordForAuthSystem", (event, ...args) => {
+  const [ authSystemData, botPasswordData ] = args;
+  spellbook.addBotPasswordForAuthSystem(authSystemData, botPasswordData);
+});
+
+ipcMain.handle("createStandaloneWikiWithUrl", (event, ...args) => {
+  const [ wikiName, wikiUrl ] = args;
+  spellbook.createStandaloneWikiWithUrl(wikiName, wikiUrl);
+});
+
+ipcMain.handle("createWikiFarmWithUrls", (event, ...args) => {
+  const [farmName, wikiUrls ] = args;
+  spellbook.createWikiFarmWithUrls(farmName, wikiUrls);
+});
+
 ipcMain.handle("getUser", getUserData);
 ipcMain.handle("getUserLists", (event, arg) => {
   return new Promise((res, rej) => res(spellbook.getUserLists));

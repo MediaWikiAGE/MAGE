@@ -76,7 +76,7 @@
       </div>
 
       <div class="row-start-8 col-start-3">
-        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" class="p-0.5">
+        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" :disabled="blockSaving" class="p-0.5">
       </div>
 
       <div class="row-start-9 col-start-1 col-end-5">
@@ -103,13 +103,11 @@ export default {
       isWikiFarm: false,
       wikiUrls: [],
       saveAs: null,
+      blockSaving: false,
 
       validationErrors: [],
 
-      farms: [
-        { id: 1, name: "fandom.com" },
-        { id: 2, name: "gamepedia.com" }
-      ],
+      farms: [],
       object: {
         name: "None",
       },
@@ -138,7 +136,8 @@ export default {
         return false;
       }
     },
-    saveLogin() {
+    /// Returns an array of strings containing error messages for validating form inputs. If empty, the form is filled correctly.
+    validateForm() {
       const validationErrors = [];
       if (this.isEmpty(this.accountName)) {
         validationErrors.push("The account name cannot be empty");
@@ -187,11 +186,65 @@ export default {
         }
       }
 
-      this.validationErrors = validationErrors;
-      if (validationErrors.length === 0) {
-        // TODO save login
+      return validationErrors;
+    },
+
+    /// Is called when the form was saved successfully.
+    async onSaveSuccess() {
+      this.accountName = null;
+      this.botPasswordName = null;
+      this.botPassword = null;
+      this.addToExisting = false;
+      this.addTo = 0;
+      this.isWikiFarm = false;
+      this.wikiUrls = [];
+      this.saveAs = null;
+      this.farms = await window.api.remote("getAuthSystemList");
+
+      alert("Login data saved successfully!");
+      this.blockSaving = false;
+    },
+
+    /// Separate function for (asynchronously) updating settings when saving a login.
+    async updateSettings(authSystemData, botPasswordData) {
+        if (this.addToExisting) {
+          await window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+        } else if (this.isWikiFarm) {
+          // this.wikiUrls gives an "An object could not be cloned." error if provided directly?
+          await window.api.remote("createWikiFarmWithUrls", this.saveAs, [...this.wikiUrls]);
+          await window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+        } else {
+          await window.api.remote("createStandaloneWikiWithUrl", this.saveAs, this.wikiUrls[0]);
+          await window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+        }
+    },
+
+    /// Validates the form and attempts to save configuration data.
+    saveLogin() {
+      this.validationErrors = this.validateForm();
+      if (this.validationErrors.length === 0) {
+        this.blockSaving = true;
+
+        const botPasswordData = {
+          accountName: this.accountName,
+          botPasswordName: this.botPasswordName,
+          botPassword: this.botPassword
+        };
+
+        // The auth systems list has structures with the same fields as needed by auth system remotes.
+        const authSystemData = this.addToExisting
+          ? { ... this.farms[this.addTo - 1] }
+          : {
+            name: this.saveAs,
+            isFarm: this.isWikiFarm
+          };
+
+        this.updateSettings(authSystemData, botPasswordData).then(this.onSaveSuccess);
       }
     }
+  },
+  created: async function() {
+    this.farms = await window.api.remote("getAuthSystemList");
   },
   components: { SvgIcon },
 };
