@@ -192,6 +192,21 @@ export default {
       return validationErrors;
     },
 
+    /// Is called when the form was saved successfully.
+    onSaveSuccess() {
+      this.blockSaving = false;
+      alert("Login data saved successfully!");
+
+      this.accountName = null;
+      this.botPasswordName = null;
+      this.botPassword = null;
+      this.addToExisting = false;
+      this.addTo = 0;
+      this.isWikiFarm = false;
+      this.wikiUrls = [];
+      this.saveAs = null;
+    },
+
     /// Validates the form and attempts to save configuration data.
     saveLogin() {
       this.validationErrors = this.validateForm();
@@ -210,21 +225,15 @@ export default {
         };
 
         if (this.addToExisting) {
-          window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then( () => {
-            this.blockSaving = false;
-          });
+          window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then(this.onSaveSuccess);
         } else if (this.isWikiFarm) {
           // this.wikiUrls gives an "An object could not be cloned." error if provided directly?
           window.api.remote("createWikiFarmWithUrls", this.saveAs, [...this.wikiUrls]).then( () => {
-            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then( () => {
-              this.blockSaving = false;
-            });
+            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then(this.onSaveSuccess);
           });
         } else {
           window.api.remote("createStandaloneWikiWithUrl", this.saveAs, this.wikiUrls[0]).then( () => {
-            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then( () => {
-              this.blockSaving = false;
-            });
+            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then(this.onSaveSuccess);
           });
         }
       }
