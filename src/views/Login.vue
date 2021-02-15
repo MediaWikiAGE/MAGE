@@ -206,6 +206,20 @@ export default {
       this.blockSaving = false;
     },
 
+    /// Separate function for (asynchronously) updating settings when saving a login.
+    async updateSettings(authSystemData, botPasswordData) {
+        if (this.addToExisting) {
+          await window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+        } else if (this.isWikiFarm) {
+          // this.wikiUrls gives an "An object could not be cloned." error if provided directly?
+          await window.api.remote("createWikiFarmWithUrls", this.saveAs, [...this.wikiUrls]);
+          await window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+        } else {
+          await window.api.remote("createStandaloneWikiWithUrl", this.saveAs, this.wikiUrls[0]);
+          await window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+        }
+    },
+
     /// Validates the form and attempts to save configuration data.
     saveLogin() {
       this.validationErrors = this.validateForm();
@@ -226,18 +240,7 @@ export default {
             isFarm: this.isWikiFarm
           };
 
-        if (this.addToExisting) {
-          window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then(this.onSaveSuccess);
-        } else if (this.isWikiFarm) {
-          // this.wikiUrls gives an "An object could not be cloned." error if provided directly?
-          window.api.remote("createWikiFarmWithUrls", this.saveAs, [...this.wikiUrls]).then( () => {
-            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then(this.onSaveSuccess);
-          });
-        } else {
-          window.api.remote("createStandaloneWikiWithUrl", this.saveAs, this.wikiUrls[0]).then( () => {
-            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then(this.onSaveSuccess);
-          });
-        }
+        this.updateSettings(authSystemData, botPasswordData).then(this.onSaveSuccess);
       }
     }
   },
