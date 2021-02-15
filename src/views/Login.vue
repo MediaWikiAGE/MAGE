@@ -76,7 +76,7 @@
       </div>
 
       <div class="row-start-8 col-start-3">
-        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" class="p-0.5">
+        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" :disabled="blockSaving" class="p-0.5">
       </div>
 
       <div class="row-start-9 col-start-1 col-end-5">
@@ -103,6 +103,7 @@ export default {
       isWikiFarm: false,
       wikiUrls: [],
       saveAs: null,
+      blockSaving: false,
 
       validationErrors: [],
 
@@ -195,6 +196,8 @@ export default {
     saveLogin() {
       this.validationErrors = this.validateForm();
       if (this.validationErrors.length === 0) {
+        this.blockSaving = true;
+
         const botPasswordData = {
           accountName: this.accountName,
           botPasswordName: this.botPasswordName,
@@ -207,15 +210,21 @@ export default {
         };
 
         if (this.addToExisting) {
-          window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+          window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then( () => {
+            this.blockSaving = false;
+          });
         } else if (this.isWikiFarm) {
           // this.wikiUrls gives an "An object could not be cloned." error if provided directly?
           window.api.remote("createWikiFarmWithUrls", this.saveAs, [...this.wikiUrls]).then( () => {
-            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then( () => {
+              this.blockSaving = false;
+            });
           });
         } else {
           window.api.remote("createStandaloneWikiWithUrl", this.saveAs, this.wikiUrls[0]).then( () => {
-            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData).then( () => {
+              this.blockSaving = false;
+            });
           });
         }
       }
