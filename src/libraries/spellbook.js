@@ -2,221 +2,214 @@ import fs from "fs";
 import path from "path";
 import Bot from "@sidemen19/mediawiki.js";
 import keytar from "keytar";
-import defaultSettings from "../spellbook.json";
-import { app } from "electron";
+import { app, dialog, BrowserWindow } from "electron";
 import { getWikiInfo } from "./wikiDetect.js";
 
-// Should hook into node project variable REFERENCE TWICE
+// TODO hook into node project variable REFERENCE TWICE
 const projectName = "MediaWikiAGE";
 
+let settings = defaultSettings();
+let settingFileError = false;
+
+function defaultSettings() {
+  return {
+    "wikis": {},
+    "farms": {}
+  };
+};
+
+function getSettingsPath() {
+  return path.join(app.getPath("userData"), "mage_settings.json");
+};
+
+function saveSettings() {
+  fs.writeFileSync(getSettingsPath(), JSON.stringify(settings, null, 4));
+};
+
+function overwriteSettings() {
+  console.warn("Resetting the configuration file to default.");
+  settings = defaultSettings();
+  saveSettings();
+
+  function offerKeytarReset(browserWindow) {
+    keytar.findCredentials(projectName).then( creds => {
+      if (creds.length === 0) {
+        return;
+      }
+
+      dialog.showMessageBox(browserWindow, {
+        type: "warning",
+        title: "MAGE: Configuration Reset",
+        message: "Resetting MAGE configuration. Do you want to delete all stored bot passwords?",
+        buttons: ["Keep passwords", "Delete passwords"],
+        defaultId: 0,
+        cancelId: 0
+      }).then( (resolved) => {
+        if (resolved.response === 1) {
+          console.warn("Warning: deleting all stored passwords.");
+          creds.forEach(obj => keytar.deletePassword(projectName, obj.account));
+        }
+      });
+    });
+
+  };
+
+  // Wipe keytar in case the settings file is corrupted, deleted, or missing. The installation is assumed to be new, or
+  // the account information is assumed to be irrecoverable or not needed to be recovered.
+  // Implementation notes:
+  //  - This dialog offers a destructive action, and so it is intentionally modal.
+  //  - Dialogs can't be opened until the app is ready, but what's more, they can only be modal if bound to a browser window.
+  //  - Assumes it's always sensible to block either the focused window, or window #0.
+  if (app.isReady()) {
+    offerKeytarReset(BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0]);
+  } else {
+    app.once("browser-window-created", (event, browserWindow) => {
+      offerKeytarReset(browserWindow);
+    })
+  }
+};
+
+function loadSettings() {
+  try {
+    settings = JSON.parse(fs.readFileSync(getSettingsPath()));
+  } catch (err) {
+    if (err.name === "SyntaxError") {
+      console.error("Settings file contains invalid JSON.");
+    } else {
+      // Assume the only error other than a syntax error is a "file not found" error.
+      console.error(`Could not load the configuration file: ${err.name}: ${err.message}.`);
+    }
+    overwriteSettings();
+  }
+};
+
+function checkWikiSettings(wikiName) {
+  settings.wikis[wikiName] = settings.wikis[wikiName] || {};
+  return settings.wikis[wikiName];
+};
+
+function checkFarmSettings(farmName) {
+  settings.farms[farmName] = settings.farms[farmName] || {};
+  return settings.farms[farmName];
+};
+
+function checkAccountSettings(authSettings, accountName) {
+  authSettings.accounts = authSettings.accounts || {};
+  authSettings.accounts[accountName] = authSettings.accounts[accountName] || {};
+  return authSettings.accounts[accountName];
+};
+
+function checkAccountPasswordSettings(accountSettings, botPasswordName) {
+  accountSettings.botPasswords = accountSettings.botPasswords || {};
+  accountSettings.botPasswords[botPasswordName] = accountSettings.botPasswords[botPasswordName] || {};
+  return accountSettings.botPasswords[botPasswordName];
+};
+
+function checkFarmWikiSettings(farmSettings, wikiName) {
+  farmSettings.wikis = farmSettings.wikis || {};
+  farmSettings.wikis[wikiName] = farmSettings.wikis[wikiName] || {};
+  return farmSettings.wikis[wikiName];
+};
+
+function getWikiNameFromUrl(url) {
+  const urlObject = new URL(url);
+  const host = urlObject.host;
+
+  // Sort of a hack to better support non-English Fandom wiki URLs.
+  // Wikipedias in different languages have different hostnames (ru.wikipedia.org, en.wikipedia.org),
+  // but Fandom wikis in different languages have the same hostname and different path
+  // (community.fandom.com/wiki/Main Page; community.fandom.com/ru/wiki/Main Page)
+  let langSuffix = "";
+  let pathMatch = urlObject.pathname.match(/^\/([^\/]+?)\/wiki/);
+  if (pathMatch) {
+    langSuffix = ` [${pathMatch[1]}]`; // [ru]
+  }
+
+  return `${host}${langSuffix}`;
+};
+
+function deriveKeytarKey(authSystemName, accountName, botPasswordName) {
+  return `${authSystemName}|${accountName}|${botPasswordName}`;
+};
+
+class AuthSystem {
+  constructor(name) {
+    this.name = name;
+  }
+  addBotPassword(accountName, botPasswordName, botPassword) {
+    const keytarKey = deriveKeytarKey(this.name, accountName, botPasswordName);
+    keytar.setPassword(projectName, keytarKey, botPassword);
+  }
+}
+
+class Wiki extends AuthSystem {
+  constructor(name, parentFarm) {
+    super(name);
+    this.parentFarm = parentFarm;
+  }
+  addBotPassword(accountName, botPasswordName, botPassword) {
+    if (this.parentFarm) {
+      this.parentFarm.addBotPassword(accountName, botPasswordName, botPassword);
+    } else {
+      super.addBotPassword(accountName, botPasswordName, botPassword);
+
+      const wikiSettings = checkWikiSettings(this.name);
+      const wikiAccountSettings = checkAccountSettings(wikiSettings, accountName);
+      const wikiAccountPasswordSettings = checkAccountPasswordSettings(wikiAccountSettings, botPasswordName);
+
+      saveSettings();
+    }
+  }
+  setUrl(wikiUrl) {
+    const wikiSettings = checkWikiSettings(this.name);
+    wikiSettings.url = wikiUrl;
+
+    saveSettings();
+  }
+}
+
+class Farm extends AuthSystem {
+  constructor(name) {
+    super(name);
+  }
+  addBotPassword(accountName, botPasswordName, botPassword) {
+    super.addBotPassword(accountName, botPasswordName, botPassword);
+
+    const farmSettings = checkFarmSettings(this.name);
+    const farmAccountSettings = checkAccountSettings(farmSettings, accountName);
+    const farmAccountPasswordSettings = checkAccountPasswordSettings(farmAccountSettings, botPasswordName);
+
+    saveSettings();
+  }
+  addWikisFromUrls(urls) {
+    const farmSettings = checkFarmSettings(this.name);
+    for (const url of urls) {
+      const wikiSettings = checkFarmWikiSettings(farmSettings, getWikiNameFromUrl(url));
+      wikiSettings.url = url;
+    }
+
+    saveSettings();
+  }
+}
+
 export default {
-  settingFileError: false,
-  settings: defaultSettings,
-  set set(add) {
-    this.settings = add;
-  },
-  set addUserData(add) {
-    this.settings.users[add.key] = { ...(this.settings.users[add.key] || {}), ...add.val };
-  },
-  set addSiteData(add) {
-    this.settings.sites[add.key] = { ...(this.settings.sites[add.key] || {}), ...add.val };
-  },
-  set addFarmData(add) {
-    this.settings.farms[add.key] = { ...(this.settings.farms[add.key] || {}), ...add.val };
-  },
-  loadSettings: function() {
-    // Load Settings
-    try {
-      this.set = JSON.parse(fs.readFileSync(path.join(app.getPath("userData"), "spellbook.json")));
-    } catch (err) {
-      if (err.name === "SyntaxError") {
-        this.settingFileError = true;
-        console.error("Spellbook bad json. Warn user here, and do NOT overwrite their filesave. Suggest to load over from scratch");
-      } else {
-        // DEFAULT SETTINGS SAVE IF NO FILE DETECTED (ASSUME FIRST STARTUP)
-        this.saveSettings();
-        // Delete keytar as well
-        keytar.findCredentials(projectName)
-          .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
-      }
-    }
-  },
-  saveSettings: function() {
-    // PROMPT USER TO OVERWRITE BAD FILE SETTING???
-    const overwrite = true;
-    if (!this.settingFileError || overwrite) {
-      fs.writeFileSync(path.join(app.getPath("userData"), "spellbook.json"), this.export);
+  loadSettings: loadSettings,
 
-      // Flush keytar on a True Overwrite
-      if (this.settingFileError) {
-        this.settingFileError = false;
-        keytar.findCredentials(projectName)
-          .then(creds => creds.forEach(obj => keytar.deletePassword(projectName, obj.account)));
-      }
-    }
-  },
-  toString() {
-    return JSON.stringify(this.settings);
-  },
-  get all() {
-    return this.settings;
-  },
-  get export() {
-    return JSON.stringify(this.settings, null, 4);
-  },
-  get getUsers() {
-    return this.settings.users;
-  },
-  get getSites() {
-    return this.settings.sites;
-  },
-  get getFarms() {
-    return this.settings.farms;
-  },
-  getUserData: function(key) {
-    const { name, site, groups, note } = this.getUsers[key];
-    const { server, scriptpath, farm } = this.getSites[site];
-    const farmNote = (this.getFarms[farm] || {}).note;
-    const farmName = (this.getFarms[farm] || {}).name;
-    return { key, name, groups, server, scriptpath, note, farmNote, farmName };
-  },
-  get getUserLists() {
-    const users = this.getUsers;
-    return Object.keys(users).map(key => this.getUserData(key));
-  },
-  async getUserCred(userKey) {
-    const user = this.getUsers[userKey];
-    const site = this.getSites[user.site];
-    const farm = this.getFarms[site.farm];
-    return {
-      server: site.server,
-      path: site.scriptpath,
-      name: (farm || user).username,
-      pass: await keytar.getPassword(projectName, userKey)
-    };
-  },
-  addSingleUser(username, password, url, note) {
-    /*Probable structure
-    let userOut = {
-        "site": "genshin-impact-1",
-        "note": "Main Account",
-        "isBot": true,
-        "theme": "light"
-    }*/
-    class ErrInput extends Error {
-      constructor(msg) {
-        super(msg);
-        this.name = "ErrInput";
-      }
-    }
-    if (typeof username === "undefined" || username.length === 0)
-      throw new ErrInput("Username can't be undefined");
-    if (typeof password === "undefined" || password.length === 0)
-      throw new ErrInput("Password can't be undefined");
-    const scriptPath = new URL(url);
+  addBotPasswordForAuthSystem(authSystemData, botPasswordData) {
+    const authSystemObject = authSystemData.isFarm
+      ? new Farm(authSystemData.name)
+      : new Wiki(authSystemData.name);
 
-    // Chunk load script cath
-    getWikiInfo(scriptPath).then(async resp => {
-      const siteinfo = resp.body.query;
-
-      // Site data
-      const siteOut = {};
-      ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
-      const siteKey = `${siteinfo.general.server+siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
-
-      const tempBot = new Bot({
-        server: siteinfo.general.server,
-        path: siteinfo.general.scriptpath
-      });
-      try {
-        const loginResult = await tempBot.login(username, password);
-        if (loginResult.login.result === "Failed")
-            console.log(loginResult.login.reason);
-        else {
-          const whoResult = await tempBot.whoAmI();
-          const userOut = {
-            username: username,
-            site: siteKey
-          };
-          ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
-          const userKey = `${siteKey}|${username}`;
-          if (typeof note !== "undefined")
-            userOut.note = note;
-          this.addUserData = {
-            key: userKey,
-            val: userOut
-          };
-          this.addSiteData = {
-            key: siteKey,
-            val: siteOut
-          };
-          this.saveSettings();
-          keytar.setPassword(projectName, userKey, password);
-        }
-      } catch (err) {
-        console.log(err.name, err.message);
-      }
-    });
+    authSystemObject.addBotPassword(botPasswordData.accountName, botPasswordData.botPasswordName, botPasswordData.botPassword);
   },
-  addFarm(farmName, username, password, farmNote) {
-    const farmKey = `${farmName}|${username}`;
-    const farmData = {
-      key: farmKey,
-      val: {
-        name: farmName,
-        username: username
-      }
-    };
-    if (typeof farmNote !== "undefined")
-      farmData.val.note = farmNote;
-    this.addFarmData = farmData;
-    this.saveSettings();
-    keytar.setPassword(projectName, farmKey, password);
+
+  createStandaloneWikiWithUrl(wikiName, wikiUrl) {
+    const wiki = new Wiki(wikiName);
+    wiki.setUrl(wikiUrl);
   },
-  async addFarmUser(farmName, username, url, note) {
-    const farmKey = `${farmName}|${username}`;
-    const scriptPath = new URL(url);
-    const password = await keytar.getPassword(projectName, farmKey);
-    getWikiInfo(scriptPath).then(async resp => {
-      const siteinfo = resp.body.query;
 
-      // Site data
-      const siteOut = {
-        farm: farmKey
-      };
-      ["articlepath", "scriptpath", "lang", "server", "generator"].forEach(key => siteOut[key] = siteinfo.general[key]);
-      const siteKey = `${siteinfo.general.server+siteinfo.general.scriptpath}|${siteinfo.general.wikiid}`;
-
-      const tempBot = new Bot({
-        server: siteinfo.general.server,
-        path: siteinfo.general.scriptpath,
-      });
-      try {
-        const loginResult = await tempBot.login(username, password);
-        if (loginResult.login.result === "Failed")
-            console.log(loginResult.login.reason);
-        else {
-          const whoResult = await tempBot.whoAmI();
-          const userOut = {
-            site: siteKey
-          };
-          ["name", "groups", "rights"].forEach(key => userOut[key] = whoResult[key]);
-          const userKey = `${siteKey}|${username}`;
-          if (typeof note !== "undefined")
-            userOut.note = note;
-          this.addUserData = {
-            key: userKey,
-            val: userOut
-          };
-          this.addSiteData = {
-            key: siteKey,
-            val: siteOut
-          };
-          this.saveSettings();
-        }
-      } catch (err) {
-        console.log(err.name, err.message);
-      }
-    });
+  createWikiFarmWithUrls(farmName, wikiUrls) {
+    const farm = new Farm(farmName);
+    farm.addWikisFromUrls(wikiUrls);
   }
 };

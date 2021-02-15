@@ -195,7 +195,30 @@ export default {
     saveLogin() {
       this.validationErrors = this.validateForm();
       if (this.validationErrors.length === 0) {
-        // TODO save login
+        // TODO actually implement
+        const botPasswordData = {
+          accountName: this.accountName,
+          botPasswordName: this.botPasswordName,
+          botPassword: this.botPassword
+        };
+
+        const authSystemData = {
+          name: this.addToExisting ? this.farms[this.addTo].name : this.saveAs,
+          isFarm: this.addToExisting ? true : this.isWikiFarm
+        };
+
+        if (this.addToExisting) {
+          window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+        } else if (this.isWikiFarm) {
+          // this.wikiUrls gives an "An object could not be cloned." error if provided directly?
+          window.api.remote("createWikiFarmWithUrls", this.saveAs, [...this.wikiUrls]).then( () => {
+            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+          });
+        } else {
+          window.api.remote("createStandaloneWikiWithUrl", this.saveAs, this.wikiUrls[0]).then( () => {
+            window.api.remote("addBotPasswordForAuthSystem", authSystemData, botPasswordData);
+          });
+        }
       }
     }
   },

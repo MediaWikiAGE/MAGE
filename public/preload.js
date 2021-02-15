@@ -3,7 +3,13 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld(
   "api", {
     remote: (channel, ...data) => {
-      const validChannels = ["getUser", "getUserLists", "loginUser", "logoutUser", "disconnectServer"];
+      const validChannels = [
+        "addBotPasswordForAuthSystem",
+        "createStandaloneWikiWithUrl",
+        "createWikiFarmWithUrls",
+        "getUser", "getUserLists",
+        "loginUser", "logoutUser", "disconnectServer"
+      ];
       if (validChannels.includes(channel)) {
         return ipcRenderer.invoke(channel, ...data);
       }
