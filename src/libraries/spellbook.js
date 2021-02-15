@@ -9,7 +9,6 @@ import { getWikiInfo } from "./wikiDetect.js";
 const projectName = "MediaWikiAGE";
 
 let settings = defaultSettings();
-let settingFileError = false;
 
 function defaultSettings() {
   return {
