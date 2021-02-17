@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import Bot from "@sidemen19/mediawiki.js";
 import keytar from "keytar";
 import { app, dialog, BrowserWindow } from "electron";
 import { getWikiInfo } from "./wikiDetect.js";
