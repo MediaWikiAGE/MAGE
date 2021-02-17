@@ -19,8 +19,8 @@ let current_user = null;
 
 const getUserData = (event, arg) => {
   return new Promise((res, rej) => res({
-    cacheSite: current_user ? currentUser.cacheSite : undefined,
-    cacheUser: current_user ? currentUser.cacheUser : undefined
+    cacheSite: current_user ? current_user.cacheSite : undefined,
+    cacheUser: current_user ? current_user.cacheUser : undefined
   }));
 };
 
