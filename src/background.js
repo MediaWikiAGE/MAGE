@@ -4,7 +4,6 @@ import { config as load_env } from "dotenv";
 import { app, protocol, BrowserWindow, Menu, MenuItem, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import Bot from "@sidemen19/mediawiki.js";
 import spellbook from "./libraries/spellbook.js";
 import menuTemplate from "./libraries/menuTemplate.js";
 
@@ -16,12 +15,12 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 const isMac = process.platform !== "darwin";
 
 spellbook.loadSettings();
-let current_user = new Bot();
+let current_user = null;
 
 const getUserData = (event, arg) => {
   return new Promise((res, rej) => res({
-    cacheSite: current_user.cacheSite,
-    cacheUser: current_user.cacheUser
+    cacheSite: current_user ? current_user.cacheSite : undefined,
+    cacheUser: current_user ? current_user.cacheUser : undefined
   }));
 };
 
@@ -60,7 +59,7 @@ ipcMain.handle("logoutUser", async (event, arg) => {
   return getUserData();
 });
 ipcMain.handle("disconnectServer", (event, arg) => {
-  current_user = new Bot();
+  current_user = null;
   return getUserData();
 });
 
