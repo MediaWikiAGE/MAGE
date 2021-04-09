@@ -14,14 +14,17 @@
     <div id="tasklist" class="flex flex-col w-2/3 mx-1 bg-gray-100">
       <h2 class="mx-auto my-1 text-2xl">Current Tasks</h2>
       <div class="overflow-y-auto my-1">
-        <div v-for="task in tasks" :key="task.internalId">
+        <div v-for="(task, index) in tasks" :key="task.internalId">
           <div v-if="expandedTasks[task.internalId]" class="flex flex-col bg-gray-200 mx-1 my-0.5 px-1 py-1">
             <div class="flex justify-between">
               <button class="flex-shrink-0 opacity-60"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
-              <h3 class="text-lg mx-auto">Task {{task.internalId}}: {{task.name}}</h3>
+              <h3 class="text-lg mx-auto">Task {{index+1}}: {{task.name}}</h3>
               <button class="flex-shrink-0 hover:bg-gray-300" title="Collapse" @click="collapseTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-up" /></button>
             </div>
             <p class="mt-1 mb-3">{{task.description}}</p>
+            <ul v-if="Object.keys(task.params).length > 0">
+              <li v-for="(param, paramName) in task.params" :key="paramName"><strong>{{paramName}}:</strong> <span class="font-mono">{{param}}</span></li>
+            </ul>
             <div class="flex justify-between">
               <button class="flex-shrink-0 hover:bg-gray-300" title="Task options"><svg-icon width="24" height="24" icon="cog" /></button>
               <div class="select-none hover:bg-gray-300 px-1">
@@ -32,14 +35,14 @@
           </div>
           <div v-else class="flex justify-between bg-gray-200 mx-1 my-0.5 px-1 py-1">
             <button class="flex-shrink-0 opacity-60"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
-            <h3 class="text-lg">Task {{task.internalId}}: {{task.name}}</h3>
+            <h3 class="text-lg">Task {{index+1}}: {{task.name}}</h3>
             <button class="flex-shrink-0 hover:bg-gray-300" title="Expand" @click="expandTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
           </div>
         </div>
       </div>
       <div class="flex mt-auto">
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Options"><svg-icon width="32" height="32" icon="cog" /></button>
-        <button class="mr-auto flex-shrink-0 hover:bg-gray-300" title="Add task"><svg-icon width="32" height="32" icon="document-add" /></button>
+        <button class="mr-auto flex-shrink-0 hover:bg-gray-300" title="Add task" @click="addTaskModalOpen = true"><svg-icon width="32" height="32" icon="document-add" /></button>
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Run or resume tasks"><svg-icon width="32" height="32" icon="play" /></button>
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Pause all tasks to resume later"><svg-icon width="32" height="32" icon="pause" /></button>
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
@@ -49,10 +52,10 @@
   </div>
   <teleport to="body">
     <div v-if="generatorModalOpen" class="fixed inset-0 w-screen h-screen z-10 backdrop-filter backdrop-brightness-50">
-      <div class="fixed inset-0 w-4/5 h-4/5 m-auto bg-white border-2 border-gray-700 grid grid-rows-6 grid-cols-3 gap-1">
-        <div class="row-start-1 row-end-6 col-start-1 col-end-3 bg-gray-100 flex flex-col">
+      <div class="fixed inset-0 w-4/5 h-4/5 m-auto bg-white border-2 border-gray-700 grid grid-rows-6 grid-cols-2 gap-1">
+        <div class="row-start-1 row-end-6 col-start-1 bg-gray-100 flex flex-col">
           <div class="bg-indigo-100 text-center">
-            <h3 class="text-xl">Page Generators</h3>
+            <h3 class="text-xl py-1">Page Generators</h3>
           </div>
           <div class="overflow-y-auto mt-1">
             <div v-for="generator in generatorList" :key="generator.id" class="px-1" @click="generatorModalChosenGenerator = generator.id" :class="{'bg-gray-300': generatorModalChosenGenerator === generator.id, 'hover:bg-gray-200': generatorModalChosenGenerator !== generator.id}">
@@ -61,9 +64,9 @@
             </div>
           </div>
         </div>
-        <div class="row-start-1 row-end-6 col-start-3 bg-gray-100 flex flex-col">
+        <div class="row-start-1 row-end-6 col-start-2 bg-gray-100 flex flex-col">
           <div class="bg-indigo-100 text-center">
-            <h3 class="text-xl">Generator Options</h3>
+            <h3 class="text-xl py-1">Generator Options</h3>
           </div>
           <div class="overflow-y-auto mt-1">
             <div v-for="genOption in generatorOptionList" :key="genOption.id" class="mb-1 px-1">
@@ -95,12 +98,61 @@
         </div>
       </div>
     </div>
+
+    <div v-if="addTaskModalOpen" class="fixed inset-0 w-screen h-screen z-10 backdrop-filter backdrop-brightness-50">
+      <div class="fixed inset-0 w-4/5 h-4/5 m-auto bg-white border-2 border-gray-700 grid grid-rows-6 grid-cols-2 gap-1">
+        <div class="row-start-1 row-end-6 col-start-1 bg-gray-100 flex flex-col">
+          <div class="bg-indigo-100 text-center">
+            <h3 class="text-xl py-1">Task Types</h3>
+          </div>
+          <div class="overflow-y-auto mt-1">
+            <div v-for="task in taskList" :key="task.id" class="px-1 py-0.5" @click="addTaskModalChosenTask = task.id" :class="{'bg-gray-300': addTaskModalChosenTask === task.id, 'hover:bg-gray-200': addTaskModalChosenTask !== task.id}">
+              <input type="radio" name="page-task" :id="'page-task-selector-' + task.id" v-model="addTaskModalChosenTask" :value="task.id" class="absolute opacity-0 w-0 h-0" />
+              <label :for="'page-task-selector-' + task.id" class="select-none">{{task.name}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="row-start-1 row-end-6 col-start-2 bg-gray-100 flex flex-col">
+          <div class="bg-indigo-100 text-center">
+            <h3 class="text-xl py-1">Task Options</h3>
+          </div>
+          <div class="overflow-y-auto mt-1">
+            <div v-for="taskOption in taskOptionList" :key="taskOption.id" class="mb-1 px-1">
+              <div v-if="taskOption.type === 'boolean'" class="flex items-center">
+                <input :id="getTaskOptionInputId(taskOption.id)" type="checkbox" v-model="taskOptionValues[taskOption.id]">
+                <label :for="getTaskOptionInputId(taskOption.id)" class="mr-auto pl-1 select-none">{{taskOption.name}}</label>
+              </div>
+              <div v-else-if="taskOption.type === 'integer'" class="flex flex-col">
+                <label :for="getTaskOptionInputId(taskOption.id)" class="mr-auto select-none"> {{taskOption.name}}</label>
+                <input
+                  :id="getTaskOptionInputId(taskOption.id)"
+                  type="number"
+                  :min="taskOption.min"
+                  :max="taskOption.max"
+                  v-model="taskOptionValues[taskOption.id]"
+                  class="px-0.5"
+                >
+              </div>
+              <div v-else class="flex flex-col">
+                <label :for="getTaskOptionInputId(taskOption.id)" class="mr-auto select-none"> {{taskOption.name}}</label>
+                <input :id="getTaskOptionInputId(taskOption.id)" type="text" v-model="taskOptionValues[taskOption.id]" class="px-0.5">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row-start-6 col-start-1 col-end-4 bg-gray-100 flex justify-around items-center">
+          <button @click="addTask()" class="select-none bg-gray-300 px-1.5 py-0.5 hover:shadow">Add Task</button>
+          <button @click="addTaskModalOpen = false" class="select-none bg-gray-300 px-1.5 py-0.5 hover:shadow">Cancel</button>
+        </div>
+      </div>
+    </div>
   </teleport>
 </template>
 
 <script>
 import SvgIcon from "@/components/SvgIcon";
 import * as pageGenerators from "@/libraries/pageGenerators.js";
+import * as pageTasks from "@/libraries/pageTasks.js";
 
 export default {
   components: { SvgIcon },
@@ -108,31 +160,11 @@ export default {
     return {
       generatorModalOpen: false,
       generatorModalChosenGenerator: "numbers",
-      generatorModalGeneratorOptions: {},
+      addTaskModalOpen: false,
+      addTaskModalChosenTask: "null-edit",
       expandedTasks: {},
-      tasks: [
-        {
-          internalId: 1,
-          name: "Null edit",
-          description: "Make a blank edit to the page to purge server-side cache.",
-          enabled: false
-        },
-        {
-          internalId: 2,
-          name: "Category change for patch notes",
-          description: "Renaming category 'PatchNotes' to 'Patch notes' to make the name less artificial.",
-          enabled: false
-        },
-        {
-          internalId: 3,
-          name: "Remove deprecated parameter",
-          description: "Remove the copy-paste legacy 'isCat' parameter from transclusions of Template:InfoboxCat. All cats are trivially cats.",
-          enabled: false
-        },
-      ],
-      taskPages: [
-
-      ]
+      tasks: [],
+      taskPages: []
     };
   },
   computed: {
@@ -149,11 +181,28 @@ export default {
         defaultValues[option.id] = option.default;
       }
       return defaultValues;
+    },
+    taskList() {
+      return pageTasks.listTasks();
+    },
+    taskOptionList() {
+      return pageTasks.getTaskParameters(this.addTaskModalChosenTask);
+    },
+    taskOptionValues() {
+      const options = this.taskOptionList;
+      const defaultValues = {};
+      for (const option of options) {
+        defaultValues[option.id] = option.default;
+      }
+      return defaultValues;
     }
   },
   methods: {
     getGeneratorOptionInputId(optionId) {
       return `generator-option-${this.generatorModalChosenGenerator}-${optionId}`;
+    },
+    getTaskOptionInputId(optionId) {
+      return `task-option-${this.addTaskModalChosenTask}-${optionId}`;
     },
     onPageListAreaInput(event) {
       // An empty textarea results in a one-element array with an empty string,
@@ -181,6 +230,17 @@ export default {
         }
       }
       this.generatorModalOpen = false;
+    },
+    addTask() {
+      const task = pageTasks.getTaskInfoById(this.addTaskModalChosenTask);
+      task.internalId = this.tasks.length;
+      // Intentional JSON parse/stringify to allow for deep copying and prevent
+      // unwanted reactivity from affecting prior tasks of the same type.
+      task.params = JSON.parse(JSON.stringify(this.taskOptionValues));
+      task.enabled = true;
+
+      this.tasks.push(task);
+      this.addTaskModalOpen = false;
     }
   }
 };
