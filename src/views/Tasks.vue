@@ -1,14 +1,16 @@
 <template>
   <div id="taskwindow" class="flex h-full">
+
     <div id="pagelist" class="flex flex-col w-1/3 mx-1 flex-grow-0 bg-gray-100">
       <h2 class="mx-auto my-1 text-2xl">Pages</h2>
-      <textarea class="border border-gray-400 h-full mx-1 resize-none text-sm font-mono my-auto"></textarea>
+      <textarea class="border border-gray-400 h-full mx-1 resize-none text-sm font-mono my-auto" :value="taskPages.join('\n')" @input="onPageListAreaInput"></textarea>
       <div class="flex">
-        <button class="mt-1 mx-auto flex-shrink-0 hover:bg-gray-300 flex" title="Generate page list">
+        <button class="mt-1 mx-auto flex-shrink-0 hover:bg-gray-300 flex" title="Generate page list" @click="generatorModalOpen = true">
           <svg-icon width="32" height="32" icon="plus" />
         </button>
       </div>
     </div>
+
     <div id="tasklist" class="flex flex-col w-2/3 mx-1 bg-gray-100">
       <h2 class="mx-auto my-1 text-2xl">Current Tasks</h2>
       <div class="overflow-y-auto my-1">
@@ -43,16 +45,70 @@
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
       </div>
     </div>
+
   </div>
+  <teleport to="body">
+    <div v-if="generatorModalOpen" class="fixed inset-0 w-screen h-screen z-10 backdrop-filter backdrop-brightness-50">
+      <div class="fixed inset-0 w-4/5 h-4/5 m-auto bg-white border-2 border-gray-700 grid grid-rows-6 grid-cols-3 gap-1">
+        <div class="row-start-1 row-end-6 col-start-1 col-end-3 bg-gray-100 flex flex-col">
+          <div class="bg-indigo-100 text-center">
+            <h3 class="text-xl">Page Generators</h3>
+          </div>
+          <div class="overflow-y-auto mt-1">
+            <div v-for="generator in generatorList" :key="generator.id" class="px-1" @click="generatorModalChosenGenerator = generator.id" :class="{'bg-gray-300': generatorModalChosenGenerator === generator.id, 'hover:bg-gray-200': generatorModalChosenGenerator !== generator.id}">
+              <input type="radio" name="page-generator" :id="'page-generator-selector-' + generator.id" v-model="generatorModalChosenGenerator" :value="generator.id" class="absolute opacity-0 w-0 h-0" />
+              <label :for="'page-generator-selector-' + generator.id" class="select-none">{{generator.name}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="row-start-1 row-end-6 col-start-3 bg-gray-100 flex flex-col">
+          <div class="bg-indigo-100 text-center">
+            <h3 class="text-xl">Generator Options</h3>
+          </div>
+          <div class="overflow-y-auto mt-1">
+            <div v-for="genOption in generatorOptionList" :key="genOption.id" class="mb-1 px-1">
+              <div v-if="genOption.type === 'boolean'" class="flex items-center">
+                <input :id="getGeneratorOptionInputId(genOption.id)" type="checkbox" v-model="generatorOptionValues[genOption.id]">
+                <label :for="getGeneratorOptionInputId(genOption.id)" class="mr-auto pl-1 select-none">{{genOption.name}}</label>
+              </div>
+              <div v-else-if="genOption.type === 'integer'" class="flex flex-col">
+                <label :for="getGeneratorOptionInputId(genOption.id)" class="mr-auto select-none"> {{genOption.name}}</label>
+                <input
+                  :id="getGeneratorOptionInputId(genOption.id)"
+                  type="number"
+                  :min="genOption.min"
+                  :max="genOption.max"
+                  v-model="generatorOptionValues[genOption.id]"
+                  class="px-0.5"
+                >
+              </div>
+              <div v-else class="flex flex-col">
+                <label :for="getGeneratorOptionInputId(genOption.id)" class="mr-auto select-none"> {{genOption.name}}</label>
+                <input :id="getGeneratorOptionInputId(genOption.id)" type="text" v-model="generatorOptionValues[genOption.id]" class="px-0.5">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row-start-6 col-start-1 col-end-4 bg-gray-100 flex justify-around items-center">
+          <button @click="generatePages()" class="select-none bg-gray-300 px-1.5 py-0.5 hover:shadow">Generate</button>
+          <button @click="generatorModalOpen = false" class="select-none bg-gray-300 px-1.5 py-0.5 hover:shadow">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </teleport>
 </template>
 
 <script>
 import SvgIcon from "@/components/SvgIcon";
+import * as pageGenerators from "@/libraries/pageGenerators.js";
 
 export default {
   components: { SvgIcon },
   data() {
     return {
+      generatorModalOpen: false,
+      generatorModalChosenGenerator: "numbers",
+      generatorModalGeneratorOptions: {},
       expandedTasks: {},
       tasks: [
         {
@@ -79,12 +135,52 @@ export default {
       ]
     };
   },
+  computed: {
+    generatorList() {
+      return pageGenerators.listGenerators();
+    },
+    generatorOptionList() {
+      return pageGenerators.getGeneratorParameters(this.generatorModalChosenGenerator);
+    },
+    generatorOptionValues() {
+      const options = this.generatorOptionList;
+      const defaultValues = {};
+      for (const option of options) {
+        defaultValues[option.id] = option.default;
+      }
+      return defaultValues;
+    }
+  },
   methods: {
+    getGeneratorOptionInputId(optionId) {
+      return `generator-option-${this.generatorModalChosenGenerator}-${optionId}`;
+    },
+    onPageListAreaInput(event) {
+      // An empty textarea results in a one-element array with an empty string,
+      // which leads to an extra newline at the top if the list is filled from a
+      // generator.
+      let pageArray = event.target.value.split("\n");
+
+      if (pageArray.length === 1 && pageArray[0] === "") {
+        pageArray = [];
+      }
+
+      this.taskPages = pageArray;
+    },
     expandTask(internalId) {
       this.expandedTasks[internalId] = true;
     },
     collapseTask(internalId) {
       this.expandedTasks[internalId] = false;
+    },
+    generatePages() {
+      const pages = pageGenerators.generatePages(this.generatorModalChosenGenerator, this.generatorOptionValues);
+      for (const page of pages) {
+        if (!this.taskPages.includes(page)) {
+          this.taskPages.push(page);
+        }
+      }
+      this.generatorModalOpen = false;
     }
   }
 };
