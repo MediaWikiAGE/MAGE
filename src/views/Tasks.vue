@@ -43,7 +43,7 @@
       <div class="flex mt-auto">
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Options"><svg-icon width="32" height="32" icon="cog" /></button>
         <button class="mr-auto flex-shrink-0 hover:bg-gray-300" title="Add task" @click="addTaskModalOpen = true"><svg-icon width="32" height="32" icon="document-add" /></button>
-        <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Run or resume tasks"><svg-icon width="32" height="32" icon="play" /></button>
+        <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Run or resume tasks" @click="startTasks()"><svg-icon width="32" height="32" icon="play" /></button>
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Pause all tasks to resume later"><svg-icon width="32" height="32" icon="pause" /></button>
         <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
       </div>
@@ -164,7 +164,8 @@ export default {
       addTaskModalChosenTask: "null-edit",
       expandedTasks: {},
       tasks: [],
-      taskPages: []
+      taskPages: [],
+      runningTasks: false
     };
   },
   computed: {
@@ -241,6 +242,48 @@ export default {
 
       this.tasks.push(task);
       this.addTaskModalOpen = false;
+    },
+    startTasks() {
+      this.runningTasks = true;
+      console.log("Starting tasks for page list.");
+      for (const page of this.taskPages) {
+        const pageData = {};
+        pageData.title = page;
+        console.log(`Starting tasks for page '${pageData.title}'.`);
+        pageData.text = page;
+        console.log(`Mock page text for testing: ${pageData.text}.`);
+
+        for (const task of this.tasks) {
+          if (!task.enabled) {
+            console.log(`Task with internal ID ${task.internalId} is disabled, skipping.`);
+            continue;
+          }
+          console.log(`Running task with internal ID ${task.internalId} and ID ${task.id}.`);
+          const preTaskPageData = JSON.parse(JSON.stringify(pageData));
+          pageTasks.runTask(pageData, task.id, task.params);
+          let actionTaken = false;
+          if (pageData.title !== preTaskPageData.title) {
+            console.log(`Moving page from '${preTaskPageData.title}' to '${pageData.title}'.`);
+            actionTaken = true;
+          }
+          if (pageData.text !== preTaskPageData.text) {
+            console.log(`Editing the page '${pageData.title}' to say '${pageData.text}' instead of '${preTaskPageData.text}'.`);
+            actionTaken = true;
+          }
+          if (pageData.nullEdit) {
+            console.log(`Null-editing the page '${pageData.title}'.`);
+            actionTaken = true;
+            pageData.nullEdit = null;
+          }
+          if (actionTaken) {
+            console.log("All needed actions were performed.");
+          } else {
+            console.log("No action was needed for this task.");
+          }
+        }
+        console.log(`Completed processing of page '${pageData.title}'.`);
+      }
+      console.log("All pages processed.");
     }
   }
 };

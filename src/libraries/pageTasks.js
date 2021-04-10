@@ -21,7 +21,7 @@ registerPageTask({
   description: "If the page has numbers in its name, it's moved to the title where the numbers are doubled. So 'Left 4 Dead 2' would become 'Left 8 Dead 4'.",
   parameters: [],
   processPage(pageData, params) {
-    pageData.title = pageData.title.replaceAll(/[1-9][0-9]+/g, (match) => String(Number(match)*2));
+    pageData.title = pageData.title.replaceAll(/[1-9][0-9]*/g, (match) => String(Number(match)*2));
   }
 });
 
@@ -84,12 +84,13 @@ export function getTaskParameters(taskId) {
 export function getTaskInfoById(taskId) {
   const task = pageTasksById[taskId];
   const taskInfo = {
+    id: task.id,
     name: task.name,
     description: task.description
   };
   return taskInfo;
 }
 
-function runTasks(pageData, taskList) {
-
+export function runTask(pageData, taskId, taskParams) {
+  pageTasksById[taskId].processPage(pageData, taskParams);
 }
