@@ -35,8 +35,8 @@
       </div>
       <div class="row-start-4 col-start-3">
         <div>
-          <label for="addToExisting">Add to existing?</label>
-          <input type="checkbox" id="addToExisting" name="addToExisting" :value=false v-model="addToExisting" class="ml-1">
+          <label for="addToExisting" class="pr-1">Add to existing?</label>
+          <input type="checkbox" id="addToExisting" name="addToExisting" :value=false v-model="addToExisting">
         </div>
         <select :disabled="!addToExisting" name="addTo" id="addTo" v-model.number="addTo">
           <option value="0" disabled selected>None</option>
@@ -48,8 +48,8 @@
         Do you use the same credentials to log into several different wikis?
       </div>
       <div class="row-start-5 col-start-3">
-        <label for="isWikiFarm">Wiki farm?</label>
-        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" v-model="isWikiFarm" :disabled="addToExisting" class="ml-1">
+        <label for="isWikiFarm" class="pr-1">Wiki farm?</label>
+        <input type="checkbox" id="isWikiFarm" name="isWikiFarm" v-model="isWikiFarm" :disabled="addToExisting">
       </div>
 
       <div class="row-start-6 col-start-1 text-right text-sm">

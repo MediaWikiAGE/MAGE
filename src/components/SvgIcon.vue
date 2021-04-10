@@ -1,4 +1,4 @@
-<template><img style="-webkit-user-drag: none" :width="width" :height="height" :src="image"></template>
+<template><img class="select-none" style="-webkit-user-drag: none" :width="width" :height="height" :src="image"></template>
 <script>
 export default {
   data: function() {
