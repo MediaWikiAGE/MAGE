@@ -19,6 +19,11 @@ module.exports = {
   variants: {
     extend: {
       backgroundColor: ["active"],
+      filter: ["dark"],
+      invert: ["dark"],
+      contrast: ["dark"],
+      ringWidth: ["hover"],
+      ringColor: ["dark"],
     },
   },
   plugins: [],
