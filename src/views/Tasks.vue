@@ -5,7 +5,7 @@
       <h2 class="mx-auto my-1 text-2xl">Pages</h2>
       <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 resize-none text-sm font-mono my-auto dark:bg-gray-700" :value="taskPages.join('\n')" @input="onPageListAreaInput"></textarea>
       <div class="flex">
-        <button class="mt-1 mx-auto flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600 flex" title="Generate page list" @click="generatorModalOpen = true">
+        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="generatorModalOpen = true">
           <svg-icon width="32" height="32" icon="plus" />
         </button>
       </div>
@@ -26,7 +26,7 @@
               <li v-for="(param, paramName) in task.params" :key="paramName"><strong>{{paramName}}:</strong> <span class="font-mono">{{param}}</span></li>
             </ul>
             <div class="flex justify-between">
-              <button class="flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Task options"><svg-icon width="24" height="24" icon="cog" /></button>
+              <button class="svg-icon-button" title="Task options"><svg-icon width="24" height="24" icon="cog" /></button>
               <div class="select-none hover:bg-gray-300 dark:hover:bg-gray-600 px-1">
                 <label :for="'task-' + task.internalId + '-enabled'">Enabled? </label>
                 <input :id="'task-' + task.internalId + '-enabled'" type="checkbox" v-model="task.enabled">
@@ -36,26 +36,26 @@
           <div v-else class="flex justify-between bg-gray-200 dark:bg-gray-700 mx-1 my-0.5 px-1 py-1">
             <button class="flex-shrink-0 opacity-60"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
             <h3 class="text-lg">Task {{index+1}}: {{task.name}}</h3>
-            <button class="flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Expand" @click="expandTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
+            <button class="svg-icon-button" title="Expand" @click="expandTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
           </div>
         </div>
       </div>
       <div class="flex mt-auto">
-        <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Options"><svg-icon width="32" height="32" icon="cog" /></button>
-        <button class="mr-auto flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Add task" @click="addTaskModalOpen = true"><svg-icon width="32" height="32" icon="document-add" /></button>
-        <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Run or resume tasks" @click="startTasks()"><svg-icon width="32" height="32" icon="play" /></button>
-        <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Pause all tasks to resume later"><svg-icon width="32" height="32" icon="pause" /></button>
-        <button class="mx-0.5 flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Options"><svg-icon width="32" height="32" icon="cog" /></button>
+        <button class="mr-auto svg-icon-button" title="Add task" @click="addTaskModalOpen = true"><svg-icon width="32" height="32" icon="document-add" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Run or resume tasks" @click="startTasks()"><svg-icon width="32" height="32" icon="play" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Pause all tasks to resume later"><svg-icon width="32" height="32" icon="pause" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
       </div>
     </div>
 
   </div>
   <teleport to="body">
-    <div v-if="generatorModalOpen" class="fixed inset-0 w-screen h-screen z-10 backdrop-filter backdrop-brightness-50 dark:text-gray-200">
-      <div class="fixed inset-0 w-4/5 h-4/5 m-auto bg-white border-2 border-gray-700 dark:border-gray-500 dark:bg-black grid grid-rows-6 grid-cols-2 gap-1">
-        <div class="row-start-1 row-end-6 col-start-1 bg-gray-100 dark:bg-gray-900 flex flex-col">
-          <div class="bg-indigo-100 dark:bg-indigo-900 text-center">
-            <h3 class="text-xl py-1">Page Generators</h3>
+    <div v-if="generatorModalOpen" class="modal-wrapper">
+      <div class="modal-div">
+        <div class="modal-column modal-column-left">
+          <div class="modal-header">
+            <h3>Page Generators</h3>
           </div>
           <div class="overflow-y-auto mt-1">
             <div v-for="generator in generatorList" :key="generator.id" class="px-1" @click="generatorModalChosenGenerator = generator.id" :class="{'bg-gray-300 dark:bg-gray-500': generatorModalChosenGenerator === generator.id, 'hover:bg-gray-200 dark:hover:bg-gray-600': generatorModalChosenGenerator !== generator.id}">
@@ -64,9 +64,9 @@
             </div>
           </div>
         </div>
-        <div class="row-start-1 row-end-6 col-start-2 bg-gray-100 dark:bg-gray-900 flex flex-col">
-          <div class="bg-indigo-100 dark:bg-indigo-900 text-center">
-            <h3 class="text-xl py-1">Generator Options</h3>
+        <div class="modal-column modal-column-right">
+          <div class="modal-header">
+            <h3>Generator Options</h3>
           </div>
           <div class="overflow-y-auto mt-1">
             <div v-for="genOption in generatorOptionList" :key="genOption.id" class="mb-1 px-1">
@@ -92,18 +92,18 @@
             </div>
           </div>
         </div>
-        <div class="row-start-6 col-start-1 col-end-4 bg-gray-100 dark:bg-gray-900 flex justify-around items-center">
-          <button @click="generatePages()" class="select-none bg-gray-300 dark:bg-gray-600 px-1.5 py-0.5 hover:ring ring-gray-200 dark:ring-gray-700">Generate</button>
-          <button @click="generatorModalOpen = false" class="select-none bg-gray-300 dark:bg-gray-600 px-1.5 py-0.5 hover:ring ring-gray-200 dark:ring-gray-700">Cancel</button>
+        <div class="modal-buttons-row">
+          <button @click="generatePages()" class="modal-resolution-button">Generate</button>
+          <button @click="generatorModalOpen = false" class="modal-resolution-button">Cancel</button>
         </div>
       </div>
     </div>
 
-    <div v-if="addTaskModalOpen" class="fixed inset-0 w-screen h-screen z-10 backdrop-filter backdrop-brightness-50 dark:text-gray-200">
-      <div class="fixed inset-0 w-4/5 h-4/5 m-auto bg-white border-2 border-gray-700 dark:border-gray-500 dark:bg-black grid grid-rows-6 grid-cols-2 gap-1">
-        <div class="row-start-1 row-end-6 col-start-1 bg-gray-100 dark:bg-gray-900 flex flex-col">
-          <div class="bg-indigo-100 dark:bg-indigo-900 text-center">
-            <h3 class="text-xl py-1">Task Types</h3>
+    <div v-if="addTaskModalOpen" class="modal-wrapper">
+      <div class="modal-div">
+        <div class="modal-column modal-column-left">
+          <div class="modal-header">
+            <h3>Task Types</h3>
           </div>
           <div class="overflow-y-auto mt-1">
             <div v-for="task in taskList" :key="task.id" class="px-1 py-0.5" @click="addTaskModalChosenTask = task.id" :class="{'bg-gray-300 dark:bg-gray-500': addTaskModalChosenTask === task.id, 'hover:bg-gray-200 dark:hover:bg-gray-600': addTaskModalChosenTask !== task.id}">
@@ -112,9 +112,9 @@
             </div>
           </div>
         </div>
-        <div class="row-start-1 row-end-6 col-start-2 bg-gray-100 dark:bg-gray-900 flex flex-col">
-          <div class="bg-indigo-100 dark:bg-indigo-900 text-center">
-            <h3 class="text-xl py-1">Task Options</h3>
+        <div class="modal-column modal-column-right">
+          <div class="modal-header">
+            <h3>Task Options</h3>
           </div>
           <div class="overflow-y-auto mt-1">
             <div v-for="taskOption in taskOptionList" :key="taskOption.id" class="mb-1 px-1">
@@ -140,9 +140,9 @@
             </div>
           </div>
         </div>
-        <div class="row-start-6 col-start-1 col-end-4 bg-gray-100 dark:bg-gray-900 flex justify-around items-center">
-          <button @click="addTask()" class="select-none bg-gray-300 dark:bg-gray-600 px-1.5 py-0.5 hover:ring ring-gray-200 dark:ring-gray-700">Add Task</button>
-          <button @click="addTaskModalOpen = false" class="select-none bg-gray-300 dark:bg-gray-600 px-1.5 py-0.5 hover:ring ring-gray-200 dark:ring-gray-700">Cancel</button>
+        <div class="modal-buttons-row">
+          <button @click="addTask()" class="modal-resolution-button">Add Task</button>
+          <button @click="addTaskModalOpen = false" class="modal-resolution-button">Cancel</button>
         </div>
       </div>
     </div>
@@ -288,3 +288,53 @@ export default {
   }
 };
 </script>
+<style>
+.svg-icon-button {
+  @apply flex-shrink-0;
+  @apply hover:bg-gray-300 dark:hover:bg-gray-600;
+}
+
+.modal-wrapper {
+  @apply fixed inset-0;
+  @apply w-screen h-screen;
+  @apply z-10 backdrop-filter backdrop-brightness-50;
+  @apply dark:text-gray-200;
+}
+.modal-div {
+  @apply fixed inset-0;
+  @apply grid grid-rows-6 grid-cols-2 gap-1;
+  @apply w-4/5 h-4/5 m-auto;
+  @apply border-2 border-gray-700 dark:border-gray-500;
+  @apply bg-white dark:bg-black;
+}
+.modal-header {
+  @apply text-center;
+  @apply bg-indigo-100 dark:bg-indigo-900;
+}
+.modal-header h3 {
+  @apply text-xl py-1;
+}
+.modal-resolution-button {
+  @apply select-none;
+  @apply px-1.5 py-0.5;
+  @apply bg-gray-300 dark:bg-gray-600;
+  @apply hover:ring ring-gray-200 dark:ring-gray-700;
+}
+.modal-div > div {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+.modal-column {
+  @apply flex flex-col;
+  @apply row-start-1 row-end-6;
+}
+.modal-column-left {
+  @apply col-start-1;
+}
+.modal-column-right {
+  @apply col-start-2;
+}
+.modal-buttons-row {
+  @apply flex justify-around items-center;
+  @apply row-start-6 col-start-1 col-end-4;
+}
+</style>
