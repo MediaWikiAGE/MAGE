@@ -1,7 +1,7 @@
 <template>
-  <div id="loginentry" class="xl:grid xl:grid-cols-loginview-outer h-full">
+  <div id="loginentry" class="xl:grid xl:grid-cols-loginview-outer h-full dark:bg-gray-900">
     <div class="grid grid-cols-loginview-3 md:grid-cols-loginview-4 gap-1 xl:col-start-2">
-      <div class="hidden select-none md:flex md:justify-center md:items-center md:col-start-4 md:row-start-1 md:row-end-9"><svg-icon icon="magelogo" /></div>
+      <div class="hidden select-none md:flex md:justify-center md:items-center md:col-start-4 md:row-start-1 md:row-end-9"><svg-icon icon="magelogo" noinvert="true" /></div>
       <div class="flex justify-center row-start-1 row-end-9 col-start-2">
         <div class="w-px border-l border-gray-500"></div>
       </div>
@@ -11,7 +11,7 @@
       </div>
       <div class="row-start-1 col-start-3">
         <label for="accountName">Username</label>
-        <input type="text" id="accountName" name="accountName" v-model.trim="accountName" class="block w-full">
+        <input type="text" id="accountName" name="accountName" v-model.trim="accountName" class="block w-full dark:bg-gray-700">
       </div>
 
       <div class="row-start-2 col-start-1 text-right text-sm">
@@ -19,7 +19,7 @@
       </div>
       <div class="row-start-2 col-start-3">
         <label for="botPasswordName">Bot password name</label>
-        <input type="text" id="botPasswordName" name="botPasswordName" v-model.trim="botPasswordName" class="block w-full">
+        <input type="text" id="botPasswordName" name="botPasswordName" v-model.trim="botPasswordName" class="block w-full dark:bg-gray-700">
       </div>
 
       <div class="row-start-3 col-start-1 text-right text-sm">
@@ -27,7 +27,7 @@
       </div>
       <div class="row-start-3 col-start-3">
         <label for="botPassword">Bot password</label>
-        <input type="text" id="botPassword" name="botPassword" v-model.trim="botPassword" class="block w-full">
+        <input type="text" id="botPassword" name="botPassword" v-model.trim="botPassword" class="block w-full dark:bg-gray-700">
       </div>
 
       <div class="row-start-4 col-start-1 text-right text-sm">
@@ -38,7 +38,7 @@
           <label for="addToExisting" class="pr-1">Add to existing?</label>
           <input type="checkbox" id="addToExisting" name="addToExisting" :value=false v-model="addToExisting">
         </div>
-        <select :disabled="!addToExisting" name="addTo" id="addTo" v-model.number="addTo">
+        <select :disabled="!addToExisting" name="addTo" id="addTo" class="dark:bg-gray-700" v-model.number="addTo">
           <option value="0" disabled selected>None</option>
           <option v-for="knownFarm in farms" :key="knownFarm.id" :value="knownFarm.id">{{ knownFarm.name }}</option>
         </select>
@@ -59,11 +59,11 @@
       <div class="row-start-6 col-start-3">
         <div v-if="!isWikiFarm">
           <label for="urlField">URL</label>
-          <input type="text" id="urlField" name="urlField" :value="wikiUrls[0]" @input="onUrlFieldInput" :disabled="addToExisting" class="block w-full">
+          <input type="text" id="urlField" name="urlField" :value="wikiUrls[0]" @input="onUrlFieldInput" :disabled="addToExisting" class="block w-full dark:bg-gray-700">
         </div>
         <div v-else>
           <label for="urlArea">URLs</label>
-          <textarea id="urlArea" name="urlArea" :value="wikiUrls.join('\n')" @input="onUrlAreaInput" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono" :disabled="addToExisting"></textarea>
+          <textarea id="urlArea" name="urlArea" :value="wikiUrls.join('\n')" @input="onUrlAreaInput" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono dark:bg-gray-700" :disabled="addToExisting"></textarea>
         </div>
       </div>
 
@@ -72,16 +72,16 @@
         <div v-else>Save this farm as:</div>
       </div>
       <div class="row-start-7 col-start-3">
-        <input type="text" id="saveAs" name="saveAs" v-model.trim="saveAs" :disabled="addToExisting" class="w-full">
+        <input type="text" id="saveAs" name="saveAs" v-model.trim="saveAs" :disabled="addToExisting" class="w-full dark:bg-gray-700">
       </div>
 
       <div class="row-start-8 col-start-3">
-        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" :disabled="blockSaving" class="p-0.5">
+        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" :disabled="blockSaving" class="p-0.5 dark:bg-gray-700">
       </div>
 
       <div class="row-start-9 col-start-1 col-end-5">
         <span v-if="validationErrors.length > 0">Errors:</span>
-        <ul class="bg-gray-100 text-red-900 text-sm">
+        <ul class="bg-gray-100 dark:bg-gray-800 text-red-900 dark:text-red-400 text-sm">
           <li v-for="(error, index) in validationErrors" :key="index">{{ error }}</li>
         </ul>
       </div>

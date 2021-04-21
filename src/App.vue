@@ -1,28 +1,28 @@
 <template>
-  <div id="app" class="main grid" style="width: 100vw; height: 100vh; grid-template: auto max-content / max-content auto; grid-gap: 0.25em;">
-    <div id="nav" class="menu select-none" style="overflow-y: auto;">
+  <div id="app" class="main dark:bg-black grid" style="width: 100vw; height: 100vh; grid-template: auto max-content / max-content auto; grid-gap: 0.25em;">
+    <div id="nav" class="menu dark:bg-gray-900 dark:text-gray-200 select-none" style="overflow-y: auto;">
       <div class="flex flex-col" style="gap: 2px;">
-        <div class="flex whitespace-nowrap p-0 bg-indigo-100 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
+        <div class="flex whitespace-nowrap p-0 bg-indigo-100 dark:bg-indigo-900 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
           <div class="mx-auto" v-show="mobileMenuOpen"><svg-icon width="32" height="32" icon="chevron-double-left" /></div>
           <div class="mx-auto" v-show="!mobileMenuOpen"><svg-icon width="24" height="32" icon="chevron-double-right" /></div>
         </div>
         <router-link custom v-for="(item, i) in this.menuItems" :key="i" :to="item.url">
           <div class="flex items-center cursor-pointer transition duration-150 ease-in-out" :class="this.getMenuLinkClass(item.name)" @click="this.$router.push(`${item.url}`); this.activeTab = item.name;">
-            <div class="pad flex-shrink-0" :title="item.title" style="width: 48px; height: 48px;" ><svg-icon width="48" height="48" :icon="item.buttonImage" /></div>
+            <div class="pad flex-shrink-0" :title="item.title" style="width: 48px; height: 48px;" ><svg-icon width="48" height="48" :icon="item.buttonImage" :noinvert="item.buttonImage === 'magelogo'" /></div>
             <div class="pad whitespace-nowrap" :class="{ hidden: !mobileMenuOpen }"> {{ item.title }} </div>
           </div>
         </router-link>
       </div>
     </div>
-    <div class="pad main overflow-auto" style="grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
-    <div class="pad main" style="grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
+    <div class="pad main overflow-auto dark:bg-black dark:text-gray-200" style="grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
+    <div class="pad main dark:bg-black dark:text-gray-200" style="grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
   </div>
 </template>
 
 <script>
   import MageFooter from "@/components/Footer";
   import SvgIcon from "@/components/SvgIcon";
-  
+
   import { ref } from "vue";
   export default {
     name: "App",
@@ -42,7 +42,9 @@
       getMenuLinkClass: function(linkName) {
         return {
           "bg-gray-300": this.activeTab === linkName,
+          "dark:bg-gray-500": this.activeTab === linkName,
           "hover:bg-gray-200": this.activeTab !== linkName,
+          "dark:hover:bg-gray-600": this.activeTab !== linkName,
         };
       }
     },
