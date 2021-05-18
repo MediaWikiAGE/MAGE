@@ -262,6 +262,84 @@ class Farm extends AuthSystem {
   }
 }
 
+/// Returns a list of standalone wiki accounts for the account info exported
+/// function.
+///
+/// The entries in the list are objects with the following fields:
+///  - name: string
+///     The name of the standalone wiki
+///  - accounts: array of string
+///     Alphabetically-sorted (ascending) accounts for the wiki, in the format
+///     `UserName@BotPasswordName`
+///
+/// The returned list is itself sorted in ascending order of the `name` fields.
+function getStandaloneWikiAccountInfo() {
+  const wikiList = [];
+  for (const [wikiName, wikiData] of Object.entries(settings.wikis)) {
+    const wikiAccounts = [];
+    for (const [accountName, accountData] of Object.entries(wikiData.accounts)) {
+      for (const botPasswordName of Object.keys(accountData.botPasswords)) {
+        wikiAccounts.push({
+          name: `${accountName}@${botPasswordName}`
+        });
+      }
+    }
+    wikiAccounts.sort( (a, b) => a.localeCompare(b) );
+
+    wikiList.push({
+      name: wikiName,
+      accounts: wikiAccounts
+    });
+  }
+  wikiList.sort( (a, b) => a.name.localeCompare(b.name) );
+  return wikiList;
+}
+
+
+/// Returns a list of farm wikis and accounts for the account info exported
+/// function.
+///
+/// The entries in the list are objects with the following fields:
+///  - name: string
+///     The name of the farm
+///  - wikis: array of string
+///     Names of the wikis in the farm, in ascending order
+///  - accounts: array of string
+///     Alphabetically-sorted (ascending) accounts for the farm, in the format
+///     `UserName@BotPasswordName`
+///
+/// The returned list is itself sorted in ascending order of the `name` fields.
+function getWikiFarmAccountInfo() {
+  const farmList = [];
+  for (const [farmName, farmData] of Object.entries(settings.farms)) {
+    const farmWikis = [];
+    for (const wikiName in farmData.wikis) {
+      farmWikis.push({
+        name: wikiName
+      });
+    }
+    farmList.sort( (a, b) => a.localeCompare(b) );
+
+    const farmAccounts = [];
+    for (const [accountName, accountData] of Object.entries(farmData.accounts)) {
+      for (const botPasswordName of Object.keys(accountData.botPasswords)) {
+        farmAccounts.push({
+          name: `${accountName}@${botPasswordName}`
+        });
+      }
+    }
+    farmAccounts.sort( (a, b) => a.localeCompare(b) );
+
+    farmList.push({
+      name: farmName,
+      wikis: farmWikis,
+      accounts: farmAccounts
+    });
+  }
+  farmList.sort( (a, b) => a.name.localeCompare(b.name) );
+  return farmList;
+}
+
 export default {
   loadSettings: loadSettings,
 
@@ -293,6 +371,19 @@ export default {
     }
 
     return list;
+  },
+
+  /// Returns the data on all known wikis, farms, and associated accounts and
+  /// bot passwords.
+  ///
+  /// The returned object has the `standalone` field returned from
+  /// `getStandaloneWikiAccountInfo()`, and the `farms` field returned from
+  /// `getWikiFarmAccountInfo()`.
+  getAccountData() {
+    const accountData = {};
+    accountData.standalone = getStandaloneWikiAccountInfo();
+    accountData.farms = getWikiFarmAccountInfo();
+    return accountData;
   },
 
   /// Adds a password specified in `botPasswordData` for the auth system specified in `authSystemData`.
