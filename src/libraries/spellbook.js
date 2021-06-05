@@ -284,7 +284,7 @@ function getStandaloneWikiAccountInfo() {
         });
       }
     }
-    wikiAccounts.sort( (a, b) => a.localeCompare(b) );
+    wikiAccounts.sort( (a, b) => a.name.localeCompare(b.name) );
 
     wikiList.push({
       name: wikiName,
@@ -318,7 +318,7 @@ function getWikiFarmAccountInfo() {
         name: wikiName
       });
     }
-    farmList.sort( (a, b) => a.localeCompare(b) );
+    farmList.sort( (a, b) => a.name.localeCompare(b.name) );
 
     const farmAccounts = [];
     for (const [accountName, accountData] of Object.entries(farmData.accounts)) {
@@ -328,7 +328,7 @@ function getWikiFarmAccountInfo() {
         });
       }
     }
-    farmAccounts.sort( (a, b) => a.localeCompare(b) );
+    farmAccounts.sort( (a, b) => a.name.localeCompare(b.name) );
 
     farmList.push({
       name: farmName,
