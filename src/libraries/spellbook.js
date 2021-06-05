@@ -254,7 +254,18 @@ class Farm extends AuthSystem {
   addWikisFromUrls(urls) {
     const farmSettings = checkFarmSettings(this.name);
     for (const url of urls) {
-      const wikiSettings = checkFarmWikiSettings(farmSettings, getWikiNameFromUrl(url));
+      const baseWikiName = getWikiNameFromUrl(url);
+      let wikiNameSuffix = "";
+      let suffixIndex = 1;
+
+      // A truthy `url` field implies a preexisting settings structure.
+      // This is done to avoid overwriting such structures.
+      while (checkFarmWikiSettings(farmSettings, baseWikiName + wikiNameSuffix).url) {
+        suffixIndex += 1;
+        wikiNameSuffix = ` [${suffixIndex}]`;
+      }
+
+      const wikiSettings = checkFarmWikiSettings(farmSettings, baseWikiName + wikiNameSuffix);
       wikiSettings.url = url;
     }
 
