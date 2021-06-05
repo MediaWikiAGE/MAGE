@@ -3,7 +3,7 @@
 export default {
   data: function() {
     return {
-      image: require(`../assets/icons/${this.icon}.svg`)
+      image: require(`../assets/icons/${this.icon}.svg`).default
     };
   },
   props: [ "width", "height", "icon", "noinvert" ]
