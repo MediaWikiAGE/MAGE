@@ -1,6 +1,6 @@
 <template>
   <div id="loginentry" class="2xl:grid 2xl:grid-cols-loginview-outer h-full dark:bg-gray-900">
-    <div class="grid grid-cols-loginview-3 lg:grid-cols-loginview-4 gap-1 2xl:col-start-2">
+    <div class="grid grid-cols-loginview-3 lg:grid-cols-loginview-4 gap-x-1 gap-y-4 2xl:col-start-2">
       <div class="hidden select-none lg:flex lg:justify-center lg:items-center lg:col-start-4 lg:row-start-1 lg:row-end-9"><svg-icon icon="magelogo" noinvert="true" /></div>
       <div class="flex justify-center row-start-1 row-end-9 col-start-2">
         <div class="w-px border-l border-gray-500"></div>
