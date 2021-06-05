@@ -163,6 +163,10 @@ export default {
           } else if (!this.isValidUrl(this.wikiUrls[0])) {
             validationErrors.push("When creating a new standalone wiki, the wiki URL must be valid");
           }
+
+          if (this.farms.some(authSystem => authSystem.name === this.saveAs && !authSystem.isFarm)) {
+            validationErrors.push(`A standalone wiki named "${this.saveAs}" is already defined.`);
+          }
         } else {
           let noValidUrls = true;
           for (const url of this.wikiUrls) {
@@ -179,9 +183,13 @@ export default {
           if (noValidUrls) {
             validationErrors.push("When creating a new wiki farm, at least one URL must be non-empty and valid.");
           }
+
+          if (this.farms.some(authSystem => authSystem.name === this.saveAs && authSystem.isFarm)) {
+            validationErrors.push(`A wiki farm named "${this.saveAs}" is already defined.`);
+          }
         }
 
-        if (!this.addToExisting && (this.saveAs === null || this.saveAs === "")) {
+        if (this.saveAs === null || this.saveAs === "") {
           validationErrors.push("When adding to an existing wiki or farm, the name for the wiki or farm cannot be empty");
         }
       }
