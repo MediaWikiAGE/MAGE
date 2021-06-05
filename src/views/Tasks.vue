@@ -5,7 +5,7 @@
       <h2 class="mx-auto my-1 text-2xl">Pages</h2>
       <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 resize-none text-sm font-mono my-auto dark:bg-gray-700" :value="taskPages.join('\n')" @input="onPageListAreaInput"></textarea>
       <div class="flex">
-        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="generatorModalOpen = true">
+        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="openGeneratorModal()">
           <svg-icon width="32" height="32" icon="plus" />
         </button>
       </div>
@@ -42,7 +42,7 @@
       </div>
       <div class="flex mt-auto">
         <button class="mx-0.5 svg-icon-button" title="Options"><svg-icon width="32" height="32" icon="cog" /></button>
-        <button class="mr-auto svg-icon-button" title="Add task" @click="addTaskModalOpen = true"><svg-icon width="32" height="32" icon="document-add" /></button>
+        <button class="mr-auto svg-icon-button" title="Add task" @click="openAddTaskModal()"><svg-icon width="32" height="32" icon="document-add" /></button>
         <button class="mx-0.5 svg-icon-button" title="Run or resume tasks" @click="startTasks()"><svg-icon width="32" height="32" icon="play" /></button>
         <button class="mx-0.5 svg-icon-button" title="Pause all tasks to resume later"><svg-icon width="32" height="32" icon="pause" /></button>
         <button class="mx-0.5 svg-icon-button" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
@@ -94,7 +94,7 @@
         </div>
         <div class="modal-buttons-row">
           <button @click="generatePages()" class="modal-resolution-button">Generate</button>
-          <button @click="generatorModalOpen = false" class="modal-resolution-button">Cancel</button>
+          <button @click="closeGeneratorModal()" class="modal-resolution-button">Cancel</button>
         </div>
       </div>
     </div>
@@ -142,7 +142,7 @@
         </div>
         <div class="modal-buttons-row">
           <button @click="addTask()" class="modal-resolution-button">Add Task</button>
-          <button @click="addTaskModalOpen = false" class="modal-resolution-button">Cancel</button>
+          <button @click="closeAddTaskModal()" class="modal-resolution-button">Cancel</button>
         </div>
       </div>
     </div>
@@ -230,7 +230,7 @@ export default {
           this.taskPages.push(page);
         }
       }
-      this.generatorModalOpen = false;
+      this.closeGeneratorModal();
     },
     addTask() {
       const task = pageTasks.getTaskInfoById(this.addTaskModalChosenTask);
@@ -241,7 +241,7 @@ export default {
       task.enabled = true;
 
       this.tasks.push(task);
-      this.addTaskModalOpen = false;
+      this.closeAddTaskModal();
     },
     startTasks() {
       this.runningTasks = true;
@@ -284,6 +284,32 @@ export default {
         console.log(`Completed processing of page '${pageData.title}'.`);
       }
       console.log("All pages processed.");
+    },
+    onGeneratorModalKeydown(event) {
+      if (event.code === "Escape") {
+        this.closeGeneratorModal();
+      }
+    },
+    openGeneratorModal() {
+      this.generatorModalOpen = true;
+      document.addEventListener("keydown", this.onGeneratorModalKeydown);
+    },
+    closeGeneratorModal() {
+      this.generatorModalOpen = false;
+      document.removeEventListener("keydown", this.onGeneratorModalKeydown);
+    },
+    onAddTaskModalKeydown(event) {
+      if (event.code === "Escape") {
+        this.closeAddTaskModal();
+      }
+    },
+    openAddTaskModal() {
+      this.addTaskModalOpen = true;
+      document.addEventListener("keydown", this.onAddTaskModalKeydown);
+    },
+    closeAddTaskModal() {
+      this.addTaskModalOpen = false;
+      document.removeEventListener("keydown", this.onAddTaskModalKeydown);
     }
   }
 };
