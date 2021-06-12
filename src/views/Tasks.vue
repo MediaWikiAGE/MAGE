@@ -3,7 +3,7 @@
 
     <div id="pagelist" class="flex flex-col w-1/3 mx-1 flex-grow-0 bg-gray-100 dark:bg-gray-800 dark:text-gray-200">
       <h2 class="mx-auto my-1 text-2xl">Pages</h2>
-      <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 resize-none text-sm font-mono my-auto dark:bg-gray-700" :value="taskPages.join('\n')" @input="onPageListAreaInput" :disabled="isAnyModalOpen"></textarea>
+      <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 p-0.5 resize-none text-sm font-mono my-auto dark:bg-gray-700 focus:ring-1 focus:ring-yellow-600 dark:focus:ring-yellow-300" :value="taskPages.join('\n')" @input="onPageListAreaInput" :disabled="isAnyModalOpen"></textarea>
       <div class="flex">
         <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="openGeneratorModal()" :disabled="isAnyModalOpen">
           <svg-icon width="32" height="32" icon="plus" />
@@ -17,9 +17,9 @@
         <div v-for="(task, index) in tasks" :key="task.internalId">
           <div v-if="expandedTasks[task.internalId]" class="flex flex-col bg-gray-200 dark:bg-gray-700 mx-1 my-0.5 px-1 py-1">
             <div class="flex justify-between">
-              <button class="flex-shrink-0 opacity-60" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
+              <div class="flex-shrink-0 opacity-60 cursor-pointer my-auto"><svg-icon width="24" height="24" icon="drag-indicator" /></div>
               <h3 class="text-lg mx-auto">Task {{index+1}}: {{task.name}}</h3>
-              <button class="flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Collapse" @click="collapseTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-up" /></button>
+              <button :id="'task-collapse-' + task.internalId" class="svg-icon-button" title="Collapse" @click="collapseTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-up" /></button>
             </div>
             <p class="mt-1 mb-3">{{task.description}}</p>
             <ul v-if="Object.keys(task.params).length > 0">
@@ -27,16 +27,17 @@
             </ul>
             <div class="flex justify-between">
               <button class="svg-icon-button" title="Task options" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="cog" /></button>
-              <div class="select-none hover:bg-gray-300 dark:hover:bg-gray-600 px-1">
-                <label :for="'task-' + task.internalId + '-enabled'">Enabled? </label>
-                <input :id="'task-' + task.internalId + '-enabled'" type="checkbox" v-model="task.enabled" :disabled="isAnyModalOpen">
+              <div>
+                <label :for="'task-' + task.internalId + '-enabled'" class="block select-none hover:bg-gray-300 dark:hover:bg-gray-600 px-1">Enabled?
+                  <input :id="'task-' + task.internalId + '-enabled'" class="focus:ring-2 focus:ring-yellow-600 dark:focus:ring-yellow-300" type="checkbox" v-model="task.enabled" :disabled="isAnyModalOpen">
+                </label>
               </div>
             </div>
           </div>
           <div v-else class="flex justify-between bg-gray-200 dark:bg-gray-700 mx-1 my-0.5 px-1 py-1">
-            <button class="flex-shrink-0 opacity-60" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
+            <div class="flex-shrink-0 opacity-60 cursor-pointer my-auto"><svg-icon width="24" height="24" icon="drag-indicator" /></div>
             <h3 class="text-lg">Task {{index+1}}: {{task.name}}</h3>
-            <button class="svg-icon-button" title="Expand" @click="expandTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
+            <button :id="'task-expand-' + task.internalId" class="svg-icon-button" title="Expand" @click="expandTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
           </div>
         </div>
       </div>
@@ -202,6 +203,31 @@ export default {
     }
   },
   methods: {
+    // This method is for event handlers (which are synchronous) that need to
+    // focus on conditionally-rendered elements enabled inside the handler.
+    // Because the handler blocks the process, the element won't be rendered
+    // until after the handler returns, but elements can't be focused if they
+    // are hidden.
+    // This is kind of a hack, but sadly, I couldn't think of a better and more
+    // or less universal solution.
+    deferredFocus(elementId) {
+      let targetElement = document.getElementById(elementId);
+      (async () => {
+        // Conditional rendering may be based on `v-if` or `v-show`. In the
+        // former case, the element isn't part of the DOM, and so the second
+        // loop (which is valid for `v-show`) would fail because `targetElement`
+        // is null.
+        while (!targetElement) {
+          targetElement = document.getElementById(elementId);
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        while (targetElement.offsetParent === null) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+        targetElement.focus();
+      })();
+    },
     getGeneratorOptionInputId(optionId) {
       return `generator-option-${this.generatorModalChosenGenerator}-${optionId}`;
     },
@@ -222,9 +248,11 @@ export default {
     },
     expandTask(internalId) {
       this.expandedTasks[internalId] = true;
+      this.deferredFocus(`task-collapse-${internalId}`);
     },
     collapseTask(internalId) {
       this.expandedTasks[internalId] = false;
+      this.deferredFocus(`task-expand-${internalId}`);
     },
     generatePages() {
       const pages = pageGenerators.generatePages(this.generatorModalChosenGenerator, this.generatorOptionValues);
@@ -296,22 +324,7 @@ export default {
     openGeneratorModal(event) {
       this.generatorModalOpen = true;
       document.addEventListener("keydown", this.onGeneratorModalKeydown);
-
-      // It seems handling events (which is how this method would be called)
-      // blocks the process, which means the modal won't appear until the event
-      // handler exits. And until the modal appears, an invisible input inside
-      // it can't be focused. As this produces no event (that I know of),
-      // and a MutationObserver on the `style` attribute felt more hacky and
-      // less reliable than just asynchronously waiting for the modal to appear,
-      // this is how I handled it.
-      const targetElement = document.getElementById(`page-generator-selector-${this.generatorModalChosenGenerator}`);
-      (async () => {
-        while (targetElement.offsetParent === null) {
-          await new Promise(resolve => setTimeout(resolve, 50));
-        }
-        targetElement.focus();
-      })();
-
+      this.deferredFocus(`page-generator-selector-${this.generatorModalChosenGenerator}`);
       event.preventDefault();
     },
     closeGeneratorModal() {
@@ -326,16 +339,7 @@ export default {
     openAddTaskModal(event) {
       this.addTaskModalOpen = true;
       document.addEventListener("keydown", this.onAddTaskModalKeydown);
-
-      const targetElement = document.getElementById(`page-task-selector-${this.addTaskModalChosenTask}`);
-      (async () => {
-        while (targetElement.offsetParent === null) {
-          await new Promise(resolve => setTimeout(resolve, 50));
-        }
-        targetElement.focus();
-      })();
-
-      // see the note in openGeneratorModal()
+      this.deferredFocus(`page-task-selector-${this.addTaskModalChosenTask}`);
       event.preventDefault();
     },
     closeAddTaskModal() {
@@ -349,6 +353,7 @@ export default {
 .svg-icon-button {
   @apply flex-shrink-0;
   @apply hover:bg-gray-300 dark:hover:bg-gray-600;
+  @apply focus:bg-gray-300 dark:focus:bg-gray-600 focus:shadow-inner-focus;
 }
 
 .modal-wrapper {
