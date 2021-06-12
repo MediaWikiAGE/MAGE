@@ -3,9 +3,9 @@
 
     <div id="pagelist" class="flex flex-col w-1/3 mx-1 flex-grow-0 bg-gray-100 dark:bg-gray-800 dark:text-gray-200">
       <h2 class="mx-auto my-1 text-2xl">Pages</h2>
-      <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 resize-none text-sm font-mono my-auto dark:bg-gray-700" :value="taskPages.join('\n')" @input="onPageListAreaInput"></textarea>
+      <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 resize-none text-sm font-mono my-auto dark:bg-gray-700" :value="taskPages.join('\n')" @input="onPageListAreaInput" :disabled="isAnyModalOpen"></textarea>
       <div class="flex">
-        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="openGeneratorModal()">
+        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="openGeneratorModal()" :disabled="isAnyModalOpen">
           <svg-icon width="32" height="32" icon="plus" />
         </button>
       </div>
@@ -17,50 +17,50 @@
         <div v-for="(task, index) in tasks" :key="task.internalId">
           <div v-if="expandedTasks[task.internalId]" class="flex flex-col bg-gray-200 dark:bg-gray-700 mx-1 my-0.5 px-1 py-1">
             <div class="flex justify-between">
-              <button class="flex-shrink-0 opacity-60"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
+              <button class="flex-shrink-0 opacity-60" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
               <h3 class="text-lg mx-auto">Task {{index+1}}: {{task.name}}</h3>
-              <button class="flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Collapse" @click="collapseTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-up" /></button>
+              <button class="flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Collapse" @click="collapseTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-up" /></button>
             </div>
             <p class="mt-1 mb-3">{{task.description}}</p>
             <ul v-if="Object.keys(task.params).length > 0">
               <li v-for="(param, paramName) in task.params" :key="paramName"><strong>{{paramName}}:</strong> <span class="font-mono">{{param}}</span></li>
             </ul>
             <div class="flex justify-between">
-              <button class="svg-icon-button" title="Task options"><svg-icon width="24" height="24" icon="cog" /></button>
+              <button class="svg-icon-button" title="Task options" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="cog" /></button>
               <div class="select-none hover:bg-gray-300 dark:hover:bg-gray-600 px-1">
                 <label :for="'task-' + task.internalId + '-enabled'">Enabled? </label>
-                <input :id="'task-' + task.internalId + '-enabled'" type="checkbox" v-model="task.enabled">
+                <input :id="'task-' + task.internalId + '-enabled'" type="checkbox" v-model="task.enabled" :disabled="isAnyModalOpen">
               </div>
             </div>
           </div>
           <div v-else class="flex justify-between bg-gray-200 dark:bg-gray-700 mx-1 my-0.5 px-1 py-1">
-            <button class="flex-shrink-0 opacity-60"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
+            <button class="flex-shrink-0 opacity-60" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
             <h3 class="text-lg">Task {{index+1}}: {{task.name}}</h3>
-            <button class="svg-icon-button" title="Expand" @click="expandTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
+            <button class="svg-icon-button" title="Expand" @click="expandTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
           </div>
         </div>
       </div>
       <div class="flex mt-auto">
-        <button class="mx-0.5 svg-icon-button" title="Options"><svg-icon width="32" height="32" icon="cog" /></button>
-        <button class="mr-auto svg-icon-button" title="Add task" @click="openAddTaskModal()"><svg-icon width="32" height="32" icon="document-add" /></button>
-        <button class="mx-0.5 svg-icon-button" title="Run or resume tasks" @click="startTasks()"><svg-icon width="32" height="32" icon="play" /></button>
-        <button class="mx-0.5 svg-icon-button" title="Pause all tasks to resume later"><svg-icon width="32" height="32" icon="pause" /></button>
-        <button class="mx-0.5 svg-icon-button" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Options" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="cog" /></button>
+        <button class="mr-auto svg-icon-button" title="Add task" @click="openAddTaskModal" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="document-add" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Run or resume tasks" @click="startTasks()" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="play" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Pause all tasks to resume later" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="pause" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Abort all tasks (loses all progress)" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="stop" /></button>
       </div>
     </div>
 
   </div>
   <teleport to="body">
-    <div v-if="generatorModalOpen" class="modal-wrapper">
+    <div v-show="generatorModalOpen" class="modal-wrapper">
       <div class="modal-div">
         <div class="modal-column modal-column-left">
           <div class="modal-header">
             <h3>Page Generators</h3>
           </div>
-          <div class="overflow-y-auto mt-1">
-            <div v-for="generator in generatorList" :key="generator.id" class="px-1" @click="generatorModalChosenGenerator = generator.id" :class="{'bg-gray-300 dark:bg-gray-500': generatorModalChosenGenerator === generator.id, 'hover:bg-gray-200 dark:hover:bg-gray-600': generatorModalChosenGenerator !== generator.id}">
-              <input type="radio" name="page-generator" :id="'page-generator-selector-' + generator.id" v-model="generatorModalChosenGenerator" :value="generator.id" class="absolute opacity-0 w-0 h-0" />
-              <label :for="'page-generator-selector-' + generator.id" class="select-none">{{generator.name}}</label>
+          <div class="radio-typelist">
+            <div v-for="generator in generatorList" :key="generator.id">
+              <input type="radio" name="page-generator" :id="'page-generator-selector-' + generator.id" v-model="generatorModalChosenGenerator" :value="generator.id" />
+              <label :for="'page-generator-selector-' + generator.id" @click="generatorModalChosenGenerator = generator.id">{{generator.name}}</label>
             </div>
           </div>
         </div>
@@ -99,16 +99,16 @@
       </div>
     </div>
 
-    <div v-if="addTaskModalOpen" class="modal-wrapper">
+    <div v-show="addTaskModalOpen" class="modal-wrapper">
       <div class="modal-div">
         <div class="modal-column modal-column-left">
           <div class="modal-header">
             <h3>Task Types</h3>
           </div>
-          <div class="overflow-y-auto mt-1">
-            <div v-for="task in taskList" :key="task.id" class="px-1 py-0.5" @click="addTaskModalChosenTask = task.id" :class="{'bg-gray-300 dark:bg-gray-500': addTaskModalChosenTask === task.id, 'hover:bg-gray-200 dark:hover:bg-gray-600': addTaskModalChosenTask !== task.id}">
-              <input type="radio" name="page-task" :id="'page-task-selector-' + task.id" v-model="addTaskModalChosenTask" :value="task.id" class="absolute opacity-0 w-0 h-0" />
-              <label :for="'page-task-selector-' + task.id" class="select-none">{{task.name}}</label>
+          <div class="radio-typelist">
+            <div v-for="task in taskList" :key="task.id" @click="addTaskModalChosenTask = task.id">
+              <input type="radio" name="page-task" :id="'page-task-selector-' + task.id" v-model="addTaskModalChosenTask" :value="task.id" />
+              <label :for="'page-task-selector-' + task.id">{{task.name}}</label>
             </div>
           </div>
         </div>
@@ -196,6 +196,9 @@ export default {
         defaultValues[option.id] = option.default;
       }
       return defaultValues;
+    },
+    isAnyModalOpen() {
+      return this.generatorModalOpen || this.addTaskModalOpen;
     }
   },
   methods: {
@@ -290,9 +293,26 @@ export default {
         this.closeGeneratorModal();
       }
     },
-    openGeneratorModal() {
+    openGeneratorModal(event) {
       this.generatorModalOpen = true;
       document.addEventListener("keydown", this.onGeneratorModalKeydown);
+
+      // It seems handling events (which is how this method would be called)
+      // blocks the process, which means the modal won't appear until the event
+      // handler exits. And until the modal appears, an invisible input inside
+      // it can't be focused. As this produces no event (that I know of),
+      // and a MutationObserver on the `style` attribute felt more hacky and
+      // less reliable than just asynchronously waiting for the modal to appear,
+      // this is how I handled it.
+      const targetElement = document.getElementById(`page-generator-selector-${this.generatorModalChosenGenerator}`);
+      (async () => {
+        while (targetElement.offsetParent === null) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+        targetElement.focus();
+      })();
+
+      event.preventDefault();
     },
     closeGeneratorModal() {
       this.generatorModalOpen = false;
@@ -303,9 +323,20 @@ export default {
         this.closeAddTaskModal();
       }
     },
-    openAddTaskModal() {
+    openAddTaskModal(event) {
       this.addTaskModalOpen = true;
       document.addEventListener("keydown", this.onAddTaskModalKeydown);
+
+      const targetElement = document.getElementById(`page-task-selector-${this.addTaskModalChosenTask}`);
+      (async () => {
+        while (targetElement.offsetParent === null) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+        targetElement.focus();
+      })();
+
+      // see the note in openGeneratorModal()
+      event.preventDefault();
     },
     closeAddTaskModal() {
       this.addTaskModalOpen = false;
@@ -362,5 +393,24 @@ export default {
 .modal-buttons-row {
   @apply flex justify-around items-center;
   @apply row-start-6 col-start-1 col-end-4;
+}
+
+.radio-typelist {
+  @apply overflow-y-auto;
+}
+.radio-typelist input {
+  @apply absolute opacity-0 w-0 h-0;
+}
+.radio-typelist label {
+  @apply select-none block px-1 py-0.5;
+}
+.radio-typelist input:not(:checked) + label {
+  @apply hover:bg-gray-200 dark:hover:bg-gray-600;
+}
+.radio-typelist input:checked + label {
+  @apply bg-gray-300 dark:bg-gray-500;
+}
+.radio-typelist input:focus + label {
+  box-shadow: inset 0 0 6px 0 hsl(45, 90%, 65%);
 }
 </style>
