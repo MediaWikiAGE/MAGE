@@ -411,6 +411,6 @@ export default {
   @apply bg-gray-300 dark:bg-gray-500;
 }
 .radio-typelist input:focus + label {
-  box-shadow: inset 0 0 6px 0 hsl(45, 90%, 65%);
+  @apply shadow-inner-focus;
 }
 </style>
