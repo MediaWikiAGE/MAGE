@@ -22,6 +22,7 @@
 <script>
   import MageFooter from "@/components/Footer";
   import SvgIcon from "@/components/SvgIcon";
+  import $ from "jquery";
 
   import { ref } from "vue";
   export default {
@@ -46,6 +47,12 @@
           "hover:bg-gray-200": this.activeTab !== linkName,
           "dark:hover:bg-gray-600": this.activeTab !== linkName,
         };
+      }
+    },
+
+    beforeCreate() {
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        $("html").addClass("dark");
       }
     },
 

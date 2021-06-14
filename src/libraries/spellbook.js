@@ -254,7 +254,18 @@ class Farm extends AuthSystem {
   addWikisFromUrls(urls) {
     const farmSettings = checkFarmSettings(this.name);
     for (const url of urls) {
-      const wikiSettings = checkFarmWikiSettings(farmSettings, getWikiNameFromUrl(url));
+      const baseWikiName = getWikiNameFromUrl(url);
+      let wikiNameSuffix = "";
+      let suffixIndex = 1;
+
+      // A truthy `url` field implies a preexisting settings structure.
+      // This is done to avoid overwriting such structures.
+      while (checkFarmWikiSettings(farmSettings, baseWikiName + wikiNameSuffix).url) {
+        suffixIndex += 1;
+        wikiNameSuffix = ` [${suffixIndex}]`;
+      }
+
+      const wikiSettings = checkFarmWikiSettings(farmSettings, baseWikiName + wikiNameSuffix);
       wikiSettings.url = url;
     }
 
@@ -284,7 +295,7 @@ function getStandaloneWikiAccountInfo() {
         });
       }
     }
-    wikiAccounts.sort( (a, b) => a.localeCompare(b) );
+    wikiAccounts.sort( (a, b) => a.name.localeCompare(b.name) );
 
     wikiList.push({
       name: wikiName,
@@ -318,7 +329,7 @@ function getWikiFarmAccountInfo() {
         name: wikiName
       });
     }
-    farmList.sort( (a, b) => a.localeCompare(b) );
+    farmList.sort( (a, b) => a.name.localeCompare(b.name) );
 
     const farmAccounts = [];
     for (const [accountName, accountData] of Object.entries(farmData.accounts)) {
@@ -328,7 +339,7 @@ function getWikiFarmAccountInfo() {
         });
       }
     }
-    farmAccounts.sort( (a, b) => a.localeCompare(b) );
+    farmAccounts.sort( (a, b) => a.name.localeCompare(b.name) );
 
     farmList.push({
       name: farmName,

@@ -1,7 +1,7 @@
 module.exports = {
   purge: [],
   // darkMode: or 'media' or 'class'
-  darkMode: "media",
+  darkMode: "class",
   theme: {
     extend: {
       gridTemplateColumns: {
@@ -14,6 +14,9 @@ module.exports = {
         "8": "8",
         "9": "9",
       }
+    },
+    boxShadow: {
+      "inner-focus": "inset 0 0 6px 0 hsl(45, 90%, 50%)"
     },
   },
   variants: {

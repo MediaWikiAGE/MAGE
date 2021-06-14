@@ -3,9 +3,9 @@
 
     <div id="pagelist" class="flex flex-col w-1/3 mx-1 flex-grow-0 bg-gray-100 dark:bg-gray-800 dark:text-gray-200">
       <h2 class="mx-auto my-1 text-2xl">Pages</h2>
-      <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 resize-none text-sm font-mono my-auto dark:bg-gray-700" :value="taskPages.join('\n')" @input="onPageListAreaInput"></textarea>
+      <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 p-0.5 resize-none text-sm font-mono my-auto dark:bg-gray-700 focus:ring-1 focus:ring-yellow-600 dark:focus:ring-yellow-300" :value="taskPages.join('\n')" @input="onPageListAreaInput" :disabled="isAnyModalOpen"></textarea>
       <div class="flex">
-        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="generatorModalOpen = true">
+        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="openGeneratorModal" :disabled="isAnyModalOpen">
           <svg-icon width="32" height="32" icon="plus" />
         </button>
       </div>
@@ -17,50 +17,51 @@
         <div v-for="(task, index) in tasks" :key="task.internalId">
           <div v-if="expandedTasks[task.internalId]" class="flex flex-col bg-gray-200 dark:bg-gray-700 mx-1 my-0.5 px-1 py-1">
             <div class="flex justify-between">
-              <button class="flex-shrink-0 opacity-60"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
+              <div class="flex-shrink-0 opacity-60 cursor-pointer my-auto"><svg-icon width="24" height="24" icon="drag-indicator" /></div>
               <h3 class="text-lg mx-auto">Task {{index+1}}: {{task.name}}</h3>
-              <button class="flex-shrink-0 hover:bg-gray-300 dark:hover:bg-gray-600" title="Collapse" @click="collapseTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-up" /></button>
+              <button :id="'task-collapse-' + task.internalId" class="svg-icon-button" title="Collapse" @click="collapseTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-up" /></button>
             </div>
             <p class="mt-1 mb-3">{{task.description}}</p>
             <ul v-if="Object.keys(task.params).length > 0">
               <li v-for="(param, paramName) in task.params" :key="paramName"><strong>{{paramName}}:</strong> <span class="font-mono">{{param}}</span></li>
             </ul>
             <div class="flex justify-between">
-              <button class="svg-icon-button" title="Task options"><svg-icon width="24" height="24" icon="cog" /></button>
-              <div class="select-none hover:bg-gray-300 dark:hover:bg-gray-600 px-1">
-                <label :for="'task-' + task.internalId + '-enabled'">Enabled? </label>
-                <input :id="'task-' + task.internalId + '-enabled'" type="checkbox" v-model="task.enabled">
+              <button class="svg-icon-button" title="Task options" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="cog" /></button>
+              <div>
+                <label :for="'task-' + task.internalId + '-enabled'" class="block select-none hover:bg-gray-300 dark:hover:bg-gray-600 px-1">Enabled?
+                  <input :id="'task-' + task.internalId + '-enabled'" class="focus:ring-2 focus:ring-yellow-600 dark:focus:ring-yellow-300" type="checkbox" v-model="task.enabled" :disabled="isAnyModalOpen">
+                </label>
               </div>
             </div>
           </div>
           <div v-else class="flex justify-between bg-gray-200 dark:bg-gray-700 mx-1 my-0.5 px-1 py-1">
-            <button class="flex-shrink-0 opacity-60"><svg-icon width="24" height="24" icon="drag-indicator" /></button>
+            <div class="flex-shrink-0 opacity-60 cursor-pointer my-auto"><svg-icon width="24" height="24" icon="drag-indicator" /></div>
             <h3 class="text-lg">Task {{index+1}}: {{task.name}}</h3>
-            <button class="svg-icon-button" title="Expand" @click="expandTask(task.internalId)"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
+            <button :id="'task-expand-' + task.internalId" class="svg-icon-button" title="Expand" @click="expandTask(task.internalId)" :disabled="isAnyModalOpen"><svg-icon width="24" height="24" icon="chevron-double-down" /></button>
           </div>
         </div>
       </div>
       <div class="flex mt-auto">
-        <button class="mx-0.5 svg-icon-button" title="Options"><svg-icon width="32" height="32" icon="cog" /></button>
-        <button class="mr-auto svg-icon-button" title="Add task" @click="addTaskModalOpen = true"><svg-icon width="32" height="32" icon="document-add" /></button>
-        <button class="mx-0.5 svg-icon-button" title="Run or resume tasks" @click="startTasks()"><svg-icon width="32" height="32" icon="play" /></button>
-        <button class="mx-0.5 svg-icon-button" title="Pause all tasks to resume later"><svg-icon width="32" height="32" icon="pause" /></button>
-        <button class="mx-0.5 svg-icon-button" title="Abort all tasks (loses all progress)"><svg-icon width="32" height="32" icon="stop" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Options" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="cog" /></button>
+        <button class="mr-auto svg-icon-button" title="Add task" @click="openAddTaskModal" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="document-add" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Run or resume tasks" @click="startTasks()" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="play" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Pause all tasks to resume later" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="pause" /></button>
+        <button class="mx-0.5 svg-icon-button" title="Abort all tasks (loses all progress)" :disabled="isAnyModalOpen"><svg-icon width="32" height="32" icon="stop" /></button>
       </div>
     </div>
 
   </div>
   <teleport to="body">
-    <div v-if="generatorModalOpen" class="modal-wrapper">
+    <div v-show="generatorModalOpen" class="modal-wrapper">
       <div class="modal-div">
         <div class="modal-column modal-column-left">
           <div class="modal-header">
             <h3>Page Generators</h3>
           </div>
-          <div class="overflow-y-auto mt-1">
-            <div v-for="generator in generatorList" :key="generator.id" class="px-1" @click="generatorModalChosenGenerator = generator.id" :class="{'bg-gray-300 dark:bg-gray-500': generatorModalChosenGenerator === generator.id, 'hover:bg-gray-200 dark:hover:bg-gray-600': generatorModalChosenGenerator !== generator.id}">
-              <input type="radio" name="page-generator" :id="'page-generator-selector-' + generator.id" v-model="generatorModalChosenGenerator" :value="generator.id" class="absolute opacity-0 w-0 h-0" />
-              <label :for="'page-generator-selector-' + generator.id" class="select-none">{{generator.name}}</label>
+          <div class="radio-typelist">
+            <div v-for="generator in generatorList" :key="generator.id">
+              <input type="radio" name="page-generator" :id="'page-generator-selector-' + generator.id" v-model="generatorModalChosenGenerator" :value="generator.id" />
+              <label :for="'page-generator-selector-' + generator.id" @click="generatorModalChosenGenerator = generator.id">{{generator.name}}</label>
             </div>
           </div>
         </div>
@@ -94,21 +95,21 @@
         </div>
         <div class="modal-buttons-row">
           <button @click="generatePages()" class="modal-resolution-button">Generate</button>
-          <button @click="generatorModalOpen = false" class="modal-resolution-button">Cancel</button>
+          <button @click="closeGeneratorModal()" class="modal-resolution-button">Cancel</button>
         </div>
       </div>
     </div>
 
-    <div v-if="addTaskModalOpen" class="modal-wrapper">
+    <div v-show="addTaskModalOpen" class="modal-wrapper">
       <div class="modal-div">
         <div class="modal-column modal-column-left">
           <div class="modal-header">
             <h3>Task Types</h3>
           </div>
-          <div class="overflow-y-auto mt-1">
-            <div v-for="task in taskList" :key="task.id" class="px-1 py-0.5" @click="addTaskModalChosenTask = task.id" :class="{'bg-gray-300 dark:bg-gray-500': addTaskModalChosenTask === task.id, 'hover:bg-gray-200 dark:hover:bg-gray-600': addTaskModalChosenTask !== task.id}">
-              <input type="radio" name="page-task" :id="'page-task-selector-' + task.id" v-model="addTaskModalChosenTask" :value="task.id" class="absolute opacity-0 w-0 h-0" />
-              <label :for="'page-task-selector-' + task.id" class="select-none">{{task.name}}</label>
+          <div class="radio-typelist">
+            <div v-for="task in taskList" :key="task.id" @click="addTaskModalChosenTask = task.id">
+              <input type="radio" name="page-task" :id="'page-task-selector-' + task.id" v-model="addTaskModalChosenTask" :value="task.id" />
+              <label :for="'page-task-selector-' + task.id">{{task.name}}</label>
             </div>
           </div>
         </div>
@@ -142,7 +143,7 @@
         </div>
         <div class="modal-buttons-row">
           <button @click="addTask()" class="modal-resolution-button">Add Task</button>
-          <button @click="addTaskModalOpen = false" class="modal-resolution-button">Cancel</button>
+          <button @click="closeAddTaskModal()" class="modal-resolution-button">Cancel</button>
         </div>
       </div>
     </div>
@@ -196,9 +197,58 @@ export default {
         defaultValues[option.id] = option.default;
       }
       return defaultValues;
+    },
+    isAnyModalOpen() {
+      return this.generatorModalOpen || this.addTaskModalOpen;
     }
   },
   methods: {
+    // This method is for event handlers (which are synchronous) that need to
+    // focus on conditionally-rendered elements enabled inside the handler.
+    // Because the handler blocks the process, the element won't be rendered
+    // until after the handler returns, but elements can't be focused if they
+    // are hidden.
+    // This is kind of a hack, but sadly, I couldn't think of a better and more
+    // or less universal solution.
+    deferredFocus(elementId) {
+      let targetElement = document.getElementById(elementId);
+      (async () => {
+        // Conditional rendering may be based on `v-if` or `v-show`. In the
+        // former case, the element isn't part of the DOM, and so the second
+        // loop (which is valid for `v-show`) would fail because `targetElement`
+        // is null.
+        while (!targetElement) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+          targetElement = document.getElementById(elementId);
+        }
+
+        while (targetElement.offsetParent === null) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+        targetElement.focus();
+      })();
+    },
+    commitChoices() {
+      const taskData = {
+        generatorModalChosenGenerator: this.generatorModalChosenGenerator,
+        addTaskModalChosenTask: this.addTaskModalChosenTask,
+        expandedTasks: this.expandedTasks,
+        tasks: this.tasks,
+        taskPages: this.taskPages
+      };
+
+      this.$store.commit("saveTaskViewData", taskData);
+    },
+    restoreFromState() {
+      const taskData = this.$store.getters.getTaskViewData;
+      if (taskData === null) {
+        return;
+      }
+
+      for (const key of Object.keys(taskData)) {
+        this[key] = taskData[key];
+      }
+    },
     getGeneratorOptionInputId(optionId) {
       return `generator-option-${this.generatorModalChosenGenerator}-${optionId}`;
     },
@@ -219,9 +269,11 @@ export default {
     },
     expandTask(internalId) {
       this.expandedTasks[internalId] = true;
+      this.deferredFocus(`task-collapse-${internalId}`);
     },
     collapseTask(internalId) {
       this.expandedTasks[internalId] = false;
+      this.deferredFocus(`task-expand-${internalId}`);
     },
     generatePages() {
       const pages = pageGenerators.generatePages(this.generatorModalChosenGenerator, this.generatorOptionValues);
@@ -230,7 +282,7 @@ export default {
           this.taskPages.push(page);
         }
       }
-      this.generatorModalOpen = false;
+      this.closeGeneratorModal();
     },
     addTask() {
       const task = pageTasks.getTaskInfoById(this.addTaskModalChosenTask);
@@ -241,7 +293,7 @@ export default {
       task.enabled = true;
 
       this.tasks.push(task);
-      this.addTaskModalOpen = false;
+      this.closeAddTaskModal();
     },
     startTasks() {
       this.runningTasks = true;
@@ -284,14 +336,51 @@ export default {
         console.log(`Completed processing of page '${pageData.title}'.`);
       }
       console.log("All pages processed.");
+    },
+    onGeneratorModalKeydown(event) {
+      if (event.code === "Escape") {
+        this.closeGeneratorModal();
+      }
+    },
+    openGeneratorModal(event) {
+      this.generatorModalOpen = true;
+      document.addEventListener("keydown", this.onGeneratorModalKeydown);
+      this.deferredFocus(`page-generator-selector-${this.generatorModalChosenGenerator}`);
+      event.preventDefault();
+    },
+    closeGeneratorModal() {
+      this.generatorModalOpen = false;
+      document.removeEventListener("keydown", this.onGeneratorModalKeydown);
+    },
+    onAddTaskModalKeydown(event) {
+      if (event.code === "Escape") {
+        this.closeAddTaskModal();
+      }
+    },
+    openAddTaskModal(event) {
+      this.addTaskModalOpen = true;
+      document.addEventListener("keydown", this.onAddTaskModalKeydown);
+      this.deferredFocus(`page-task-selector-${this.addTaskModalChosenTask}`);
+      event.preventDefault();
+    },
+    closeAddTaskModal() {
+      this.addTaskModalOpen = false;
+      document.removeEventListener("keydown", this.onAddTaskModalKeydown);
     }
-  }
+  },
+  created: function() {
+    this.restoreFromState();
+  },
+  beforeUnmount: function() {
+    this.commitChoices();
+  },
 };
 </script>
 <style>
 .svg-icon-button {
   @apply flex-shrink-0;
   @apply hover:bg-gray-300 dark:hover:bg-gray-600;
+  @apply focus:bg-gray-300 dark:focus:bg-gray-600 focus:shadow-inner-focus;
 }
 
 .modal-wrapper {
@@ -336,5 +425,24 @@ export default {
 .modal-buttons-row {
   @apply flex justify-around items-center;
   @apply row-start-6 col-start-1 col-end-4;
+}
+
+.radio-typelist {
+  @apply overflow-y-auto;
+}
+.radio-typelist input {
+  @apply absolute opacity-0 w-0 h-0;
+}
+.radio-typelist label {
+  @apply select-none block px-1 py-0.5;
+}
+.radio-typelist input:not(:checked) + label {
+  @apply hover:bg-gray-200 dark:hover:bg-gray-600;
+}
+.radio-typelist input:checked + label {
+  @apply bg-gray-300 dark:bg-gray-500;
+}
+.radio-typelist input:focus + label {
+  @apply shadow-inner-focus;
 }
 </style>
