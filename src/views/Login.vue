@@ -304,6 +304,10 @@ export default {
 .form-input-wrapper textarea {
   @apply block w-full;
 }
+.form-input-wrapper input:disabled,
+.form-input-wrapper textarea:disabled {
+  @apply dark:bg-gray-800;
+}
 .form-input-wrapper textarea {
   @apply border border-gray-500 resize-none text-sm font-mono;
 }
