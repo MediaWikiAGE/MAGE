@@ -16,7 +16,7 @@
           </select>
         </div>
 
-        <div class="select-none flex flex-col w-full mt-2">
+        <div class="select-none flex flex-col w-full mt-4">
           <label for="chosenWiki" class="pr-1">Wiki name</label>
           <select id="chosenWiki" name="chosenWiki" class="flex-grow dark:bg-gray-700" :value="chosenWiki" @change="onWikiChange">
             <option value="-1" disabled selected>None</option>
@@ -24,7 +24,7 @@
           </select>
         </div>
 
-        <div class="select-none flex flex-col w-full mt-2">
+        <div class="select-none flex flex-col w-full mt-4">
           <label for="chosenAccount" class="pr-1">User account</label>
           <select id="chosenAccount" name="chosenAccount" class="flex-grow dark:bg-gray-700" :value="chosenAccount" @change="onAccountChange">
             <option value="-1" selected>None (identify using your IP)</option>
