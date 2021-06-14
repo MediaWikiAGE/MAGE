@@ -6,77 +6,77 @@
         <div class="w-px border-l border-gray-500"></div>
       </div>
 
-      <div class="row-start-1 col-start-1 text-right text-sm">
+      <div class="help-text row-start-1">
         The name of the account you're setting the password for
       </div>
-      <div class="row-start-1 col-start-3">
+      <div class="form-input-wrapper row-start-1">
         <label for="accountName">Username</label>
-        <input type="text" id="accountName" name="accountName" v-model.trim="accountName" class="block w-full dark:bg-gray-700">
+        <input type="text" id="accountName" name="accountName" v-model.trim="accountName">
       </div>
 
-      <div class="row-start-2 col-start-1 text-right text-sm">
+      <div class="help-text row-start-2">
         The name of your bot password from Special:BotPasswords
       </div>
-      <div class="row-start-2 col-start-3">
+      <div class="form-input-wrapper row-start-2">
         <label for="botPasswordName">Bot password name</label>
-        <input type="text" id="botPasswordName" name="botPasswordName" v-model.trim="botPasswordName" class="block w-full dark:bg-gray-700">
+        <input type="text" id="botPasswordName" name="botPasswordName" v-model.trim="botPasswordName">
       </div>
 
-      <div class="row-start-3 col-start-1 text-right text-sm">
+      <div class="help-text row-start-3">
         The generated password string of characters from Special:BotPasswords
       </div>
-      <div class="row-start-3 col-start-3">
+      <div class="form-input-wrapper row-start-3">
         <label for="botPassword">Bot password</label>
-        <input type="text" id="botPassword" name="botPassword" v-model.trim="botPassword" class="block w-full dark:bg-gray-700">
+        <input type="text" id="botPassword" name="botPassword" v-model.trim="botPassword">
       </div>
 
-      <div class="row-start-4 col-start-1 text-right text-sm">
+      <div class="help-text row-start-4">
         Do you want to add the credentials for a wiki or wiki farm already known to MAGE?
       </div>
-      <div class="row-start-4 col-start-3">
+      <div class="form-input-wrapper row-start-4">
         <div>
           <label for="addToExisting" class="pr-1">Add to existing?</label>
           <input type="checkbox" id="addToExisting" name="addToExisting" :value=false v-model="addToExisting">
         </div>
-        <select :disabled="!addToExisting" name="addTo" id="addTo" class="dark:bg-gray-700" v-model.number="addTo">
+        <select :disabled="!addToExisting" name="addTo" id="addTo" v-model.number="addTo">
           <option value="0" disabled selected>None</option>
           <option v-for="knownFarm in farms" :key="knownFarm.id" :value="knownFarm.id">{{ knownFarm.name }}</option>
         </select>
       </div>
 
-      <div class="row-start-5 col-start-1 text-right text-sm">
+      <div class="help-text row-start-5">
         Do you use the same credentials to log into several different wikis?
       </div>
-      <div class="row-start-5 col-start-3">
+      <div class="form-input-wrapper row-start-5">
         <label for="isWikiFarm" class="pr-1">Wiki farm?</label>
         <input type="checkbox" id="isWikiFarm" name="isWikiFarm" v-model="isWikiFarm" :disabled="addToExisting">
       </div>
 
-      <div class="row-start-6 col-start-1 text-right text-sm">
+      <div class="help-text row-start-6">
         <div v-if="!isWikiFarm">The front page of your wiki. MAGE will figure out the script path automatically.</div>
         <div v-else>The front pages of your wikis, one per line. MAGE will figure out the script path automatically.</div>
       </div>
-      <div class="row-start-6 col-start-3">
+      <div class="form-input-wrapper row-start-6">
         <div v-if="!isWikiFarm">
           <label for="urlField">URL</label>
-          <input type="text" id="urlField" name="urlField" :value="wikiUrls[0]" @input="onUrlFieldInput" :disabled="addToExisting" class="block w-full dark:bg-gray-700">
+          <input type="text" id="urlField" name="urlField" :value="wikiUrls[0]" @input="onUrlFieldInput" :disabled="addToExisting">
         </div>
         <div v-else>
           <label for="urlArea">URLs</label>
-          <textarea id="urlArea" name="urlArea" :value="wikiUrls.join('\n')" @input="onUrlAreaInput" rows="4" class="block border border-gray-500 w-full resize-none text-sm font-mono dark:bg-gray-700" :disabled="addToExisting"></textarea>
+          <textarea id="urlArea" name="urlArea" :value="wikiUrls.join('\n')" @input="onUrlAreaInput" rows="4" :disabled="addToExisting"></textarea>
         </div>
       </div>
 
-      <div class="row-start-7 col-start-1 text-right text-sm">
+      <div class="help-text row-start-7">
         <div v-if="!isWikiFarm">Save this wiki as:</div>
         <div v-else>Save this farm as:</div>
       </div>
-      <div class="row-start-7 col-start-3">
-        <input type="text" id="saveAs" name="saveAs" v-model.trim="saveAs" :disabled="addToExisting" class="w-full dark:bg-gray-700">
+      <div class="form-input-wrapper row-start-7">
+        <input type="text" id="saveAs" name="saveAs" v-model.trim="saveAs" :disabled="addToExisting">
       </div>
 
-      <div class="row-start-8 col-start-3">
-        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" :disabled="blockSaving" class="p-0.5 dark:bg-gray-700">
+      <div class="form-input-wrapper row-start-8">
+        <input type="button" id="saveLogin" name="saveLogin" value="Save login" @click="saveLogin" :disabled="blockSaving" class="p-0.5">
       </div>
 
       <div class="row-start-9 col-start-1 col-end-5">
@@ -257,3 +257,25 @@ export default {
   components: { SvgIcon },
 };
 </script>
+<style>
+.help-text {
+  @apply col-start-1 text-right text-sm;
+}
+
+.form-input-wrapper {
+  @apply col-start-3;
+}
+.form-input-wrapper input,
+.form-input-wrapper select,
+.form-input-wrapper textarea {
+  @apply dark:bg-gray-700;
+  @apply focus:ring-1 focus:ring-yellow-600 dark:focus:ring-yellow-300;
+}
+.form-input-wrapper input[type="text"],
+.form-input-wrapper textarea {
+  @apply block w-full;
+}
+.form-input-wrapper textarea {
+  @apply border border-gray-500 resize-none text-sm font-mono;
+}
+</style>
