@@ -228,6 +228,27 @@ export default {
         targetElement.focus();
       })();
     },
+    commitChoices() {
+      const taskData = {
+        generatorModalChosenGenerator: this.generatorModalChosenGenerator,
+        addTaskModalChosenTask: this.addTaskModalChosenTask,
+        expandedTasks: this.expandedTasks,
+        tasks: this.tasks,
+        taskPages: this.taskPages
+      };
+
+      this.$store.commit("saveTaskViewData", taskData);
+    },
+    restoreFromState() {
+      const taskData = this.$store.getters.getTaskViewData;
+      if (taskData === null) {
+        return;
+      }
+
+      for (const key of Object.keys(taskData)) {
+        this[key] = taskData[key];
+      }
+    },
     getGeneratorOptionInputId(optionId) {
       return `generator-option-${this.generatorModalChosenGenerator}-${optionId}`;
     },
@@ -346,7 +367,13 @@ export default {
       this.addTaskModalOpen = false;
       document.removeEventListener("keydown", this.onAddTaskModalKeydown);
     }
-  }
+  },
+  created: function() {
+    this.restoreFromState();
+  },
+  beforeUnmount: function() {
+    this.commitChoices();
+  },
 };
 </script>
 <style>

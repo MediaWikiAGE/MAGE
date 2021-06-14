@@ -12,6 +12,7 @@ const store = createStore({
     processedBotPassId: null,
 
     loginFormData: null,
+    taskViewData: null,
   },
   mutations: {
     saveProcessedWiki(state, processedWikiData) {
@@ -23,6 +24,9 @@ const store = createStore({
     },
     saveLoginFormData(state, loginFormData) {
       state.loginFormData = loginFormData;
+    },
+    saveTaskViewData(state, taskViewData) {
+      state.taskViewData = taskViewData;
     }
   },
   getters: {
@@ -36,6 +40,9 @@ const store = createStore({
     },
     getLoginFormData(state) {
       return state.loginFormData;
+    },
+    getTaskViewData(state) {
+      return state.taskViewData;
     }
   }
 });
