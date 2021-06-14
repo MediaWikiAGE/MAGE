@@ -118,7 +118,7 @@ export default {
     setWiki(wikiId) {
       this.chosenWiki = wikiId;
 
-      if (this.chosenFarm === -1) {
+      if (this.chosenFarm === -1 && this.chosenWiki !== -1) {
         const wikiData = this.accountData.standalone[this.chosenWiki];
         this.chosenAccount = -1;
         this.chosenAccountSource = wikiData.accounts;
