@@ -7,26 +7,26 @@
     <div class="mt-3 ml-2">
       <h3 class="text-xl">Choose a wiki to operate on:</h3>
 
-      <div class="max-w-xs">
-        <div class="select-none flex flex-col w-full">
-          <label for="chosenFarm" class="pr-1">Wiki farm name</label>
-          <select id="chosenFarm" name="chosenFarm" class="flex-grow dark:bg-gray-700" :value="chosenFarm" @change="onFarmChange">
+      <div class="wiki-choice-container">
+        <div class="control-container">
+          <label for="chosenFarm">Wiki farm name</label>
+          <select id="chosenFarm" name="chosenFarm" :value="chosenFarm" @change="onFarmChange">
             <option value="-1" selected>None (standalone wiki)</option>
             <option v-for="(knownFarm, index) in chosenFarmSource" :key="knownFarm.name" :value="index">{{ knownFarm.name }}</option>
           </select>
         </div>
 
-        <div class="select-none flex flex-col w-full mt-4">
-          <label for="chosenWiki" class="pr-1">Wiki name</label>
-          <select id="chosenWiki" name="chosenWiki" class="flex-grow dark:bg-gray-700" :value="chosenWiki" @change="onWikiChange">
+        <div class="control-container">
+          <label for="chosenWiki">Wiki name</label>
+          <select id="chosenWiki" name="chosenWiki" :value="chosenWiki" @change="onWikiChange">
             <option value="-1" disabled selected>None</option>
             <option v-for="(knownWiki, index) in chosenWikiSource" :key="knownWiki.name" :value="index">{{ knownWiki.name }}</option>
           </select>
         </div>
 
-        <div class="select-none flex flex-col w-full mt-4">
-          <label for="chosenAccount" class="pr-1">User account</label>
-          <select id="chosenAccount" name="chosenAccount" class="flex-grow dark:bg-gray-700" :value="chosenAccount" @change="onAccountChange">
+        <div class="control-container">
+          <label for="chosenAccount">User account</label>
+          <select id="chosenAccount" name="chosenAccount" :value="chosenAccount" @change="onAccountChange">
             <option value="-1" selected>None (identify using your IP)</option>
             <option v-for="(knownAccount, index) in chosenAccountSource" :key="knownAccount.name" :value="index">{{ knownAccount.name }}</option>
           </select>
@@ -107,3 +107,21 @@ export default {
   },
 };
 </script>
+<style>
+.wiki-choice-container {
+  @apply max-w-xs;
+}
+.wiki-choice-container .control-container {
+  @apply select-none flex flex-col w-full;
+}
+.wiki-choice-container .control-container:not(:first-child) {
+  @apply mt-4;
+}
+.control-container label {
+  @apply pr-1;
+}
+.control-container select {
+  @apply flex-grow dark:bg-gray-700;
+  @apply focus:ring-1 focus:ring-yellow-600 dark:focus:ring-yellow-300;
+}
+</style>
