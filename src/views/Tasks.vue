@@ -218,8 +218,8 @@ export default {
         // loop (which is valid for `v-show`) would fail because `targetElement`
         // is null.
         while (!targetElement) {
-          targetElement = document.getElementById(elementId);
           await new Promise(resolve => setTimeout(resolve, 50));
+          targetElement = document.getElementById(elementId);
         }
 
         while (targetElement.offsetParent === null) {
