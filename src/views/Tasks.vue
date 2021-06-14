@@ -5,7 +5,7 @@
       <h2 class="mx-auto my-1 text-2xl">Pages</h2>
       <textarea class="border border-gray-400 dark:border-gray-300 h-full mx-1 p-0.5 resize-none text-sm font-mono my-auto dark:bg-gray-700 focus:ring-1 focus:ring-yellow-600 dark:focus:ring-yellow-300" :value="taskPages.join('\n')" @input="onPageListAreaInput" :disabled="isAnyModalOpen"></textarea>
       <div class="flex">
-        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="openGeneratorModal()" :disabled="isAnyModalOpen">
+        <button class="mt-1 mx-auto svg-icon-button" title="Generate page list" @click="openGeneratorModal" :disabled="isAnyModalOpen">
           <svg-icon width="32" height="32" icon="plus" />
         </button>
       </div>
