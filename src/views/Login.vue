@@ -114,6 +114,31 @@ export default {
     };
   },
   methods: {
+    commitChoices() {
+      const loginData = {
+        accountName: this.accountName,
+        botPasswordName: this.botPasswordName,
+        botPassword: this.botPassword,
+        addToExisting: this.addToExisting,
+        addTo: this.addTo,
+        isWikiFarm: this.isWikiFarm,
+        wikiUrls: this.wikiUrls,
+        saveAs: this.saveAs,
+        validationErrors: this.validationErrors
+      };
+
+      this.$store.commit("saveLoginFormData", loginData);
+    },
+    restoreData() {
+      const loginData = this.$store.getters.getLoginFormData;
+      if (loginData === null) {
+        return;
+      }
+
+      for (const key of Object.keys(loginData)) {
+        this[key] = loginData[key];
+      }
+    },
     onUrlFieldInput(event) {
       this.wikiUrls[0] = event.target.value.trim();
     },
@@ -253,6 +278,10 @@ export default {
   },
   created: async function() {
     this.farms = await window.api.remote("getAuthSystemList");
+    this.restoreData();
+  },
+  beforeUnmount: function() {
+    this.commitChoices();
   },
   components: { SvgIcon },
 };

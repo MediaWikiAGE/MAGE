@@ -9,7 +9,9 @@ const store = createStore({
     processedFarmName: null,
     processedWikiName: null,
     processedUsername: null,
-    processedBotPassId: null
+    processedBotPassId: null,
+
+    loginFormData: null,
   },
   mutations: {
     saveProcessedWiki(state, processedWikiData) {
@@ -18,6 +20,9 @@ const store = createStore({
       state.processedWikiName = wiki;
       state.processedUsername = user;
       state.processedBotPassId = botPass;
+    },
+    saveLoginFormData(state, loginFormData) {
+      state.loginFormData = loginFormData;
     }
   },
   getters: {
@@ -28,6 +33,9 @@ const store = createStore({
         state.processedUsername,
         state.processedBotPassId
       ];
+    },
+    getLoginFormData(state) {
+      return state.loginFormData;
     }
   }
 });
