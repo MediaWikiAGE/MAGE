@@ -5,10 +5,31 @@ import "@/assets/css/tailwind.css";
 import router from "./router";
 
 const store = createStore({
-  state () {
-    return {};
+  state: {
+    processedFarmName: null,
+    processedWikiName: null,
+    processedUsername: null,
+    processedBotPassId: null
   },
-  mutations: {}
+  mutations: {
+    saveProcessedWiki(state, processedWikiData) {
+      const [farm, wiki, user, botPass] = processedWikiData;
+      state.processedFarmName = farm;
+      state.processedWikiName = wiki;
+      state.processedUsername = user;
+      state.processedBotPassId = botPass;
+    }
+  },
+  getters: {
+    getProcessedWiki(state) {
+      return [
+        state.processedFarmName,
+        state.processedWikiName,
+        state.processedUsername,
+        state.processedBotPassId
+      ];
+    }
+  }
 });
 
 createApp(App)

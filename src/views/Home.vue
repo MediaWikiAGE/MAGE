@@ -72,8 +72,37 @@ export default {
       });
     }
     */
-    onFarmChange(event) {
-      this.chosenFarm = parseInt(event.target.value, 10);
+    commitChoices() {
+      let farmName = null;
+      let wikiName = null;
+      let userName = null;
+      let botPassName = null;
+
+      if (this.chosenFarm !== -1) {
+        farmName = this.chosenFarmSource[this.chosenFarm].name;
+      }
+      if (this.chosenWiki !== -1) {
+        wikiName = this.chosenWikiSource[this.chosenWiki].name;
+      }
+      if (this.chosenAccount !== -1) {
+        [userName, botPassName] = this.chosenAccountSource[this.chosenAccount].name.split("@");
+      }
+
+      this.$store.commit("saveProcessedWiki", [farmName, wikiName, userName, botPassName]);
+    },
+    restoreFromState() {
+      const [farmName, wikiName, userName, botPassName] = this.$store.getters.getProcessedWiki;
+      const fullAccountName = `${userName}@${botPassName}`;
+
+      this.setFarm(this.chosenFarmSource.findIndex( farm => farm.name === farmName ));
+      this.setWiki(this.chosenWikiSource.findIndex( wiki => wiki.name === wikiName ));
+      if (this.chosenWiki !== -1) {
+        this.setAccount(this.chosenAccountSource.findIndex( account => account.name === fullAccountName ));
+      }
+      this.commitChoices();
+    },
+    setFarm(farmId) {
+      this.chosenFarm = farmId;
       this.chosenWiki = -1;
       this.chosenAccount = -1;
 
@@ -86,8 +115,8 @@ export default {
         this.chosenAccountSource = farmData.accounts;
       }
     },
-    onWikiChange(event) {
-      this.chosenWiki = parseInt(event.target.value, 10);
+    setWiki(wikiId) {
+      this.chosenWiki = wikiId;
 
       if (this.chosenFarm === -1) {
         const wikiData = this.accountData.standalone[this.chosenWiki];
@@ -95,8 +124,20 @@ export default {
         this.chosenAccountSource = wikiData.accounts;
       }
     },
+    setAccount(accountId) {
+      this.chosenAccount = accountId;
+    },
+    onFarmChange(event) {
+      this.setFarm(parseInt(event.target.value, 10));
+      this.commitChoices();
+    },
+    onWikiChange(event) {
+      this.setWiki(parseInt(event.target.value, 10));
+      this.commitChoices();
+    },
     onAccountChange(event) {
-      this.chosenAccount = parseInt(event.target.value, 10);
+      this.setAccount(parseInt(event.target.value, 10));
+      this.commitChoices();
     }
   },
   created: async function() {
@@ -104,6 +145,7 @@ export default {
     this.accountData = accountData;
     this.chosenFarmSource = accountData.farms;
     this.chosenWikiSource = accountData.standalone;
+    this.restoreFromState();
   },
 };
 </script>
