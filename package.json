@@ -17,6 +17,7 @@
     "autoprefixer": "^10.2.6",
     "core-js": "^3.14.0",
     "got": "^11.8.2",
+    "jquery": "^3.6.0",
     "keytar": "~7.6.0",
     "postcss": "^8.3.0",
     "tailwindcss": "^2.1.4",
