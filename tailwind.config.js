@@ -10,6 +10,10 @@ module.exports = {
         "loginview-4": "1fr 1px 1fr 1fr",
         "loginview-outer": "1fr 4fr 1fr",
       },
+      gridTemplateRows: {
+        // For the login manager
+        "loginview": "min-content auto min-content min-content"
+      },
       gridRowEnd: {
         "8": "8",
         "9": "9",
