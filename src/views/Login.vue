@@ -430,7 +430,7 @@ export default {
 }
 
 .special-option {
-  @apply text-green-400;
+  @apply text-green-600 dark:text-green-400;
 }
 
 .help-wrapper {
