@@ -4,7 +4,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: () => import("@/views/Home.vue"),
+    component: () => import("@/views/TabHome.vue"),
     meta: {
       layout: "AppLayoutDefault"
     }
@@ -12,7 +12,7 @@ const routes = [
   {
     path: "/about",
     name: "About",
-    component: () => import("@/views/About.vue"),
+    component: () => import("@/views/TabAbout.vue"),
     meta: {
       layout: "AppLayoutDefault"
     }
@@ -20,7 +20,7 @@ const routes = [
   {
     path: "/login",
     name: "Login",
-    component: () => import("@/views/Login.vue"),
+    component: () => import("@/views/TabLogin.vue"),
     meta: {
       layout: "AppLayoutDefault"
     }
@@ -28,7 +28,7 @@ const routes = [
   {
     path: "/tasks",
     name: "Task List",
-    component: () => import("@/views/Tasks.vue"),
+    component: () => import("@/views/TabTasks.vue"),
     meta: {
       layout: "AppLayoutDefault"
     }
