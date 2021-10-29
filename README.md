@@ -7,7 +7,7 @@ This app is in heavy stages of production and isn't ready to be used yet.
 ## Project setup
 You will need:
 * Git
-* Node.js (version 14+; version 12 is no longer supported)
+* Node.js (version 16+; earlier versions are no longer supported)
 * A package manager, such as [pnpm](https://pnpm.js.org/)
 
 To start writing code, please fork the repository on GitHub first. This will be needed to send pull requests, which is how this project accepts patches.
