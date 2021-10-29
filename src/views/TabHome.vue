@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  name: "Home",
+  name: "TabHome",
   data() {
     return {
       chosenFarm: -1,
