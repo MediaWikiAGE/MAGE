@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import MageFooter from "@/components/Footer";
+  import MageFooter from "@/components/MageFooter";
   import SvgIcon from "@/components/SvgIcon";
   import $ from "jquery";
 
