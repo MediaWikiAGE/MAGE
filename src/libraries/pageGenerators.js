@@ -123,8 +123,15 @@ registerPageGenerator({
     {
       id: "wordsNumber",
       type: "integer",
-      name: "Number of Words",
-      description: "How much words and letters word will have",
+      name: "Number of words",
+      description: "Maximum number of results",
+      default: 10,
+      },
+    {
+      id: "wordsLength",
+      type: "integer",
+      name: "Lenght of words",
+      description: "Number of letters in words",
       default: 10
       }
   ],
@@ -134,7 +141,7 @@ registerPageGenerator({
     let oldPagename = "";
     const letters = "abcdefghijklmnopqrstuvwxyz ";
     for (let i = 0; i < params.wordsNumber; i++) {
-      for (let j = 0; j < params.wordsNumber; j++) {
+      for (let j = 0; j < params.wordsLength; j++) {
         oldPagename = pagename;
         pagename = oldPagename + letters[Math.floor(Math.random() * letters.length)];
       }
