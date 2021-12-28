@@ -115,6 +115,36 @@ registerPageGenerator({
   }
 });
 
+registerPageGenerator({
+  id: "random-words",
+  name: "Random words",
+  description: "Create amazing words",
+  parameters: [
+    {
+      id: "wordsNumber",
+      type: "integer",
+      name: "Number of Words",
+      description: "How much words and letters word will have",
+      default: 10
+      }
+  ],
+  generatePages: function(params) {
+    const pages = [];
+    let pagename = "";
+    let oldPagename = "";
+    const letters = "abcdefghijklmnopqrstuvwxyz ";
+    for (let i = 0; i < params.wordsNumber; i++) {
+      for (let j = 0; j < params.wordsNumber; j++) {
+        oldPagename = pagename;
+        pagename = oldPagename + letters[Math.floor(Math.random() * letters.length)];
+      }
+    pages.push(pagename);
+	pagename = "";
+    }
+    return pages;
+  }	  
+});
+
 export function listGenerators() {
   const generatorList = [];
   for (const generator of pageGenerators) {
