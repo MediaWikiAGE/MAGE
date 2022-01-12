@@ -75,6 +75,7 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
     webPreferences: {
       // process.env.ELECTRON_NODE_INTEGRATION hardcode to true
       // eslint-disable-next-line no-undef
@@ -95,6 +96,7 @@ async function createWindow() {
     win.loadURL("app://./index.html");
   }
   if (process.env.DEV_OPEN) await win.webContents.openDevTools();
+  win.show();
 }
 
 // Quit when all windows are closed.
