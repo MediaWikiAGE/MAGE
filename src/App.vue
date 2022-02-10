@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="main dark:bg-black grid" style="width: 100vw; height: 100vh; grid-template: auto max-content / max-content auto; grid-gap: 0.25em;">
-    <div id="nav" class="menu dark:bg-gray-900 dark:text-gray-200 select-none" style="overflow-y: auto;">
+    <div id="nav" class="menu dark:bg-gray-900 dark:text-gray-200 select-none" :class="{ small: !mobileMenuOpen }" style="overflow-y: auto;">
       <div class="flex flex-col" style="gap: 2px;">
-        <div class="flex whitespace-nowrap p-0 bg-indigo-100 dark:bg-indigo-900 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
+        <div class="flex whitespace-nowrap p-0 bg-indigo-200 dark:bg-indigo-800 cursor-pointer" id="buttonMobileMenu" :title="mobileMenuOpen ? 'Collapse Menu' : 'Expand Menu'" @click="mobileMenuOpen = !mobileMenuOpen">
           <div class="mx-auto" v-show="mobileMenuOpen"><svg-icon width="32" height="32" icon="chevron-double-left" /></div>
           <div class="mx-auto" v-show="!mobileMenuOpen"><svg-icon width="32" height="32" icon="chevron-double-right" /></div>
         </div>
@@ -14,6 +14,7 @@
         </router-link>
       </div>
     </div>
+    <div class="pad main dark:bg-black dark:text-gray-200">MAGE v. 0.1.0</div>
     <div class="pad main overflow-auto dark:bg-black dark:text-gray-200" style="grid-row-start: 1; grid-column-start: 2;"> <router-view /> </div>
     <div class="pad main dark:bg-black dark:text-gray-200" style="grid-row-start: 2; grid-column-start: 2;"> <MageFooter /> </div>
   </div>
@@ -33,10 +34,11 @@
         menuItems: [
           { name: "home", buttonImage: "magelogo", title: "Home", url: "/" },
           { name: "about", buttonImage: "tag", title: "About", url: "/about" },
-          { name: "login", buttonImage: "identification", title: "Login Manager", url: "/login" },
+          { name: "login", buttonImage: "identification", title: "Login Manager", url: "/login" },          
           { name: "tasks", buttonImage: "pencil-alt", title: "Task List", url: "/tasks" },
+          { name: "settings", buttonImage: "cog", title: "Settings", url: "/settings" },          
         ],
-        activeTab: "home",
+        activeTab: "home"
       };
     },
     methods: {
@@ -83,10 +85,15 @@
   input.long { width: 12em; }
 
   #nav {
-    width: 100%;
+    width: 175px;
     height: 100%;
     justify-content: start;
     align-content: start;
+    transition: 300ms;
+  }
+
+  #nav.small {
+    width: 55px;
   }
 
   .hide { visibility: hidden; }
@@ -112,5 +119,18 @@
   .button {
     color: ButtonText;
     background: ButtonFace;
+  }
+
+  #buttonMobileMenu {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 165px;
+    transition: 300ms;
+  }
+
+  .small #buttonMobileMenu {
+    left: 45px;
   }
 </style>

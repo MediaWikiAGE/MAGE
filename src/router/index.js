@@ -32,6 +32,14 @@ const routes = [
     meta: {
       layout: "AppLayoutDefault"
     }
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: () => import("@/views/TabSettings.vue"),
+    meta: {
+      layout: "AppLayoutDefault"
+    }
   }
 ];
 
